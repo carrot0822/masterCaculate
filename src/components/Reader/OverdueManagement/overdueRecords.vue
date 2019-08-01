@@ -16,7 +16,7 @@
                 <el-select
                   style="width: 150px"
                   v-model="searchForm.makeMethod"
-                  placeholder="请选择"
+                  placeholder="请选择 :"
                   clearable
                   @change="selectCheck(searchForm.makeMethod)"
                 >
@@ -194,6 +194,10 @@
     methods: {
       selectCheck(val) {
         console.log("val", val);
+        this.searchForm.searchData=""
+        for(const index in this.selectSearchForm){
+          this.selectSearchForm[index]=""
+        }
         this.searchData = val;
       },
       jumpBtn() {

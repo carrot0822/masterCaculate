@@ -112,8 +112,10 @@
             ></el-input>
           </el-form-item>
           <el-form-item style="margin:0px auto">
-            <el-button type="primary" @click="submitForm()" style="margin-left: 20px">确定</el-button>
-            <el-button type="info" @click="resetForm()">取消</el-button>
+            <div style="margin-bottom: 10px">
+              <span class="dialogButton true mr_40" @click="submitForm()">确 定</span>
+              <span class="dialogButton cancel" @click="resetForm()">取 消</span>
+            </div>
           </el-form-item>
         </el-form>
       </el-dialog>
@@ -124,7 +126,7 @@
         <div class="dialogBody">是否{{Dialogtitle[i]}}?</div>
         <div style="margin-bottom: 30px">
           <span class="dialogButton true mr_40" @click="submitDialog">确 定</span>
-          <span class="dialogButton cancel" @click="centerDialogVisible = false">取消</span>
+          <span class="dialogButton cancel" @click="centerDialogVisible = false">取 消</span>
         </div>
       </el-dialog>
     </div>
@@ -167,7 +169,7 @@ export default {
       tableLoading:true,
       dialogFormVisible: false, // // 新增修改弹框的展示和消失
       centerDialogVisible: false, // 删除弹框
-      Dialogtitle: ["修改", "新增", "删除"],
+      Dialogtitle: ["修改", "新增", "批量删除"],
       i: null, // 切换弹框标题
       tableChecked: [], // 批量选择的的数据
       currentPage: 1,
@@ -181,16 +183,16 @@ export default {
       if (this.searchData) {
         switch (this.searchData / 1) {
           case 0:
-            console.log("采购批次");
+
             this.selectSearchForm.batch = this.searchForm.searchData;
             break;
           case 1:
-            console.log("备注信息");
+
             this.selectSearchForm.remark = this.searchForm.searchData;
             break;
         }
       } else {
-        console.log("为空");
+
         this.selectSearchForm.batch = "";
         this.selectSearchForm.remark = "";
       }
@@ -200,14 +202,18 @@ export default {
         pageSize: this.pageSize,
         currentPage: 1
       };
-      console.log("搜索数据", newData);
+
       return newData;
     }
   },
   methods: {
     //筛选搜索
     selectCheck(val) {
-      console.log("val", val);
+
+      this.searchForm.searchData=""
+      for(const index in this.selectSearchForm){
+        this.selectSearchForm[index]=""
+      }
       this.searchData = val;
     },
     //新增按钮
@@ -217,7 +223,7 @@ export default {
     },
     //修改按钮
     EditBtn(index, row) {
-      console.log("修改的数据", row);
+
       this.id = row.id;
       this.i = 0;
       this.dialogFormVisible = true;
@@ -295,7 +301,7 @@ export default {
       submitDialog(){
         let idData=[]
         for (var item of this.tableChecked) {
-          console.log('删除id',item.id);
+
           idData.push({id:item.id})
         }
         this.axios.post(purchasing.delete,idData).then((res)=>{
@@ -316,7 +322,7 @@ export default {
       },
       //批量选择
       handleSelectionChange(val) {
-        console.log('全选按钮之后的数据',val);
+
         this.tableChecked = val;
       },
       //关闭弹窗
@@ -329,14 +335,14 @@ export default {
       },
       searchApi(value) {
         //获取登录记录
-        console.log(value);
+
         this.tableLoading = true;
         axios
           .get(purchasing.select, {
             params: value
           })
           .then(res => {
-            console.log("采购管理", res.data);
+
             if (res.data.state === true) {
               this.tableData = res.data.row; //获取返回数据
               this.total = res.data.total; //总条目数
@@ -349,19 +355,19 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error);
+
           });
       },
       paginationApi(value) {
         //获取登录记录
-        console.log(value);
+
         this.tableLoading = true;
         axios
           .get(purchasing.select, {
             params: value
           })
           .then(res => {
-            console.log("损坏记录", res.data);
+
             if (res.data.state === true) {
               this.tableData = res.data.row; //获取返回数据
               this.total = res.data.total; //总条目数
@@ -376,25 +382,25 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error);
+
           });
       },
       current_change(currentPage) {
         //分页查询
         this.currentPage = currentPage; //点击第几页
         this.paginationForm.currentPage = currentPage;
-        console.log("保存当前查询", this.paginationForm, this.currentPage);
+
         this.paginationApi(this.paginationForm); // 这里的分页应该默认提交上次查询的条件
       },
       jumpBtn() {
-        console.log('数据类型检测',this.pageInput)
+
         let page = Math.ceil(this.total / this.pageSize)
         page ==0?1:page;
         if(this.pageInput>page || this.pageInput == ''|| this.pageInput<0){
           this.pageInput = 1
           this.$nextTick(()=>{
             this.$refs.text.value = 1 // hack方法
-            console.log('Vmode绑定值',this.pageInput)
+
           })
         }else{
           this.pageInput = parseInt(this.pageInput)

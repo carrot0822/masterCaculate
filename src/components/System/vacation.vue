@@ -89,7 +89,7 @@
             :model="addForm"
             :rules="rules"
             :ref="addForm"
-            label-width="110px"
+            label-width="120px"
             class="demo-ruleForm"
             style="display: flex;flex-direction: column"
           >
@@ -123,13 +123,15 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item label-width="130px">
-              <p class="textTips">假期设置日期不可重叠</p>
+              <p class="textTips" style="color: red">(假期设置日期不可重叠)</p>
             </el-form-item>
 
             <!-- 弹框表单按钮  验证失效-->
             <div class="flexLayout" style="width: 350px;margin: 0 auto">
-              <el-button type="primary" @click="submitForm('addForm')" style="margin-left: 20px">确定</el-button>
-              <el-button type="info" @click="resetForm('addForm')">取消</el-button>
+              <div style="margin:0px auto 20px;width: 255px;">
+                <span class="dialogButton true mr_40" @click="submitForm('addForm')">确 定</span>
+                <span class="dialogButton cancel" @click="resetForm('addForm')">取 消</span>
+              </div>
             </div>
           </el-form>
         </el-dialog>
@@ -141,7 +143,7 @@
           </div>
           <div style="margin-bottom: 30px">
             <span class="dialogButton true mr_40" @click="submitDialog">确 定</span>
-            <span class="dialogButton cancel" @click="centerDialogVisible = false">取消</span>
+            <span class="dialogButton cancel" @click="centerDialogVisible = false">取 消</span>
           </div>
         </el-dialog>
       </div>
@@ -160,7 +162,7 @@
         tableChecked: [], // 全选绑定的数据
         dialogFormVisible: false, // // 新增修改弹框的展示和消失
         centerDialogVisible:false,
-        Dialogtitle: ["修改", "新增","删除"],
+        Dialogtitle: ["修改", "新增","批量删除"],
         i: null, // 切换弹框标题
         searchForm: {
           // 接受搜索表单的数据

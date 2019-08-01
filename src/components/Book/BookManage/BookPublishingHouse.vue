@@ -102,36 +102,38 @@
           <!-- 添加弹框 -->
           <div class="addEditDialog">
             <!-- Form -->
-            <el-dialog @close="closeForm" width="568px" :title="Dialogtitle[i]" :visible.sync="dialogFormVisible">
-              <el-form id="addFormYf"  label-width="120px" :rules="addRules" :model="addForm" :ref="addForm" style="display: flex;flex-direction: column">
-                <el-form-item label="出版社名称 :" prop="publishName" style="padding-left: 60px">
+            <el-dialog @close="closeForm" width="500px" :title="Dialogtitle[i]" :visible.sync="dialogFormVisible">
+              <el-form id="addFormYf"  label-width="130px" :rules="addRules" :model="addForm" :ref="addForm" style="display: flex;flex-direction: column;margin-top: 15px">
+                <el-form-item label="出版社名称 :" prop="publishName">
                   <el-input v-model="addForm.publishName"></el-input>
                 </el-form-item>
-                <el-form-item label="公 司 地 址 :" prop="componentAddress" style="padding-left: 60px">
+                <el-form-item label="公 司 地 址 :" prop="componentAddress">
                   <el-input v-model="addForm.componentAddress"></el-input>
                 </el-form-item>
-                <el-form-item label="联　系　人 :" prop="contacts" style="padding-left: 60px">
+                <el-form-item label="联　系　人 :" prop="contacts">
                   <el-input v-model="addForm.contacts"></el-input>
                 </el-form-item>
-                <el-form-item label="联 系 电 话 :" prop="contactPhone" style="padding-left: 60px">
+                <el-form-item label="联 系 电 话 :" prop="contactPhone">
                   <el-input v-model="addForm.contactPhone"></el-input>
                 </el-form-item>
                 <!-- 弹框表单按钮  验证失效-->
-                <el-form-item>
-                  <el-button type="primary" @click="submitForm()">确定</el-button>
-                  <el-button type="info" @click="resetForm()" >取消</el-button>
+                <el-form-item label-width="110px">
+                  <div>
+                    <span class="dialogButton true mr_40" @click="submitForm()">确 定</span>
+                    <span class="dialogButton cancel" @click="resetForm()">取 消</span>
+                  </div>
                 </el-form-item>
               </el-form>
             </el-dialog>
           </div>
-          <div class="forbid">
-            <el-dialog :title="Dialogtitle[i]" :visible.sync="centerDialogVisible" width="500px" center>
+          <div class="forbid collectionDelete">
+            <el-dialog :title="Dialogtitle[i]" :visible.sync="centerDialogVisible" width="400px" center>
               <div class="dialogBody">
                 是否{{Dialogtitle[i]}}?
               </div>
-              <div slot="footer">
+              <div style="margin-bottom: 20px">
                 <span class="dialogButton true mr_40" @click="submitDialog">确 定</span>
-                <span class="dialogButton cancel" @click="centerDialogVisible=false">取消</span>
+                <span class="dialogButton cancel" @click="centerDialogVisible=false">取 消</span>
               </div>
             </el-dialog>
           </div>
@@ -249,7 +251,6 @@
     computed:{
       searchTimeForm() {
         // 计算属性 真正传递的数据
-        console.log('ztree',this.zTree.code)
         let citynameCode=''
         if(this.zTree.code==undefined){
           citynameCode='bj_jing'
@@ -268,15 +269,15 @@
     methods: {
       jumpBtn() {
         // v-mode绑定好像会默认转数据类型
-        console.log('数据类型检测',this.pageInput)
+
         let page = Math.ceil(this.total / this.pageSize)
         page ==0?1:page;
         if(this.pageInput>page || this.pageInput == ''|| this.pageInput<0){
           this.pageInput = 1
           this.$nextTick(()=>{
             this.$refs.text.value = 1 // hack方法
-            console.log('Vmode绑定值',this.pageInput)
-          })
+
+    })
         }else{
           this.pageInput = parseInt(this.pageInput)
           this.$refs.text.value = parseInt(this.pageInput)
@@ -296,7 +297,7 @@
       EditBtn(index,row){
         this.i=1
         this.dialogFormVisible=true
-        console.log('修改的数据',row)
+
         this.addForm.publishName=row.name
         this.addForm.componentAddress=row.address
         this.addForm.contacts=row.contacts
@@ -315,7 +316,7 @@
       //删除确定按钮
       submitDialog(){
         this.axios.post(bookpublish.delete,[{id:this.id}]).then((res)=>{
-          console.log('删除出版社返回的数据',res)
+
           if(res.data.state==true){
             this.$message({
               message: res.data.msg,
@@ -340,7 +341,7 @@
       async freshArea() {
         let list=[]
         this.axios.get(bookpublish.city).then((response)=>{
-          console.log('ztree树',response)
+
           for (let item of response.data.row) {
             list.push({
               name:item.name,
@@ -349,14 +350,14 @@
             });
           }
           //将数据渲染到ztree树
-          console.log('list',list[0].checked)
+
           $.fn.zTree.init($("#treeDemo"), this.setting, list);
           this.zNodes=list
         })
       },
       /*====== 3.1点击ztree节点获取节点信息======*/
       zTreeOnCheck(event,treeId){
-        console.log('checktreeId',treeId)
+
         let treeObj = $.fn.zTree.getZTreeObj("treeDemo");
         if(treeId.checked==true){
           treeObj.checkNode(treeId, !treeId.checked, true);
@@ -369,7 +370,7 @@
         this.SearchApi(this.searchTimeForm)
       },
       zTreeOnClick(event, treeId, treeNode){
-        console.log('clicktreeNode',treeNode)
+
         let treeObj = $.fn.zTree.getZTreeObj("treeDemo");
         if(treeNode.checked==false){
           treeObj.checkNode(treeNode, !treeNode.checked, true);
@@ -384,7 +385,7 @@
       /*====== 弹框相关函数 ======*/
       // 编辑弹框
       submitForm() {
-        console.log('ztree树节点信息',this.zTree.code)
+
         if(this.i==0){
           this.$refs[this.addForm].validate((valid) => {
             if (valid) {
@@ -394,7 +395,7 @@
                 this.formApi(this.zTree.name,this.zTree.code)
               }
             } else {
-              console.log('error submit!!');
+
               return false;
             }
           });
@@ -409,7 +410,7 @@
             contacts:this.addForm.contacts,
             telephone:this.addForm.contactPhone
           }).then((res)=>{
-            console.log('修改图书出版社返回的消息',res)
+
             if(res.data.state==true){
               this.$message({
                 message: '修改成功',
@@ -440,7 +441,7 @@
           telephone:this.addForm.contactPhone
         }]
         this.axios.post(bookpublish.add,addStr).then((res)=>{
-          console.log(res)
+
           if(res.data.state==true){
             this.$message({
               message: res.data.msg,
@@ -466,7 +467,7 @@
         this.dialogFormVisible=false
       },
       closeForm() { // 弹框关闭的时候执行 清空数据
-        //console.log("关闭测试");
+
         this.$refs[this.addForm].resetFields();
         let obj = this.addForm;
         for (var i in obj) {
@@ -480,14 +481,13 @@
             params: value
           })
           .then(res => {
-            console.log("当前获取的数据", res.data);
+
             if (res.data.state === true) {
               let nomol = res.data.row;
               this.tableData = nomol; //获取返回数据
               this.total = res.data.total; //总条目数
               this.paginationForm = Object.assign({}, value); // 保存上次的查询结果
-              console.log("过滤后的数据", nomol);
-              console.log("保存当前查询", this.paginationForm);
+
               this.tableLoading = false;
             } else {
               this.$message.error(res.data.msg);
@@ -502,15 +502,15 @@
             params: value
           })
           .then(res => {
-            console.log("当前获取的数据分页", res.data);
+
             if (res.data.state === true) {
               let nomol = res.data.row;
               this.tableData = nomol; //获取返回数据
               this.total = res.data.total; //总条目数
               this.paginationForm = Object.assign({}, value); // 保存上次的查询结果
-              //console.log("过滤后的数据", nomol);
+
               this.currentPage = 1
-              console.log("保存当前查询", this.paginationForm);
+
               this.tableLoading = false;
             } else {
               this.$message.error(res.data.msg);
@@ -522,7 +522,7 @@
         //分页查询
         this.currentPage = currentPage; //点击第几页
         this.paginationForm.currentPage = currentPage;
-        console.log("保存当前查询", this.paginationForm);
+
         this.paginationApi(this.paginationForm); // 这里的分页应该默认提交上次查询的条件
       },
 
