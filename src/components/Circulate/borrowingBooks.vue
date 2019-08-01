@@ -39,10 +39,12 @@
               </el-form>
             </div>
           </div>
-          <div v-if="!userTable.length"><img :src="loadingImg" class="loadingImg"></div>
+          <div v-if="!userTable.length">
+            <img :src="loadingImg" class="loadingImg" />
+          </div>
           <div class="userInfo" v-if="userTable.length">
             <div class="headBox">
-              <img :src="defaultImg" style="width:100%;height:100%;">
+              <img :src="defaultImg" style="width:100%;height:100%;" />
             </div>
             <div class="infoBox">
               <div class="info">
@@ -81,7 +83,12 @@
                     class="input-with-select"
                     @keyup.enter.native="selectBtn"
                   >
-                    <el-select id="protect" v-model="searchForm.selectBook" slot="prepend" placeholder="请选择">
+                    <el-select
+                      id="protect"
+                      v-model="searchForm.selectBook"
+                      slot="prepend"
+                      placeholder="请选择"
+                    >
                       <el-option label="书籍" value="1"></el-option>
                       <el-option label="期刊" value="2"></el-option>
                     </el-select>
@@ -118,18 +125,8 @@
               >
                 <el-table-column align="center" label="序号" width="80" type="index"></el-table-column>
                 <el-table-column align="center" width="100" prop="name" label="书籍名称"></el-table-column>
-                <el-table-column
-                  align="center"
-                  width="200"
-                  prop="code"
-                  label="馆内码"
-                ></el-table-column>
-                <el-table-column
-                  align="center"
-                  width="100"
-                  prop="fkTypeName"
-                  label="书籍类型"
-                ></el-table-column>
+                <el-table-column align="center" width="200" prop="code" label="馆内码"></el-table-column>
+                <el-table-column align="center" width="100" prop="fkTypeName" label="书籍类型"></el-table-column>
                 <el-table-column align="center" prop="author" label="作者"></el-table-column>
                 <el-table-column align="center" fixed="right" width="100" label="操作">
                   <template slot-scope="scope">
@@ -230,14 +227,14 @@
                 <el-table-column align="center" prop="renewCount" label="续借次数"></el-table-column>
               </el-table>
             </section>
-          </el-tab-pane> -->
+          </el-tab-pane>-->
         </el-tabs>
         <!-- <el-table-column align="center" label="操作">
                   <template slot-scope="scope">
                     <el-button @click="renewBtn(scope.row)" type="text" size="small">续借</el-button>
                     <el-button @click="damageBtn(scope.row)" type="text" size="small">报损</el-button>
                   </template>
-                </el-table-column> -->
+        </el-table-column>-->
       </div>
     </div>
   </div>
@@ -247,19 +244,19 @@
 import axios from "axios";
 import { bookOperateInt, borrowInt } from "@request/api/base.js";
 export default {
-  name:'borrow',
+  name: "borrow",
   data() {
     return {
       message: "",
       labelPosition: "left",
-      
+
       searchForm: {
         cardNum: "",
         bookCode: "",
         selectBook: "1"
       },
-      defaultImg:require('../../base/img/defaultImg.png'),
-      loadingImg:require('../../base/img/Nodata.png'),
+      defaultImg: require("../../base/img/defaultImg.png"),
+      loadingImg: require("../../base/img/Nodata.png"),
       rules: {
         // 添加的参数验证
         cardNum: [{ required: true, message: "请选择卡号", trigger: "blur" }]
@@ -272,7 +269,7 @@ export default {
       activeName: "first",
       tabFlag: false,
       tabCard: {},
-      lastCardNum:'',
+      lastCardNum: "",
       /*------ 用户信息 ------*/
       userTable: [],
       /*------ 借书结果配置 ------*/
@@ -321,9 +318,9 @@ export default {
     selectBtn() {
       if (this.searchForm.selectBook == "1") {
         this.codeSearchApi(this.searchTimeForm);
-        console.log('就是看看',this.searchForm.selectBook)
+        console.log("就是看看", this.searchForm.selectBook);
       } else {
-        this.$message.info('现在还未决定怎么做')
+        this.$message.info("现在还未决定怎么做");
         console.log("现在调用的是期刊API");
       }
     },
@@ -413,7 +410,7 @@ export default {
           this.userTable = res.data.row;
           this.tabCard = data;
           this.tabFlag = true;
-          this.lastCardNum = this.searchForm.cardNum
+          this.lastCardNum = this.searchForm.cardNum;
 
           console.log("查询成功的读者卡号", data, this.tabFlag);
           console.log("用户信息", this.userTable);
@@ -486,6 +483,11 @@ export default {
         if (res.data.state === true) {
           console.log("借书记录", res.data.row);
           this.endTable = res.data.row.list;
+          let value = this.searchForm.cardNum;
+          let obj = {
+            cardNum: value
+          };
+          this.readCardApi(obj);
           this.$message.success("操作完成,请查看下方借书结果");
           console.log("现在的借书机理", this.endTable);
         } else {
@@ -516,9 +518,7 @@ export default {
       });
     },
     // 续借API
-    renewApi(){
-
-    },
+    renewApi() {},
     /*------ websocket区域 ------*/
     // 建立websocket连接
     init(url) {
@@ -714,5 +714,4 @@ export default {
 .borrowbook .searchBox .el-select .el-input--suffix {
   width: 75px;
 }
-
 </style>
