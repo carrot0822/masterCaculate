@@ -170,7 +170,7 @@ export default new Router({
         {
           path: '/stoneroomInfo',
           meta:{
-            title:'库房管理',
+            title:'区域管理',
             Mode:'2'
           },
           component: StoneRoomInfo

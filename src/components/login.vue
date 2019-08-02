@@ -141,6 +141,7 @@ import {loginInter,login} from '../request/api/base.js'
     min-height: 100vh;
     width: 100%;
     padding-top: 150px;
+    box-sizing: border-box;
   }
   #backgroundImg{
     border-radius: 20px;

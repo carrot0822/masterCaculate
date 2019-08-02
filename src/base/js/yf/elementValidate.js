@@ -7,3 +7,7 @@ export function isvalidNumber(str) {
   const reg =/^[-\\+]?[\\d]*$/
   return reg.test(str)
 }
+export function isvalidNumber_english(str) {
+  const reg =/^[A-Za-z0-9]+$/
+  return reg.test(str)
+}

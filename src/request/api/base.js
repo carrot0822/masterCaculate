@@ -483,3 +483,6 @@ export const recommPurchase={
 };
 //荐购历史记录
 export const recommHis=url+'authmodule/recommendationHis/select';
+
+//数据字典的logo上传接口
+export const logoImg=imgurl+'filemodule/uploadImg/addLogo'

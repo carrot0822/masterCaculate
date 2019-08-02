@@ -94,7 +94,7 @@
               <el-input v-model="changeStoreForm.storeName"></el-input>
             </el-form-item>
             <el-form-item class="spec" label="楼　　号:" :label-width="changelabel" prop="storeNum">
-              <el-input-number v-model="changeStoreForm.storeNum "  :min="-5" :max="100"></el-input-number>
+              <el-input v-model="changeStoreForm.storeNum "></el-input>
             </el-form-item>
             <div class="row2">
               <el-form-item label="温度警报" :label-width="changelabel">
@@ -148,57 +148,32 @@
           center
         >
           <el-form ref="changeAreaForm" :inline="true" :rules="changeRules" :model="changeAreaForm">
-            <el-form-item label="库房名称:" :label-width="changelabel" prop="storeName">
-              <el-input :disabled="true" v-model="changeAreaForm.storeName"></el-input>
+            <el-form-item label="区 名 称:" :label-width="changelabel" prop="zoneName">
+              <el-input v-model="changeAreaForm.regionName"></el-input>
             </el-form-item>
-            <el-form-item label="区名称:" :label-width="changelabel" prop="zoneName">
-              <el-input v-model="changeAreaForm.zoneName"></el-input>
+            <el-form-item label="区 编 号:" :label-width="changelabel" prop="storeName">
+              <el-input v-model="changeAreaForm.regionNum"></el-input>
             </el-form-item>
             <div class="row2">
-              <el-form-item label="固定所在列:" :label-width="changelabel" prop="column">
-                <el-select v-model="changeAreaForm.column" placeholder="请选择">
-                  <el-option label="左" value="left"></el-option>
-                  <el-option label="右" value="right"></el-option>
-                </el-select>
-              </el-form-item>
               <el-form-item label="该区共有:" :label-width="changelabel" prop="columnNumber">
-                <el-input v-model="changeAreaForm.columnNumber"></el-input>
+                <el-input v-model="changeAreaForm.cols"></el-input>
               </el-form-item>
-              <span class="text">列</span>
+              <span class="text">架</span>
+              <el-form-item label="该区共有:" :label-width="changelabel" prop="floor">
+                <el-input v-model="changeAreaForm.divs"></el-input>
+              </el-form-item>
+              <span class="text2">列</span>
             </div>
             <div class="row2">
-              <el-form-item label="本区区号:" :label-width="changelabel" prop="zoneNumber">
-                <el-input v-model="changeAreaForm.zoneNumber"></el-input>
+              <el-form-item label="该区共有:" :label-width="changelabel" prop="section">
+                <el-input v-model="changeAreaForm.lays"></el-input>
               </el-form-item>
-              <el-form-item label="每列有:" :label-width="changelabel" prop="section">
-                <el-input v-model="changeAreaForm.section"></el-input>
+              <span class="text1" style="left: 325px;width: 20px">层</span>
+              <el-form-item label="层架容量:" :label-width="changelabel" prop="floor">
+                <el-input v-model="changeAreaForm.volumetric"></el-input>
               </el-form-item>
-              <span class="text1">节</span>
+              <span class="text2">本</span>
             </div>
-            <div class="row2">
-              <el-form-item label="每节有:" :label-width="changelabel" prop="floor">
-                <el-input v-model="changeAreaForm.floor"></el-input>
-              </el-form-item>
-              <span class="text2">层</span>
-              <el-form-item label="密集架宽度:" :label-width="changelabel" prop="density">
-                <el-input v-model="changeAreaForm.density"></el-input>
-              </el-form-item>
-            </div>
-            <div class="row2">
-              <el-form-item label="运行速度:" :label-width="changelabel" prop="speed">
-                <el-input v-model="changeAreaForm.speed"></el-input>
-              </el-form-item>
-              <el-form-item label="密集架IP:" :label-width="changelabel" prop="ip">
-                <el-input v-model="changeAreaForm.ip"></el-input>
-              </el-form-item>
-            </div>
-            <el-form-item label="HTTP端口:" :label-width="changelabel" prop="httpPort">
-              <el-input v-model="changeAreaForm.httpPort"></el-input>
-            </el-form-item>
-            <el-form-item label="通信端口:" :label-width="changelabel" prop="comPort">
-              <el-input v-model="changeAreaForm.comPort"></el-input>
-            </el-form-item>
-
             <el-form-item class="dialogFooter">
               <div>
                 <span class="dialogButton true mr_40" @click="submitForm('changeAreaForm','changeDialog')" style="width: 150px">确 定</span>
@@ -217,6 +192,16 @@ import VeHis from "v-charts/lib/histogram.common";
 import Ring from "../../../common/test/cirle";
 import { regionInt, storeInt, headUpload } from "@request/api/base.js";
 import axios from "../../../request/http.js";
+import {isvalidNumber_english} from '../../../base/js/yf/elementValidate'
+var isvalidNumberEnglish=(rule, value,callback)=>{
+  if (!value){
+    callback(new Error('请输入楼号'))
+  }else  if (!isvalidNumber_english(value)){
+    callback(new Error('只可输入字母与数字如：负一楼 (B1) 正一楼 (1)'))
+  }else {
+    callback()
+  }
+}
 /*axios的配置开始迷离起来了 */
 export default {
   created() {
@@ -349,7 +334,7 @@ export default {
       imgfiles: null,
       changeStoreForm: {
         storeName: "",
-        storeNum:0,
+        storeNum:"",
         temperatureS: "",
         temperatureE: "",
         humidityS: "",
@@ -364,7 +349,7 @@ export default {
           { required: true, message: "请输入库房名称", trigger: "blur" }
         ],
         storeNum:[
-          { required: true, message: "请输入楼号", trigger: "blur" }
+          { required: true, trigger: "blur",validator: isvalidNumberEnglish }
         ],
         temperatureS: [
           { required: true, message: "请输入温度警告", trigger: "blur" }
@@ -408,52 +393,20 @@ export default {
       i: 0, // 控制区弹框的添加编辑绑定 删除标题和调用API
       changeDialog: false,
       changeAreaForm: {
-        storeName: "", // 库房名称
-        zoneName: "", // 区名称
-        column: "", //
-        columnNumber: "", // 数据格式
-        floor: "", // 层
-        density: "", // 密集架宽度
-        zoneNumber: "", // 区号
-        section: "", // 每列节数
-        speed: "", // 运行速度
-        ip: "", // 密集架IP
-        httpPort: "", // http端口
-        comPort: "", // 通信端口
-        id: "", // 数据库索引号
-        fkStoreId: "" // 库房ID
+        regionName:'',//区名称
+        regionNum:'',//区号
+        divs:'',//列
+        lays:'',//层
+        cols:'',//架
+        volumetric:'',//本
+        id:''
       },
       changeRules: {
-        storeName: [
-          { required: true, message: "请输入库房名称", trigger: "blur" }
-        ],
-        zoneName: [
-          { required: true, message: "请输入区名称", trigger: "blur" }
-        ],
-        column: [
-          { required: true, message: "请输入固定所在列", trigger: "change" }
-        ],
-        columnNumber: [
-          { required: true, message: "请输入去区列数", trigger: "blur" }
-        ],
-        floor: [{ required: true, message: "请输入层数", trigger: "blur" }],
-        density: [
-          { required: true, message: "请输入密集架宽度", trigger: "blur" }
-        ],
-        zoneNumber: [
-          { required: true, message: "请输入本区区号", trigger: "blur" }
-        ],
-        section: [
-          { required: true, message: "请输入每列节数", trigger: "blur" }
-        ],
-        speed: [{ required: true, message: "请输入运行速度", trigger: "blur" }],
-        ip: [{ required: true, message: "请输入密集架Ip", trigger: "blur" }],
-        httpPort: [
-          { required: true, message: "请输入http端口", trigger: "blur" }
-        ],
-        comPort: [
-          { required: true, message: "请输入通信端口", trigger: "blur" }
-        ]
+        regionNum: [{ required: true, message: "请输入区编号", trigger: "blur" }],
+        cols: [{ required: true, message: "请输入架数", trigger: "blur" }],
+        divs: [{ required: true, message: "请输入列数", trigger: "blur" }],
+        lays: [{ required: true, message: "请输入层数", trigger: "blur" }],
+        volumetric: [{ required: true, message: "请输入容量", trigger: "blur" }],
       },
       changelabel: "120px"
     };
@@ -486,20 +439,24 @@ export default {
     editAreaSub() {
       let obj = {
         id: this.changeAreaForm.id,
-        fkStoreName: this.changeAreaForm.storeName,
-        storeNum:this.changeAreaForm.storeNum,
-        regionName: this.changeAreaForm.zoneName,
-        gdlType: this.changeAreaForm.column,
-        cols: this.changeAreaForm.columnNumber,
-        lays: this.changeAreaForm.floor,
-        width: this.changeAreaForm.density,
-        regionNum: this.changeAreaForm.zoneNumber,
-        divs: this.changeAreaForm.section,
-        speed: this.changeAreaForm.speed,
-        reqestIp: this.changeAreaForm.ip,
-        httpPort: this.changeAreaForm.httpPort,
-        tcpPort: this.changeAreaForm.comPort,
-        fkStoreId: this.changeAreaForm.fkStoreId
+        regionName: this.changeAreaForm.regionName,
+        regionNum:this.changeAreaForm.regionNum,
+        divs: this.changeAreaForm.divs,
+        lays: this.changeAreaForm.lays,
+        cols: this.changeAreaForm.cols,
+        volumetric: this.changeAreaForm.volumetric,
+      };
+      return obj;
+    },
+    addAreaSub() {
+      let obj = {
+        fkStoreId: this.changeAreaForm.id,
+        regionName: this.changeAreaForm.regionName,
+        regionNum:this.changeAreaForm.regionNum,
+        divs: this.changeAreaForm.divs,
+        lays: this.changeAreaForm.lays,
+        cols: this.changeAreaForm.cols,
+        volumetric: this.changeAreaForm.volumetric,
       };
       return obj;
     },
@@ -546,6 +503,7 @@ export default {
     },
     /*------ 区相关按钮 ------*/
     addAreaBtn(store) {
+      console.log('添加区信息',store.id)
       this.i = 0;
       if(this.areaFormBug){
         this.$refs.changeAreaForm.resetFields()
@@ -554,28 +512,19 @@ export default {
       for (var i in obj) {
         obj[i] = "";
       }
-      this.changeAreaForm.storeName = store.storeName;
-      this.changeAreaForm.fkStoreId = store.id;
+      this.changeAreaForm.id=store.id
       this.changeDialog = true;
     },
     editAreaBtn(region, index) {
-
+      console.log('区信息',region)
       this.i = 1;
-      this.changeAreaForm.storeName = region.fkStoreName;
-      this.changeAreaForm.zoneName = region.regionName;
-      this.changeAreaForm.column = region.gdlType;
-      this.changeAreaForm.columnNumber = region.cols;
-      this.changeAreaForm.floor = region.lays;
-      this.changeAreaForm.density = region.width,
-      this.changeAreaForm.zoneNumber = region.regionNum;
-      this.changeAreaForm.section = region.divs;
-      this.changeAreaForm.speed = region.speed;
-      this.changeAreaForm.ip = region.reqestIp;
-      this.changeAreaForm.httpPort = region.httpPort;
-      this.changeAreaForm.comPort = region.tcpPort;
-
+      this.changeAreaForm.regionName=region.regionName
+      this.changeAreaForm.regionNum=region.regionNum
+      this.changeAreaForm.divs=region.divs
+      this.changeAreaForm.lays=region.lays
+      this.changeAreaForm.cols=region.cols
+      this.changeAreaForm.volumetric=region.volumetric
       this.changeAreaForm.id = region.id;
-      this.changeAreaForm.fkStoreId = region.fkStoreId;
 
       this.changeDialog = true;
     },
@@ -638,7 +587,7 @@ export default {
       // 区编辑和添加
       if (i == 0 || i == 1) {
         url = i == 0 ? regionInt.add : regionInt.edit;
-        data = this.editAreaSub;
+        data = i == 0 ? this.addAreaSub : this.editAreaSub;
 
         this.$refs[formName].validate(valid => {
           if (valid) {
@@ -1028,14 +977,14 @@ export default {
 .row2 .text {
   position: absolute;
   top: 13px;
-  right: 10px;
+  left: 330px;
   font-size: 14px;
   color: #878787;
 }
 .row2 .text2 {
   position: absolute;
   top: 13px;
-  left: 330px;
+  right: 10px;
   font-size: 14px;
   color: #878787;
 }

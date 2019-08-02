@@ -830,7 +830,7 @@ export default {
         place: this.addForm.place,
         code: this.addForm.code,
         dailyRent: this.addForm.dailyRent == true ? 1 : 0,
-        lendingPermission: this.addForm.lendingPermission == true ? 1 : 0,
+        lendingPermission: this.addForm.lendingPermission == true ? 0 : 1,
         available: this.addForm.available == true ? 1 : 0,
         pageSize: this.pageSize,
         currentPage: 1
@@ -844,7 +844,7 @@ export default {
         callNumber: this.addForm.callNumber,
         place: this.addForm.place,
         dailyRent: this.addForm.dailyRent == true ? 1 : 0,
-        lendingPermission: this.addForm.lendingPermission == true ? 1 : 0,
+        lendingPermission: this.addForm.lendingPermission == true ? 0 : 1,
         pageSize: this.pageSize,
         currentPage: 1
       };
@@ -1095,7 +1095,7 @@ export default {
       this.showData = row;
       this.addForm.dailyRent = row.dailyRent == 1 ? true : false;
       this.addForm.lendingPermission =
-        row.lendingPermission == 1 ? true : false;
+        row.lendingPermission == 1 ? false : true;
       this.addForm.available = row.available == 1 ? true : false;
       this.disabled = true;
     },
