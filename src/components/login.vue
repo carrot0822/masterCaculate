@@ -122,7 +122,7 @@ import {loginInter,login} from '../request/api/base.js'
       },
     },
     mounted:function(){ // 二维码的获取
-      axios.post( login.yzm ,({})).then(function (request) {
+      axios.post( login.yzm ,({})).then(function (request){
         console.log(request);
         if(request.data.row>2){
           $('#yzm').show()

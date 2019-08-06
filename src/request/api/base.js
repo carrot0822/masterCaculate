@@ -478,11 +478,11 @@ export const libNotice = {
 };
 //书籍审核
 export const recommPurchase={
-  select:`${url}authmodule/recommendationLog/select`,//列表查询
-  check:`${url}authmodule/recommendationLog/examin`,//审核
+  select:`${url}readermodule/recommend/recommendationLog/select`,//列表查询
+  check:`${url}readermodule/recommend/recommendationLog/examin`,//审核
 };
 //荐购历史记录
-export const recommHis=url+'authmodule/recommendationHis/select';
+export const recommHis=url+'readermodule/recommend/recommendationHis/select';
 
 //数据字典的logo上传接口
 export const logoImg=imgurl+'filemodule/uploadImg/addLogo'

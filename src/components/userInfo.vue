@@ -165,7 +165,8 @@ export default {
           addDiyDom: this.addDiyDom,
           selectedMulti: true,
           addHoverDom: this.addHoverDom,
-          removeHoverDom: this.removeHoverDom
+          removeHoverDom: this.removeHoverDom,
+          beforeDrag: this.zTreeBeforeDrag
         },
         callback: {
           onClick: this.zTreeOnClick, //节点点击事件
@@ -175,6 +176,7 @@ export default {
           onExpand: this.zTreeOnExpand,
           onCollapse: this.onCollapse,
           beforeExpand: this.zTreeBeforeExpand,
+          beforeDrag: this.zTreeBeforeDrag
         }
       },
       zNodes: [], //ztree树加载的数据
@@ -205,6 +207,9 @@ export default {
     this.InitializationFun()
   },
   methods: {
+    zTreeBeforeDrag(){
+      return false
+    },
     zTreeBeforeExpand(treeId, treeNode) {
       this.singlePath(treeNode);
       return true;

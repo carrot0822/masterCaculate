@@ -291,6 +291,7 @@
             }
           })
           .catch(error => {
+            console.log(error)
             this.$message.error(res.data.msg)
           });
       },
@@ -309,6 +310,7 @@
               this.paginationForm = Object.assign({}, value); // 保存上次的查询结果
               this.tableLoading = false;
             } else {
+              this.$message.error(res.data.msg)
               this.tableLoading = false;
             }
           })

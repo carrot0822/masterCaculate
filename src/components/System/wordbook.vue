@@ -65,7 +65,7 @@
               >
 
               <img
-                style="width:100px; height:100px ;border-radius:50%;"
+                style="width:100%; height:100px"
                 v-if="preloadImg"
                 :src="preloadImg"
                 alt="预览照片"
@@ -91,7 +91,7 @@
 </template>
 <script>
 import axios from "axios";
-import { bookWordInt,cardLevelInt,logoImg } from "@request/api/base.js";
+import { bookWordInt,cardLevelInt,logoImg,uploadInt } from "@request/api/base.js";
 import { control } from '@/request/api/base';
 export default {
   data() {
@@ -138,7 +138,9 @@ export default {
     searchApi() {
       axios.get(bookWordInt.search).then(res => {
         if (res.data.state) {
+          console.log('数据字典初始化数据',res)
           let data = res.data.row;
+          this.changeForm.manageSystemName = data.manageSystemName
           this.changeForm.apex = data.maxPlacingNum;
           this.changeForm.recharge = data.maxRechargeNum;
           this.changeForm.assist = data.setReissueCost;
@@ -147,6 +149,7 @@ export default {
           this.changeForm.level.code = data.equipmentGardCardCode
           this.changeForm.level.name = data.equipmentGardCardName
           this.changeForm.level.deposit = data.equipmentGardCardDeposit
+          this.preloadImg = uploadInt.preimg + data.manageSystemLogoAddress;
           console.log("接收的数据", res.data.row);
           console.log("回显", this.changeForm);
         } else {
@@ -262,6 +265,7 @@ export default {
     },
     submitForm() {
       let obj = {
+        manageSystemName: this.changeForm.manageSystemName,
         maxPlacingNum: this.changeForm.apex,
         maxRechargeNum: this.changeForm.recharge,
         setReissueCost: this.changeForm.assist,

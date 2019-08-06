@@ -212,6 +212,7 @@ export default {
           onCheck: this.zTreeOnCheck, //勾选时事件
           beforeCheck: this.zTreeBeforeCheck,
           beforeExpand: this.zTreeBeforeExpand,
+          beforeDrag: this.zTreeBeforeDrag
         },
         check: {
           enable: true,
@@ -301,6 +302,9 @@ export default {
 
   methods: {
     /*====== zTree保持展开单一路径的实现 ======*/
+    zTreeBeforeDrag(){
+      return false
+    },
     zTreeBeforeExpand(treeId, treeNode) {
       this.singlePath(treeNode);
       return true;
@@ -364,14 +368,16 @@ export default {
     zTreeOnCheck(event,treeId,treeNode){
       this.checked=true
       this.menuId.length=0
-      console.log(treeNode)
+      console.log('勾选的节点内容',treeNode.id)
       let treeObj=$.fn.zTree.getZTreeObj("treeDemo"),
         nodes=treeObj.getCheckedNodes(true);
-      console.log('nodes',nodes)
-      console.log('nodes.length',nodes.length)
+      /*if(treeNode.id==10010101){
+        var node = treeObj.getNodeByParam("id", 10010103, null);
+        console.log('关联选取的树节点',node)
+        treeObj.checkNode(node, true, true)
+      }*/
       if(nodes.length!=0){
         for(let item of nodes){
-          console.log(item.id)
           this.menuId.push(item.id)
         }
       }else{

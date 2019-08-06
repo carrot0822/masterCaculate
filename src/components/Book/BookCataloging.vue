@@ -389,8 +389,8 @@
           name: '', //正题名
           viceName: '', //副题名
           clusterName: '',//丛编题名
-          literatureType: '',//文献类别
-          layout: '',//装订版面
+          literatureType: '图书',//文献类别
+          layout: '平装',//装订版面
           fkTypeCode: '',//分类号
           fkTypeName: '',//分类名
           author: '',//编著者
@@ -399,13 +399,13 @@
           fkPressCode: '',//出版码
           publishingTime: '',//出版时间
           pageNumber: '',//页码
-          openBook: '',//开本
+          openBook: '32开',//开本
           price: '',//价格
           language: '',//语种
           edition: '',//版次
           volumeNum: '',//卷册号
           appendix: '',//附件
-          languageCode: '',
+          languageCode: '汉语',
           annotations: '',//附注
           themeWord: '',//主题词
           renarks: '',//备注

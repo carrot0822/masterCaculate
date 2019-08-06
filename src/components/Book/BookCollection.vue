@@ -830,7 +830,7 @@ export default {
         place: this.addForm.place,
         code: this.addForm.code,
         dailyRent: this.addForm.dailyRent == true ? 1 : 0,
-        lendingPermission: this.addForm.lendingPermission == true ? 0 : 1,
+        lendingPermission: this.addForm.lendingPermission == true ? 1 : 0,
         available: this.addForm.available == true ? 1 : 0,
         pageSize: this.pageSize,
         currentPage: 1
@@ -844,7 +844,7 @@ export default {
         callNumber: this.addForm.callNumber,
         place: this.addForm.place,
         dailyRent: this.addForm.dailyRent == true ? 1 : 0,
-        lendingPermission: this.addForm.lendingPermission == true ? 0 : 1,
+        lendingPermission: this.addForm.lendingPermission == true ? 1: 0,
         pageSize: this.pageSize,
         currentPage: 1
       };
@@ -1088,14 +1088,13 @@ export default {
     },
     //修改弹框
     EditBtn(index, row) {
-
+      console.log('修改的单条数据',row)
       this.i = 0;
       this.dialogFormVisible = true;
       this.addForm = row;
       this.showData = row;
       this.addForm.dailyRent = row.dailyRent == 1 ? true : false;
-      this.addForm.lendingPermission =
-        row.lendingPermission == 1 ? false : true;
+      this.addForm.lendingPermission = row.lendingPermission==0?false:true
       this.addForm.available = row.available == 1 ? true : false;
       this.disabled = true;
     },
@@ -1405,6 +1404,7 @@ export default {
         .then(res => {
 
           if (res.data.state === true) {
+            console.log('典藏表格查询数据',res)
             this.tableData = res.data.row; //获取返回数据
             this.total = res.data.total; //总条目数
             this.paginationForm = Object.assign({}, value); // 保存上次的查询结果

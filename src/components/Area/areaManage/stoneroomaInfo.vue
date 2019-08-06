@@ -148,29 +148,29 @@
           center
         >
           <el-form ref="changeAreaForm" :inline="true" :rules="changeRules" :model="changeAreaForm">
-            <el-form-item label="区 名 称:" :label-width="changelabel" prop="zoneName">
+            <el-form-item label="区 名 称:" :label-width="changelabel" prop="regionName">
               <el-input v-model="changeAreaForm.regionName"></el-input>
             </el-form-item>
-            <el-form-item label="区 编 号:" :label-width="changelabel" prop="storeName">
-              <el-input v-model="changeAreaForm.regionNum"></el-input>
+            <el-form-item label="区 编 号:" :label-width="changelabel" prop="regionNum">
+              <el-input v-model="changeAreaForm.regionNum" maxLength="2"></el-input>
             </el-form-item>
             <div class="row2">
-              <el-form-item label="该区共有:" :label-width="changelabel" prop="columnNumber">
-                <el-input v-model="changeAreaForm.cols"></el-input>
+              <el-form-item label="该区共有:" :label-width="changelabel" prop="cols">
+                <el-input v-model="changeAreaForm.cols" maxLength="3"></el-input>
               </el-form-item>
               <span class="text">架</span>
-              <el-form-item label="该区共有:" :label-width="changelabel" prop="floor">
-                <el-input v-model="changeAreaForm.divs"></el-input>
+              <el-form-item label="该区共有:" :label-width="changelabel" prop="divs">
+                <el-input v-model="changeAreaForm.divs" maxLength="2"></el-input>
               </el-form-item>
               <span class="text2">列</span>
             </div>
             <div class="row2">
-              <el-form-item label="该区共有:" :label-width="changelabel" prop="section">
-                <el-input v-model="changeAreaForm.lays"></el-input>
+              <el-form-item label="该区共有:" :label-width="changelabel" prop="lays">
+                <el-input v-model="changeAreaForm.lays" maxLength="2"></el-input>
               </el-form-item>
               <span class="text1" style="left: 325px;width: 20px">层</span>
-              <el-form-item label="层架容量:" :label-width="changelabel" prop="floor">
-                <el-input v-model="changeAreaForm.volumetric"></el-input>
+              <el-form-item label="层架容量:" :label-width="changelabel" prop="volumetric">
+                <el-input v-model="changeAreaForm.volumetric" maxLength="2"></el-input>
               </el-form-item>
               <span class="text2">本</span>
             </div>
@@ -192,12 +192,21 @@ import VeHis from "v-charts/lib/histogram.common";
 import Ring from "../../../common/test/cirle";
 import { regionInt, storeInt, headUpload } from "@request/api/base.js";
 import axios from "../../../request/http.js";
-import {isvalidNumber_english} from '../../../base/js/yf/elementValidate'
+import {isvalidNumber_english,isvalidNum} from '../../../base/js/yf/elementValidate'
 var isvalidNumberEnglish=(rule, value,callback)=>{
   if (!value){
     callback(new Error('请输入楼号'))
   }else  if (!isvalidNumber_english(value)){
     callback(new Error('只可输入字母与数字如：负一楼 (B1) 正一楼 (1)'))
+  }else {
+    callback()
+  }
+}
+var isvalidNumber=(rule, value,callback)=>{
+  if (!value){
+    callback(new Error('该项不能为空'))
+  }else  if (!isvalidNum(value)){
+    callback(new Error('只可输入数字'))
   }else {
     callback()
   }
@@ -402,11 +411,12 @@ export default {
         id:''
       },
       changeRules: {
-        regionNum: [{ required: true, message: "请输入区编号", trigger: "blur" }],
-        cols: [{ required: true, message: "请输入架数", trigger: "blur" }],
-        divs: [{ required: true, message: "请输入列数", trigger: "blur" }],
-        lays: [{ required: true, message: "请输入层数", trigger: "blur" }],
-        volumetric: [{ required: true, message: "请输入容量", trigger: "blur" }],
+        regionName: [{ required: true, message: "请输入区名称",trigger: "blur"}],
+        regionNum: [{ required: true, trigger: "blur",validator:isvalidNumber }],
+        cols: [{ required: true, trigger: "blur",validator:isvalidNumber }],
+        divs: [{ required: true, trigger: "blur",validator:isvalidNumber }],
+        lays: [{ required: true, trigger: "blur",validator:isvalidNumber }],
+        volumetric: [{ required: true, trigger: "blur",validator:isvalidNumber }],
       },
       changelabel: "120px"
     };
