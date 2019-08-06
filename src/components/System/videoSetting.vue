@@ -8,7 +8,7 @@
         <div class="nomal-Box">
           <div class="upload-demo" style="width:360px;">
             <div class="inputBox">
-              <el-form :model="addForm" :rules="rules" ref="addForm" label-width="50px">
+              <el-form :model="addForm" :rules="rules" ref="addForm" label-width="70px">
                 <el-form-item label="标题" prop="title">
                   <el-input placeholder="标题不得超过10个字" v-model="addForm.title"></el-input>
                 </el-form-item>
