@@ -213,7 +213,7 @@ export default {
           },
           splitLine: {
             // 是否启用网格线
-            show: true
+            show: false
           },
           axisLabel: {
             // 轴线和坐标名的距离
