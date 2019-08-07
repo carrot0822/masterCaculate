@@ -128,6 +128,14 @@ export default new Router({
           },
           component: ()=>import('../components/System/ArticeList.vue')
         },
+        {
+          path: '/magazineLog',
+          meta: {
+            title: '期刊编目',
+            Mode: '1'
+          },
+          component: () => import('@/components/magazine/indexCatalog.vue')
+        },
         // 2.0 典藏管理
         {
           path: '/libInfo',
