@@ -306,7 +306,7 @@
                           </p>-->
                         </div>
                       </el-form-item>
-                      <el-form-item label=" 分 类 名 :" prop="fkTypeName" class="oneInput">
+                      <el-form-item label=" 分 类 名 :" prop="fkTypeName">
                         <el-input v-model="addForm.fkTypeName "></el-input>
                       </el-form-item>
                     </div>
