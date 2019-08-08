@@ -283,12 +283,12 @@
                         <el-input v-model="addForm.name"></el-input>
                       </el-form-item>
                       <el-form-item label="并列题名:" style>
-                        <el-input v-model="addForm.viceName "></el-input>
+                        <el-input v-model="addForm.parallelTitle "></el-input>
                       </el-form-item>
                     </div>
                     <div class="flexLayout twoInput">
                       <el-form-item label=" 统一刊号 :" style>
-                        <el-input v-model="addForm.clusterName"></el-input>
+                        <el-input v-model="addForm.unifyNum"></el-input>
                       </el-form-item>
                       <el-form-item label=" 主编信息 :" prop="author" style>
                         <el-input v-model="addForm.author "></el-input>
@@ -298,8 +298,8 @@
                       <el-form-item label="邮发代号:" style>
                         <el-input v-model="addForm.clusterName"></el-input>
                       </el-form-item>
-                      <el-form-item label="发行周期:" prop="author" style>
-                        <el-input v-model="addForm.author "></el-input>
+                      <el-form-item label="发行周期:" prop="releaseCycle" style>
+                        <el-input v-model="addForm.releaseCycle "></el-input>
                       </el-form-item>
                     </div>
                     <div class="flexLayout twoInput">
@@ -342,7 +342,6 @@
                         <el-input v-model="addForm.publishingPleace "></el-input>
                       </el-form-item>
                     </div>
-
                     <div class="flexLayout">
                       <el-form-item label=" 语 种 :" prop="languageCode" class="selectInput">
                         <el-select v-model="addForm.languageCode" filterable placeholder="请选择">
@@ -362,19 +361,30 @@
                           <el-option label="教材" value="教材"></el-option>
                         </el-select>
                       </el-form-item>
-                      <el-form-item label=" 参考开本 :">
-                        <el-select v-model="addForm.layout" filterable>
-                          <el-option label="平装" value="平装"></el-option>
-                          <el-option label="精装" value="精装"></el-option>
+                      <el-form-item label=" 开 本 :">
+                        <el-select v-model="addForm.openBook" filterable>
+                          <el-option label="64开" value="64"></el-option>
+                          <el-option label="32开" value="32"></el-option>
+                          <el-option label="16开" value="16"></el-option>
+                          <el-option label="8开" value="8"></el-option>
+                          <el-option label="4开" value="4"></el-option>
                         </el-select>
                       </el-form-item>
                     </div>
-                    <div class>
+                    <div class="flexLayout twoInput">
+                      <el-form-item label="参考单价:" style>
+                        <el-input v-model="addForm.issnPrice"></el-input>
+                      </el-form-item>
+                      <el-form-item label="主体词:" prop="themeWord" style>
+                        <el-input v-model="addForm.themeWord "></el-input>
+                      </el-form-item>
+                    </div>
+                    <div class="annotations">
                       <el-form-item label=" 附　　注 :">
                         <el-input v-model="addForm.annotations "></el-input>
                       </el-form-item>
                     </div>
-                    <div>
+                    <div class="renarks">
                       <el-form-item label="摘要:" style="width: 760px;">
                         <el-input
                           type="textarea"
@@ -552,31 +562,35 @@ export default {
         }
       }, //ztree树加载的配置
       zNodes: [], //ztree树的数据
+      magazineOptions:[],
       addForm: {
         issn: "",
         name: "", //正题名
-        viceName: "", //副题名
-        clusterName: "", //丛编题名
-        literatureType: "图书", //文献类别
-        layout: "平装", //装订版面
+        parallelTitle: "", //并列题名
+        unifyNum:"", // 统一刊号
+        author: "", // 主编信息
+        clusterName:"", // 邮发代号
+        releaseCycle:"", // 发行周期
         fkTypeCode: "", //分类号
         fkTypeName: "", //分类名
-        author: "", //编著者
         fkPressName: "", //出版社
-        publishingPleace: "", //出版地
         fkPressCode: "", //出版码
+        publishingPleace: "", //出版地
+        language: "", //语种
+        languageCode: "汉语", // 语言类型
+        literatureType: "图书", //文献类别
+        openBook: "32开", //开本
+        issnPrice: "", //价格
+        themeWord: "", //主题词
+        annotations: "", //附注
+        renarks: "", //摘要
+
+        layout: "平装", //装订版面
         publishingTime: "", //出版时间
         pageNumber: "", //页码
-        openBook: "32开", //开本
-        price: "", //价格
-        language: "", //语种
         edition: "", //版次
         volumeNum: "", //卷册号
         appendix: "", //附件
-        languageCode: "汉语",
-        annotations: "", //附注
-        themeWord: "", //主题词
-        renarks: "", //备注
         setBooks: 0 //套装书
       },
       rules: {
@@ -587,29 +601,23 @@ export default {
             trigger: "blur"
           }
         ],
-        searchNumber: [
-          { required: true, message: "索书号不能为空", trigger: "blur" }
-        ],
         name: [{ required: true, message: "正题名不能为空", trigger: "blur" }],
-        author: [
-          { required: true, message: "编著者不能为空", trigger: "blur" }
+        issnPrice: [{ required: true, message: "定价不能为空", trigger: "blur" }],
+        fkTypeCode: [
+          { required: true, message: "分类号不能为空", trigger: "change" }
         ],
         languageCode: [
           { required: true, message: "常用语言不能为空", trigger: "change" }
         ],
-        fkTypeCode: [
-          { required: true, message: "分类号不能为空", trigger: "change" }
-        ],
+        
         fkTypeName: [
           { required: true, message: "分类名不能为空", trigger: "change" }
         ],
         fkPressName: [
           { required: true, message: "出版社不能为空", trigger: "change" }
         ],
-        publishingPleace: [
-          { required: true, message: "出版地不能为空", trigger: "blur" }
-        ],
-        price: [{ required: true, message: "价格不能为空", trigger: "blur" }]
+
+        
       },
       dialogFormVisible: false, // // 新增修改弹框的展示和消失
       centerDialogVisible: false, // 删除弹框
@@ -712,19 +720,20 @@ export default {
     publishTreeFun() {
       this.messageName = "请选择出版社名称";
       this.zNodes.length = 0;
-      this.freshArea(catalog.publishTree);
+      this.freshArea(logUrl.sPublisher);
     },
     /*====== 书籍弹窗内容 ======*/
     typeTreeFun() {
       this.messageName = "请选择书籍类型";
       this.zNodes.length = 0;
-      this.freshArea(catalog.typeTree);
+      this.freshArea(logUrl.sBookType);
     },
     //树状结构初始化数据
     async freshArea(value) {
       let list = [];
       this.axios.get(value).then(response => {
         if (response.data.state == true) {
+          console.log('树结构',response)
           for (let item of response.data.row) {
             list.push({
               id: item.id, //节点id
@@ -840,7 +849,8 @@ export default {
     },
     //语种下拉框数据
     languageFun() {
-      this.axios.get(catalog.language).then(res => {
+      this.axios.get(logUrl.sLanguage).then(res => {
+        console.log('语种下拉',res)
         if (res.data.state == true) {
           this.options.length = 0;
           for (const item of res.data.row) {
@@ -1162,10 +1172,21 @@ export default {
       this.currentPage = currentPage; //点击第几页
       this.paginationForm.currentPage = currentPage;
       this.paginationApi(this.paginationForm); // 这里的分页应该默认提交上次查询的条件
-    }
+    },
+    // 期刊类型查询
+    searchMagazine(){
+      axios.get(logUrl.sMagazineType).then((res)=>{
+        if(res.data.state == true){
+          this.
+          console.log('期刊类型',res)
+        }
+        
+      })
+    } 
   },
   created() {
     this.searchApi(this.searchTimeForm); // 调用查询接口获取数据
+    this.searchMagazine()
   }
 };
 </script>
