@@ -15,6 +15,8 @@ export const logUrl = {
     sBookType:`${url}periodicalmodule/marcPeriodical/selectAllBookType`, // 查询图书类型
     sPublisher:`${url}periodicalmodule/marcPeriodical/selectPressTree`, // 查询出版社树
     sLanguage:`${url}periodicalmodule/marcPeriodical/getLanguage`, // 查询语言
+    sMagazineType:`${url}periodicalmodule/marcPeriodical/periodicalType`, //  查询期刊类型
+
 }
 
 
