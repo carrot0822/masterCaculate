@@ -37,9 +37,8 @@
                 clearable
                 @change="selectCheck(searchForm.makeMethod)"
               >
-                <el-option label="书名" value="0"></el-option>
-                <el-option label="ISBN" value="1"></el-option>
-                <el-option label="丛编题名" value="2"></el-option>
+                <el-option label="期刊名" value="0"></el-option>
+                <el-option label="ISSN" value="1"></el-option>
               </el-select>
               <el-input
                 v-model="searchForm.searchData"
@@ -85,25 +84,25 @@
             ></el-table-column>
             <el-table-column
               align="center"
-              prop="isbn"
+              prop="issn"
               label="ISSN"
               width="200"
               :show-overflow-tooltip="true"
             ></el-table-column>
             <el-table-column
               align="center"
-              prop="clusterName"
+              prop="parallelTitle"
               label="并列题名"
               width="200"
               :show-overflow-tooltip="true"
             >
               <template slot-scope="scope">
-                <span>{{scope.row.clusterName == null || scope.row.clusterName=='' ?'---':scope.row.clusterName}}</span>
+                <span>{{scope.row.parallelTitle == null || scope.row.parallelTitle=='' ?'---':scope.row.parallelTitle}}</span>
               </template>
             </el-table-column>
             <el-table-column
               align="center"
-              prop="author"
+              prop="unifyNum"
               label="国内统一号"
               width="200"
               :show-overflow-tooltip="true"
@@ -117,7 +116,7 @@
             ></el-table-column>
             <el-table-column
               align="center"
-              prop="author"
+              prop="releaseCycle"
               label="发行周期"
               width="200"
               :show-overflow-tooltip="true"
@@ -138,7 +137,7 @@
             ></el-table-column>
             <el-table-column
               align="center"
-              prop="author"
+              prop="openBook"
               label="开本"
               width="200"
               :show-overflow-tooltip="true"
@@ -152,17 +151,6 @@
             ></el-table-column>
             <el-table-column
               align="center"
-              prop="publishingTime"
-              label="出版时间"
-              width="200"
-              :show-overflow-tooltip="true"
-            >
-              <template slot-scope="scope">
-                <span>{{scope.row.publishingTime == null || scope.row.publishingTime=='' ?'---':scope.row.publishingTime}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
               prop="language"
               label="语种"
               width="150"
@@ -174,7 +162,7 @@
             </el-table-column>
             <el-table-column
               align="center"
-              prop="author"
+              prop="periodicalTypeName"
               label="期刊类型"
               width="200"
               :show-overflow-tooltip="true"
@@ -296,7 +284,7 @@
                     </div>
                     <div class="flexLayout twoInput">
                       <el-form-item label="邮发代号:" style>
-                        <el-input v-model="addForm.clusterName"></el-input>
+                        <el-input v-model="addForm.postIssueNumber"></el-input>
                       </el-form-item>
                       <el-form-item label="发行周期:" prop="releaseCycle" style>
                         <el-input v-model="addForm.releaseCycle "></el-input>
@@ -354,11 +342,13 @@
                         </el-select>
                       </el-form-item>
                       <el-form-item label=" 期刊类别 :" class="threeInput">
-                        <el-select v-model="addForm.literatureType" filterable>
-                          <el-option label="图书" value="图书"></el-option>
-                          <el-option label="古籍" value="古籍"></el-option>
-                          <el-option label="视频" value="视频"></el-option>
-                          <el-option label="教材" value="教材"></el-option>
+                        <el-select v-model="addForm.periodicalTypeId">
+                          <el-option
+                            v-for="(item,index) in magazineOptions"
+                            :key="index"
+                            :label="item.name"
+                            :value="item.id"
+                          ></el-option>
                         </el-select>
                       </el-form-item>
                       <el-form-item label=" 开 本 :">
@@ -372,10 +362,10 @@
                       </el-form-item>
                     </div>
                     <div class="flexLayout twoInput">
-                      <el-form-item label="参考单价:" style>
+                      <el-form-item label="参考单价:" prop="issnPrice" style>
                         <el-input v-model="addForm.issnPrice"></el-input>
                       </el-form-item>
-                      <el-form-item label="主体词:" prop="themeWord" style>
+                      <el-form-item label="主题词:" prop="themeWord" style>
                         <el-input v-model="addForm.themeWord "></el-input>
                       </el-form-item>
                     </div>
@@ -388,7 +378,7 @@
                       <el-form-item label="摘要:" style="width: 760px;">
                         <el-input
                           type="textarea"
-                          v-model="addForm.renarks"
+                          v-model="addForm.introduction"
                           style="width: 740px;height: 80px"
                           :autosize="{ minRows:3, maxRows:3}"
                           resize="none"
@@ -450,6 +440,7 @@
               <span class="dialogButton cancel" @click="centerDialogVisible = false">取 消</span>
             </div>
           </div>
+          <!-- 内置选择弹框 -->
           <div v-if="j==3||j==4" class="bookInfo">
             <section class="tableBox">
               <el-table
@@ -468,20 +459,20 @@
                 ></el-table-column>
                 <el-table-column
                   align="center"
-                  prop="isbn"
-                  label="ISBN"
+                  prop="issn"
+                  label="ISSN"
                   :show-overflow-tooltip="true"
                 ></el-table-column>
                 <el-table-column
                   align="center"
                   prop="author"
-                  label="编著者"
+                  label="主编"
                   :show-overflow-tooltip="true"
                 ></el-table-column>
                 <el-table-column
                   align="center"
                   prop="fkPressName"
-                  label="出版社"
+                  label="发行社"
                   :show-overflow-tooltip="true"
                 ></el-table-column>
                 <el-table-column
@@ -490,12 +481,7 @@
                   label="分类号"
                   :show-overflow-tooltip="true"
                 ></el-table-column>
-                <el-table-column
-                  align="center"
-                  prop="publishingTime"
-                  label="卷宗号"
-                  :show-overflow-tooltip="true"
-                ></el-table-column>
+                
                 <el-table-column align="center" label="操作">
                   <!-- 这里的scope代表着什么 index是索引 row则是这一行的对象 -->
                   <template slot-scope="scope">
@@ -562,15 +548,15 @@ export default {
         }
       }, //ztree树加载的配置
       zNodes: [], //ztree树的数据
-      magazineOptions:[],
+      magazineOptions: [], // 期刊下拉数据
       addForm: {
         issn: "",
         name: "", //正题名
         parallelTitle: "", //并列题名
-        unifyNum:"", // 统一刊号
+        unifyNum: "", // 统一刊号
         author: "", // 主编信息
-        clusterName:"", // 邮发代号
-        releaseCycle:"", // 发行周期
+        postIssueNumber: "", // 邮发代号
+        releaseCycle: "", // 发行周期
         fkTypeCode: "", //分类号
         fkTypeName: "", //分类名
         fkPressName: "", //出版社
@@ -578,13 +564,13 @@ export default {
         publishingPleace: "", //出版地
         language: "", //语种
         languageCode: "汉语", // 语言类型
-        literatureType: "图书", //文献类别
-        openBook: "32开", //开本
+        periodicalTypeId: "1", //文献类别
+        openBook: "32", //开本
         issnPrice: "", //价格
         themeWord: "", //主题词
         annotations: "", //附注
-        renarks: "", //摘要
-
+        introduction: "", //摘要
+        /*------ 暂时用不到的数据 ------*/
         layout: "平装", //装订版面
         publishingTime: "", //出版时间
         pageNumber: "", //页码
@@ -602,29 +588,29 @@ export default {
           }
         ],
         name: [{ required: true, message: "正题名不能为空", trigger: "blur" }],
-        issnPrice: [{ required: true, message: "定价不能为空", trigger: "blur" }],
+        issnPrice: [
+          { required: true, message: "定价不能为空", trigger: "blur" }
+        ],
         fkTypeCode: [
           { required: true, message: "分类号不能为空", trigger: "change" }
         ],
         languageCode: [
           { required: true, message: "常用语言不能为空", trigger: "change" }
         ],
-        
+
         fkTypeName: [
           { required: true, message: "分类名不能为空", trigger: "change" }
         ],
         fkPressName: [
           { required: true, message: "出版社不能为空", trigger: "change" }
-        ],
-
-        
+        ]
       },
       dialogFormVisible: false, // // 新增修改弹框的展示和消失
       centerDialogVisible: false, // 删除弹框
       Dialogtitle: ["修改", "新增"],
       catalogtitle: ["批量删除", "导出", "导入", "本地数据", "远程数据"],
       i: null, // 切换弹框标题
-      j: null,
+      j: null, // 切换本地数据远程数据搜索出的弹框
       /*初始化 */
       options: [],
       tableLoading: true,
@@ -647,44 +633,42 @@ export default {
       searchData: "",
       selectSearchForm: {
         name: "", //书名
-        isbn: "", //isbn
-        clusterName: "", //丛编题名
-        currentPage: 0
+        issn: "", //isbn
+        currentPage: 1,
+        pageSize: 10
       }
     };
   },
   computed: {
     searchTimeForm() {
       if (this.searchData) {
-        switch (this.searchData / 1) {
+        switch (parseInt(this.searchData)) {
           case 0:
             this.selectSearchForm.name = this.searchForm.searchData;
             break;
           case 1:
             this.selectSearchForm.isbn = this.searchForm.searchData;
             break;
-          case 2:
-            this.selectSearchForm.clusterName = this.searchForm.searchData;
         }
       } else {
         this.selectSearchForm.name = "";
         this.selectSearchForm.isbn = "";
-        this.selectSearchForm.clusterName = "";
       }
       let newData = {
         isbn: this.selectSearchForm.isbn,
         name: this.selectSearchForm.name,
-        clusterName: this.selectSearchForm.clusterName,
         pageSize: this.pageSize,
         currentPage: 1
       };
       return newData;
     },
     addFormData() {
+      this.addForm.language = this.addForm.languageCode;
       let newData = this.addForm;
       return newData;
     },
     editFormData() {
+      this.addForm.language = this.addForm.languageCode;
       let newData = this.addForm;
       return newData;
     }
@@ -709,11 +693,14 @@ export default {
     //选中某条数据的选中按钮
     decideOn(index, row) {
       this.decideOnData = true;
-      this.addForm = row;
+      this.addForm = Object.assign(this.addForm,row);
       this.centerDialogVisible = false;
     },
     //取消本地获取，获取远程数据
     decideOut() {
+/*       if(this.type.length == 2){
+
+      } */
       this.centerDialogVisible = false;
     },
     /*====== 出版社弹窗内容 ======*/
@@ -733,7 +720,7 @@ export default {
       let list = [];
       this.axios.get(value).then(response => {
         if (response.data.state == true) {
-          console.log('树结构',response)
+          console.log("树结构", response);
           for (let item of response.data.row) {
             list.push({
               id: item.id, //节点id
@@ -844,13 +831,15 @@ export default {
     rechargeBtn() {
       this.type = [1, 2];
       this.i = 1;
+      this.addForm.openBook = '32'
+      this.addForm.periodicalTypeId = '1'
       this.dialogFormVisible = true;
       this.languageFun();
     },
     //语种下拉框数据
     languageFun() {
       this.axios.get(logUrl.sLanguage).then(res => {
-        console.log('语种下拉',res)
+        console.log("语种下拉", res);
         if (res.data.state == true) {
           this.options.length = 0;
           for (const item of res.data.row) {
@@ -864,24 +853,29 @@ export default {
     },
     //添加isbn数据搜索
     isbnData() {
-      let length = this.type.length;
-      switch (length) {
-        case 0:
-          this.$message.error("请先选择远程获取或本地获取");
-          break;
-        case 1:
-          if (this.type[0] === 1) {
+      console.log("看看数据类型", this.addForm.issn.length);
+      if (this.addForm.issn.length) {
+        let length = this.type.length;
+        switch (length) {
+          case 0:
+            this.$message.error("请先选择远程获取或本地获取");
+            break;
+          case 1:
+            if (this.type[0] === 1) {
+              this.localCatalogData();
+            } else {
+              this.remoteCatalogData();
+            }
+            break;
+          case 2:
             this.localCatalogData();
-          } else {
-            this.remoteCatalogData();
-          }
-          break;
-        case 2:
-          this.localCatalogData();
-          if (this.catalogingData.length == 0) {
-            this.remoteCatalogData();
-          }
-          break;
+            if (this.catalogingData.length == 0) {
+              this.remoteCatalogData();
+            }
+            break;
+        }
+      } else {
+        this.$message.error('ISSN不得为空')
       }
     },
     //本地数据
@@ -893,7 +887,7 @@ export default {
             console.log("本地数据", res);
             if (res.data.state == true) {
               if (res.data.row) {
-                let length = res.data.row.length
+                let length = res.data.row.length;
                 if (length > 1) {
                   this.catalogingData = res.data.row;
                   this.j = 3;
@@ -903,14 +897,13 @@ export default {
                   this.addForm = res.data.row[0];
                 }
               } else {
-                let judg = this.type.length
-                if(length == 1){
-                  this.$message.error('暂无数据，请检查输入的ISSN编号是否有误')
+                let judg = this.type.length;
+                if (length == 1) {
+                  this.$message.error("暂无数据，请检查输入的ISSN编号是否有误");
                 } else {
-                  this.$message.info("暂无数据,正在启用远程检索")
+                  this.$message.info("暂无数据,正在启用远程检索");
                 }
-                
-              } 
+              }
             }
           },
           err => {
@@ -929,21 +922,20 @@ export default {
           res => {
             console.log("外地数据", res);
             if (res.data.state == true) {
-              
-              let length = res.data.row.length
+              let length = res.data.row.length;
               // 用switch吧
-              if(!length){
-                this.$message.error('暂无数据,请检测ISSN是否正确')
-                return
+              if (!length) {
+                this.$message.error("暂无数据,请检测ISSN是否正确");
+                return;
               }
               if (length > 1) {
                 this.catalogingData = res.data.row;
                 this.j = 4;
                 this.messageWidth = "750px";
                 this.centerDialogVisible = true;
-              } else{
+              } else {
                 this.addForm = res.data.row[0];
-              } 
+              }
             }
           },
           err => {
@@ -983,7 +975,7 @@ export default {
       }
     },
     addApi(value) {
-      this.axios.post(catalog.add, value).then(
+      this.axios.post(logUrl.aLog, value).then(
         res => {
           if (res.data.state == true) {
             this.$message({
@@ -1003,7 +995,7 @@ export default {
       );
     },
     editApi(value) {
-      this.axios.post(catalog.edit, value).then(res => {
+      this.axios.post(logUrl.rLog, value).then(res => {
         if (res.data.state == true) {
           this.$message({
             message: res.data.msg,
@@ -1048,7 +1040,7 @@ export default {
       for (var item of this.tableChecked) {
         idData.push(item.id);
       }
-      this.axios.post(catalog.delete, { ids: idData }).then(res => {
+      this.axios.post(logUrl.dLog, { ids: idData }).then(res => {
         if (res.data.state == true) {
           this.$message({
             message: "书目信息删除成功",
@@ -1125,17 +1117,18 @@ export default {
           params: value
         })
         .then(res => {
-          console.log("编目数据", res);
+          console.log("编目数据", res, this.tableData);
           if (res.data.state === true) {
-            if (res.data.rows) {
-              this.tableData = res.data.rows;
+            if (res.data.row.length) {
+              this.tableData = res.data.row;
               this.total = res.data.total; //总条目数
+              this.paginationForm = Object.assign({}, value);
             } else {
               this.tableData = [];
             }
             //获取返回数据
 
-            this.paginationForm = Object.assign({}, value); // 保存上次的查询结果
+            // 保存上次的查询结果
             this.currentPage = 1; // 回到第一页显示
             this.tableLoading = false;
           } else {
@@ -1149,13 +1142,15 @@ export default {
     paginationApi(value) {
       //获取登录记录
       this.tableLoading = true;
+      
       axios
         .get(logUrl.sLog, {
           params: value
         })
         .then(res => {
+          console.log('分页查询数据',res)
           if (res.data.state === true) {
-            this.tableData = res.data.rows; //获取返回数据
+            this.tableData = res.data.row; //获取返回数据
             this.total = res.data.total; //总条目数
             this.paginationForm = Object.assign({}, value); // 保存上次的查询结果
             this.tableLoading = false;
@@ -1169,24 +1164,24 @@ export default {
     },
     current_change(currentPage) {
       //分页查询
+
       this.currentPage = currentPage; //点击第几页
       this.paginationForm.currentPage = currentPage;
       this.paginationApi(this.paginationForm); // 这里的分页应该默认提交上次查询的条件
     },
     // 期刊类型查询
-    searchMagazine(){
-      axios.get(logUrl.sMagazineType).then((res)=>{
-        if(res.data.state == true){
-          this.
-          console.log('期刊类型',res)
+    searchMagazine() {
+      axios.get(logUrl.sMagazineType).then(res => {
+        if (res.data.state == true) {
+          this.magazineOptions = res.data.row;
+          console.log("期刊类型", res);
         }
-        
-      })
-    } 
+      });
+    }
   },
   created() {
     this.searchApi(this.searchTimeForm); // 调用查询接口获取数据
-    this.searchMagazine()
+    this.searchMagazine();
   }
 };
 </script>
