@@ -128,6 +128,7 @@ export default new Router({
           },
           component: ()=>import('../components/System/ArticeList.vue')
         },
+        // 期刊模块
         {
           path: '/magazineLog',
           meta: {
@@ -135,6 +136,13 @@ export default new Router({
             Mode: '1'
           },
           component: () => import('@/components/magazine/indexCatalog.vue')
+        },
+        {
+          path:'/magazineReserve',
+          meta:{
+            title:'期刊典藏' 
+          },
+          component:() => import('@/components/magazine/indexcataAdd.vue')
         },
         // 2.0 典藏管理
         {
@@ -588,6 +596,14 @@ export default new Router({
             Mode: '6'
           },
           component: resolve => require(['../components/System/wordbook.vue'], resolve)
+        },
+        {
+          path:'/library',
+          meta:{
+            title:'藏馆地',
+            meta:1,
+          },
+          component:() => import('../components/Book/libInfo.vue')
         }
       ]
     },

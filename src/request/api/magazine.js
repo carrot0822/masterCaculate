@@ -3,6 +3,7 @@ var url = window.glob.url;
 var imgurl = window.glob.imgurl;
 var fileUrl = window.glob.fileUrl;
 // s（search）查询类接口 a（add） 增加类接口 d（delete）删除接口  r（revise）修改接口
+// 期刊编目
 export const logUrl = {
     // 增删查改一套 编目数据
     sLog:`${url}periodicalmodule/marcPeriodical/select`,
@@ -19,6 +20,9 @@ export const logUrl = {
 
 }
 
-
+// 期刊典藏
+export const reserveUrl = {
+    
+}
 
 
