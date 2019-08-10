@@ -231,7 +231,9 @@
           </div>
           <!-- <div class="space"></div> -->
            <transition name="fade-transform" mode="out-in">
+             <keep-alive>
                 <router-view></router-view>
+              </keep-alive>
           </transition>
           <!-- <transition name="fade-transform" mode="out-in">
               <keep-alive>

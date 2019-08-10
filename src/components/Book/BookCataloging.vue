@@ -259,8 +259,8 @@
                       </el-form-item>
                     </div>
                     <div>
-                      <el-form-item label=" 备　　注 :" style="width: 760px;">
-                        <el-input type="textarea" v-model="addForm.renarks" style="width: 740px;height: 80px" :autosize="{ minRows:3, maxRows:3}" resize="none"></el-input>
+                      <el-form-item label=" 摘　　要 :" style="width: 760px;">
+                        <el-input type="textarea" v-model="addForm.introduction" style="width: 740px;height: 80px" :autosize="{ minRows:3, maxRows:3}" resize="none"></el-input>
                       </el-form-item>
                     </div>
                   </div>
@@ -408,7 +408,7 @@
           languageCode: '汉语',
           annotations: '',//附注
           themeWord: '',//主题词
-          renarks: '',//备注
+          introduction: '',//备注
           setBooks: 0,//套装书
         },
         rules: {

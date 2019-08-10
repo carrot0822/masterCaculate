@@ -3,12 +3,12 @@
     <el-container>
       <div class="commonMode" style="width:100%;overflow: auto">
         <div class="sonTitle">
-          <span class="titleName">书籍典藏</span>
+          <span class="titleName">期刊典藏</span>
         </div>
         <!-- 2.0表单填写 -->
         <section class="searchBox">
           <div class="buttonBox">
-            <button class="add" @click="rechargeBtn">
+            <button class="add" @click="addBtn">
               <i class="addIcon el-icon-plus"></i>添加
             </button>
             <button class="delete" @click="drawbackBtn(tableChecked)">
@@ -52,12 +52,12 @@
           </div>
         </section>
         <!-- 3.0表格数据 -->
-        <section class="tableBox" v-loading="tableLoading">
+        <section class="tableBox" v-loading="DomTable.loading">
           <el-table
             :header-cell-style="{background:'#0096FF', color:'#fff',height:'60px', fontSize:'14px',borderRight:'none'}"
             empty-text="无数据"
             style="width: 100%; text-align:center;"
-            :data="tableData"
+            :data="sTable.tableData"
             :row-style="{height:'60px'}"
             @selection-change="handleSelectionChange"
           >
@@ -140,7 +140,6 @@
               </template>
             </el-table-column>
             <el-table-column align="center" label="操作" width="200" fixed="right">
-              <!-- 这里的scope代表着什么 index是索引 row则是这一行的对象 -->
               <template slot-scope="scope">
                 <span
                   class="green"
@@ -159,7 +158,7 @@
               layout="prev, pager, next,total,slot"
               :total="total"
               :page-size="pageSize"
-              :current-page="currentPage"
+              
               @current-change="current_change"
             >
               <slot>
@@ -201,10 +200,10 @@
               <el-form-item label="ISSN:">
                 <el-input
                   style="width:350px;"
-                  v-model="aeForm.isbn"
+                  v-model="aeForm.issn"
                   placeholder="请输入ISSN进行搜索选择相关数据"
                 >
-                  <el-button slot="append" type="primary" @click="isbnData" icon="el-icon-search"></el-button>
+                  <el-button slot="append" type="primary" @click="sIssnBtn" icon="el-icon-search"></el-button>
                 </el-input>
               </el-form-item>
               <div class="otherInput">
@@ -361,10 +360,75 @@
         </el-form>
       </div>
       <!--- ISSN搜索数据弹框 --->
-      <el-dialog width="40%" :title="issnDialog.title[0]" :visible.sync="issnDialog.display" append-to-body>
-          
-      </el-dialog>
-      <!--- --->
+      <div id="issnLogBox">
+        <el-dialog :title="issnDialog.title[0]" :visible.sync="issnDialog.display" append-to-body>
+          <div id="issnTable">
+            <div class="issnTableBox">
+              <el-table
+                :data="issnDialog.tableData"
+                max-height="250"
+                :header-row-style="tableNomalHead"
+                :header-cell-style="tableNomalHead"
+                empty-text="无数据"
+                style="width: 100%;"
+                :row-style="{height:'30px'}"
+              >
+                <el-table-column prop="name" label="期刊名"></el-table-column>
+                <el-table-column width="120" prop="issn" label="ISSN"></el-table-column>
+                <el-table-column width="120" prop="author" label="主编"></el-table-column>
+                <el-table-column width="120" prop="fkPressName" label="出版社"></el-table-column>
+                <el-table-column width="120" prop="fkTypeCode" label="分类号"></el-table-column>
+                
+                <el-table-column align="center" label="操作" width="120" fixed="right">
+                  <template slot-scope="scope">
+                    <span class="ban" @click="deleteBtn(scope.$index, scope.row)">获取</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <div class="dialogBoxBtn textCenter">
+              <span class="dialogButton cancel" @click="cancelDialog">取 消</span>
+            </div>
+          </div>
+        </el-dialog>
+      </div>
+      <!--- 期刊号弹框 --->
+      <div id="indexNumBox">
+        <el-dialog :title="indexNumDlg.title" :visible.sync="indexNumDlg.display" append-to-body>
+          <div id="indexNumTable">
+            <div class="indexNumTableBox" style="marginBottom:20px;">
+              <el-table
+                :data="indexNumDlg.tableData"
+                max-height="250"
+                :header-row-style="tableNomalHead"
+                :header-cell-style="tableNomalHead"
+                empty-text="无数据"
+                style="width: 100%;"
+                :row-style="{height:'30px'}"
+              >
+                <el-table-column width="120" prop="date" label="日期"></el-table-column>
+                <el-table-column width="120" prop="name" label="姓名"></el-table-column>
+                <el-table-column width="120" prop="address" label="地址"></el-table-column>
+                <el-table-column width="120" prop="date" label="日期"></el-table-column>
+                <el-table-column width="120" prop="name" label="姓名"></el-table-column>
+                <el-table-column width="120" prop="address" label="地址"></el-table-column>
+                <el-table-column align="center" label="操作" width="120" fixed="right">
+                  <template slot-scope="scope">
+                    <span class="ban" @click="deleteBtn(scope.$index, scope.row)">获取</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <div class="dialogBoxBtn textCenter">
+              <span class="dialogButton cancel" @click="cancelDialog">取 消</span>
+            </div>
+          </div>
+        </el-dialog>
+      </div>
+      <!--- 馆藏地树弹框 --->
+      <div id="treeBox">
+        
+      </div>
     </el-dialog>
     <!-- ISSN搜索弹框 -->
     <!-- 期刊号弹框 -->
@@ -376,30 +440,58 @@
 
 <script>
 import axios from "axios";
-import moment from "moment";
+import {reserveInt} from "@/request/api/magazine";
 import { collection } from "@request/api/base.js";
 
 export default {
   data() {
     return {
       /*------ 展示数据初始化 ------*/
-
+      sTable:{ // 表格查询与分页查询对象
+        tableData:[], // 查询数据table
+        searchReq:{}, // 查询条件
+        total:0, // 数据总条数
+        currentPage:1, // 当前页码
+      },
+      DomTable:{ // 表格样式和其余操作
+        loading:false, // 加载中
+      },
       /*------ 弹框数据 ------*/
       // a: add e:edit
       aeDiglog: {
-        display: true,
-        title: ["新增", "修改"],
+        display: false,
+        title: ["新增", "修改"]
       },
-      issnDialog:{
-          display:true,
-          title:['本地数据预览']
-      },
-      aeindex: 0,
+      aeindex: 0, //控制添加和编辑弹框的切换
       aeForm: {
         issn: "",
         checked: false,
         changeNum: 0
       },
+      // issn搜索语言弹框
+      issnDialog: {
+        display: false,
+        title: ["本地数据预览"],
+        tableData: [],
+      },
+      
+      // 表头样式
+      tableNomalHead: {
+        background: "#0096FF",
+        color: "#fff",
+        height: "30px",
+        fontSize: "18px",
+        borderRight: "none",
+        textAlign: "center"
+      },
+      tableRowHead: {},
+      // 期刊号弹框
+      indexNumDlg:{
+        display:false,
+        title:'期刊号选择',
+        tableData:[]
+      },
+      
       /*====== 2.0表单搜索区域 ======*/
       libraryName: "",
       duplicateDisable: true,
@@ -865,14 +957,7 @@ export default {
         this.$message.error("请先选择删除对象");
       }
     },
-    //新增按钮
-    rechargeBtn() {
-      for (var i in this.showData) {
-        this.showData[i] = "";
-      }
-      this.i = 1;
-      this.dialogFormVisible = true;
-    },
+
     //添加isbn数据搜索
     isbnData() {
       this.axios
@@ -1253,11 +1338,63 @@ export default {
       this.paginationForm.currentPage = currentPage;
 
       this.paginationApi(this.paginationForm); // 这里的分页应该默认提交上次查询的条件
+    },
+    /*------ 按钮触发区 ------*/
+    addBtn(){
+      // 触发新增弹框的时候 情况数据和验证情况
+      this.aeindex = 1
+      this.aeDiglog.display = true
+    },
+    /*------ 弹框按钮 ------*/
+    // 功能弹框 s: search
+    sIssnBtn(){
+      // 做数据验证
+      let obj = {}
+      obj.issn = this.aeForm.issn
+      console.log(obj,'传递的数据')
+      this._getLocal(obj)
+    },
+
+
+    // 否定弹框
+    /*------ 2019/8/10接盘版 api区 ------*/
+    // 常规增删查改四连 数据都是过滤掉的
+    _search(obj){
+      let data = obj
+      reserveInt.search(data).then((res) => {
+        console.log(res,'最新的查询')
+        if(res.data.state == true){
+          this.sTable.tableData = res.data.row
+          this.sTable.total = res.data.total
+        } else {
+          return
+        } 
+      })
+    },
+    _add(obj){
+      let data = obj
+      reserveInt.add(data).then((res) => {
+        console.log(res,'添加')
+      })
+    },
+    // 额外API
+    _getLocal(obj){
+      let data = obj
+      reserveInt.getLocal(data).then((res) => {
+        if(res.data.state == true ){
+          this.issnDialog.display = true
+          this.issnDialog.tableData = res.data.row
+        } else {
+          this.$message.error(res.data.msg)
+        }
+        console.log('获取本地ISSN',res)
+      })
     }
   },
   created() {
     this.harmMethod();
-    this.searchApi(this.searchTimeForm); // 调用查询接口获取数据
+    
+    this._search()
   }
 };
 </script>
@@ -1477,6 +1614,11 @@ a {
   }
   .el-form-item__label {
     text-align: right;
+  }
+}
+#issnTable {
+  .issnTableBox {
+    margin-bottom: 30px;
   }
 }
 </style>
