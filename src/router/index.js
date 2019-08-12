@@ -601,9 +601,9 @@ export default new Router({
           path:'/library',
           meta:{
             title:'藏馆地',
-            meta:1,
+            meta:2,
           },
-          component:() => import('../components/Book/libInfo.vue')
+          component:() => import('../components/magazine/library.vue')
         }
       ]
     },

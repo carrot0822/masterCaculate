@@ -189,8 +189,8 @@
     <el-dialog
       id="changeDialog"
       center
-      :title="aeDiglog.title[aeindex]"
-      :visible.sync="aeDiglog.display"
+      :title="aeDialog.title[aeindex]"
+      :visible.sync="aeDialog.display"
       width="900px;"
     >
       <div id="indexCataAdd" class="content">
@@ -286,9 +286,9 @@
                 <el-input
                   style="width:350px;"
                   v-model="aeForm.isbn"
-                  placeholder="请输入ISSN进行搜索选择相关数据"
+                  placeholder="请填入期刊号新增数据或点击搜索选取已有期刊号"
                 >
-                  <el-button slot="append" type="primary" @click="isbnData" icon="el-icon-search"></el-button>
+                  <el-button slot="append" type="primary" @click="sIndexBtn" icon="el-icon-search"></el-button>
                 </el-input>
               </el-form-item>
             </div>
@@ -373,21 +373,20 @@
                 style="width: 100%;"
                 :row-style="{height:'30px'}"
               >
-                <el-table-column prop="name" label="期刊名"></el-table-column>
-                <el-table-column width="120" prop="issn" label="ISSN"></el-table-column>
-                <el-table-column width="120" prop="author" label="主编"></el-table-column>
-                <el-table-column width="120" prop="fkPressName" label="出版社"></el-table-column>
-                <el-table-column width="120" prop="fkTypeCode" label="分类号"></el-table-column>
-                
-                <el-table-column align="center" label="操作" width="120" fixed="right">
+                <el-table-column align="center" width="180" prop="name" label="期刊名"></el-table-column>
+                <el-table-column align="center" width="120" prop="issn" label="ISSN"></el-table-column>
+                <el-table-column align="center" width="120" prop="author" label="主编"></el-table-column>
+                <el-table-column align="center" width="120" prop="fkPressName" label="出版社"></el-table-column>
+                <el-table-column width="120" align="center" prop="fkTypeCode" label="分类号"></el-table-column>
+                <el-table-column align="center" fixed="right" label="操作" width="120">
                   <template slot-scope="scope">
-                    <span class="ban" @click="deleteBtn(scope.$index, scope.row)">获取</span>
+                    <span class="ban" @click="getLocalBtn(scope.$index, scope.row)">获取</span>
                   </template>
                 </el-table-column>
               </el-table>
             </div>
             <div class="dialogBoxBtn textCenter">
-              <span class="dialogButton cancel" @click="cancelDialog">取 消</span>
+              <span class="dialogButton cancel" @click="issnDialog.display = false">取 消</span>
             </div>
           </div>
         </el-dialog>
@@ -458,15 +457,16 @@ export default {
       },
       /*------ 弹框数据 ------*/
       // a: add e:edit
-      aeDiglog: {
+      aeDialog: {
         display: false,
         title: ["新增", "修改"]
       },
       aeindex: 0, //控制添加和编辑弹框的切换
       aeForm: {
         issn: "",
+        id:"", // 期刊ID
         checked: false,
-        changeNum: 0
+        changeNum: 0,
       },
       // issn搜索语言弹框
       issnDialog: {
@@ -1343,18 +1343,39 @@ export default {
     addBtn(){
       // 触发新增弹框的时候 情况数据和验证情况
       this.aeindex = 1
-      this.aeDiglog.display = true
+      this.aeDialog.display = true
     },
     /*------ 弹框按钮 ------*/
-    // 功能弹框 s: search
+    // 功能弹框 s: search 外层表单弹框
     sIssnBtn(){
       // 做数据验证
       let obj = {}
       obj.issn = this.aeForm.issn
+      
       console.log(obj,'传递的数据')
       this._getLocal(obj)
     },
+    // 期刊号查询按钮
+    sIndexBtn(){
+      let obj = {}
+      obj.issn = this.aeForm.issn
+      obj.cataPeriodicalId = this.aeForm.id
+      this._getIndexNum(obj)
+    },
+    /*--- ISSN搜索数据弹框 ---*/
+    getLocalBtn(index,row){
+      this.aeForm.id = row.id
+      this.issnDialog.display = false
+      let obj = {}
+      obj.issn = this.aeForm.issn
+      obj.cataPeriodicalId = this.aeForm.id
+      this._getNumber(obj)
+      console.log(row,'获取的数据')
+    },
+    // 期刊号弹框
+    getIndexBtn(index,row){
 
+    },
 
     // 否定弹框
     /*------ 2019/8/10接盘版 api区 ------*/
@@ -1377,7 +1398,8 @@ export default {
         console.log(res,'添加')
       })
     },
-    // 额外API
+    /*------ 额外API ------*/
+    // 获取本地期刊数据
     _getLocal(obj){
       let data = obj
       reserveInt.getLocal(data).then((res) => {
@@ -1389,7 +1411,28 @@ export default {
         }
         console.log('获取本地ISSN',res)
       })
-    }
+    },
+    // 获取期刊号数据
+    _getIndexNum(obj){
+      let data = obj
+      reserveInt.getIndex(data).then((res) => {
+        if(res.data.state == true ){
+          this.indexNumDlg.display = true
+          this.indexNumDlg.tableData = res.data.row
+        } else {
+          this.$message.error(res.data.msg)
+        }
+        console.log('获取本地期刊号',res)
+      })
+    },
+    // 获取索书号
+    _getNumber(obj){
+      let data = obj
+      reserveInt.getNumber(data).then((res) => {
+        console.log(res,'索取号')
+      })
+    },
+    // 获取馆藏地
   },
   created() {
     this.harmMethod();
@@ -1619,6 +1662,9 @@ a {
 #issnTable {
   .issnTableBox {
     margin-bottom: 30px;
+    .el-table__fixed-right-patch{
+      background:rgb(0, 150, 255);
+    }
   }
 }
 </style>

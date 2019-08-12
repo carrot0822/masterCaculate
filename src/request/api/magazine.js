@@ -31,7 +31,7 @@ const reserveUrl = {
   getLocal: `${url}periodicalmodule/periodicalTbCollectionInfo/selectLocal`, // 获取本地issn
   getIndex: `${url}periodicalmodule/periodicalTbCollectionInfo/getPN`, // 获取所有期刊号
   getNumber: `${url}periodicalmodule/periodicalTbCollectionInfo/getcs`, // 获取索书号等
-
+  
 }
 export const reserveInt = {
   search,
