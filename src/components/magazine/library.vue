@@ -21,10 +21,9 @@
               v-model="searchInput.option"
               placeholder="请选择"
               clearable
-              @change="selectCheck"
             >
               <el-option label="馆藏名" value="0"></el-option>
-              <el-option label="备注信息" value="1"></el-option>
+              <el-option label="馆藏码" value="1"></el-option>
             </el-select>
             <el-input
               v-model="searchInput.search"
@@ -85,6 +84,7 @@
           layout="prev, pager, next,total,slot"
           :total=" pagationObj.total"
           :page-size=" pagationObj.pageSize"
+          :current-page="pagationObj.currentPage"
           @current-change="current_change"
         >
           <slot>
@@ -93,11 +93,8 @@
               <div class="el-input el-pagination__editor is-in-pagination">
                 <input
                   ref="text"
-                  type="number"
-                  v-model="pagationObj.pageInput"
+                  v-model.number="pagationObj.pageInput"
                   autocomplete="off"
-                  min="1"
-                  max="1"
                   class="compo el-input__inner"
                 />
               </div>页
@@ -118,17 +115,23 @@
         width="675px"
       >
         <div class="content">
-          <el-form ref="aeForm" label-width="100px" style="width:520px;" :model="aeDialog.aeForm">
+          <el-form
+            ref="aeForm"
+            :rules="aeDialog.aeRules"
+            label-width="100px"
+            style="width:520px;"
+            :model="aeDialog.aeForm"
+          >
             <section class="firstInfoBox">
               <!-- 输出的信息 -->
               <div class="indexInfo">
                 <div class="diagOneInput">
-                  <el-form-item style="width:100%" label="馆藏地编号:">
-                    <el-input v-model="aeDialog.aeForm.code" placeholder="请输入馆藏地编号"></el-input>
+                  <el-form-item prop="code" style="width:100%" label="馆藏地代码:">
+                    <el-input v-model.number="aeDialog.aeForm.code" placeholder="请输入馆藏地编号(00~99以内)"></el-input>
                   </el-form-item>
                 </div>
                 <div class="diagOneInput">
-                  <el-form-item label="馆藏地名称:">
+                  <el-form-item prop="name" label="馆藏地名称:">
                     <el-input v-model="aeDialog.aeForm.name" placeholder="请输入馆藏地名称"></el-input>
                   </el-form-item>
                 </div>
@@ -176,6 +179,20 @@
 import { libraryInt } from "@/request/api/library";
 export default {
   data() {
+    /*------ 校检规则 ------*/
+    /*  var checkCode = (rule, value, callback) => {
+        setTimeout(() => {
+          if (!Number.isInteger(value)) {
+            callback(new Error('请输入数字值'));
+          } else {
+            if (value > 100) {
+              callback(new Error('馆藏码小于100'));
+            } else {
+              callback();
+            }
+          }
+        }, 1000);
+      }; */
     return {
       /*------ 非弹框数据 ------*/
 
@@ -209,8 +226,7 @@ export default {
         total: 0,
         currentPage: 1,
         pageSize: 10,
-        pageInput: 1,
-        
+        pageInput: 1
       },
       /*------ 弹框数据 ------*/
       // a：add e:edit 增加与编辑公用弹框
@@ -219,12 +235,21 @@ export default {
         flag: false, // 是否被渲染过
         display: false,
         title: ["增加分馆", "修改分馆"],
+        // 弹框表单
         aeForm: {
           code: "",
           name: "",
           remark: ""
-        }, // 弹框表单
-        aeRules: [] // 弹框验证
+        },
+        // 弹框验证
+        aeRules: {
+          code: [
+            { required: true, message: "请输入馆藏地代码", trigger: "blur" }
+          ],
+          name: [
+            { required: true, message: "请输入馆藏地名称", trigger: "blur" }
+          ]
+        }
       },
       // war:waring
       warIndex: 0, // 控制标题
@@ -234,52 +259,108 @@ export default {
       }
     };
   },
+  computed: {
+    pageCount() {
+      let pageSize = 10;
+      let all = parseInt(this.pagationObj.total);
+      return Math.ceil(all / pageSize);
+    }
+  },
   methods: {
     /*------ 通信框架函数 ------*/
     selectCheck() {},
     selectAll(val) {
-         let arr = []
-         for(let item of val){
-             arr.push(item.id)
-         }
-         this.tableObj.selectArr = arr
+      let arr = [];
+      for (let item of val) {
+        arr.push(item.id);
+      }
+      this.tableObj.selectArr = arr;
       console.log("全选的内容", val);
     },
-    current_change() {},
-    jumpBtn() {},
+    current_change(val) {
+      this.searchForm.currentPage = val;
+      this.pagationObj.currentPage = val;
+      this._search(this.searchForm);
+      console.log(val);
+    },
+    jumpBtn() {
+      let pageNum = this.pagationObj.pageInput;
+      if (typeof pageNum != "number") {
+        this.pagationObj.pageInput;
+      }
+      if (pageNum < 0 || pageNum > this.pageCount) {
+        this.pagationObj.pageInput = 1;
+        this.$refs.text.value = 1;
+      } else {
+        this.pagationObj.pageInput = parseInt(pageNum);
+        this.$refs.text.value = parseInt(pageNum);
+      }
+      this.searchForm.currentPage = this.pagationObj.pageInput;
+      this.pagationObj.currentPage = this.pagationObj.pageInput;
+      this._search(this.searchForm);
+    },
     /*------ 非弹框触发按钮 ------*/
     addBtn() {
       if (this.aeDialog.flag) {
+        this.$refs.aeForm.resetFields();
       }
       this.aeIndex = 0;
+      this.aeDialog.flag = true;
       this.clearValue(this.aeDialog.aeForm);
       this.aeDialog.display = true;
     },
     removeBtn() {
-        this.warDialog.display = true
+      let length = this.tableObj.selectArr.length;
+      if (length) {
+        this.warDialog.display = true;
+      } else {
+        this.$message.error("请先选择需要删除的对象");
+      }
     },
     searchBtn() {
-
+      if (this.searchInput.option) {
+        if (this.searchInput.option == "0") {
+          this.searchForm.name = this.searchInput.search;
+          this.searchForm.code = "";
+          this._search(this.searchForm);
+        } else {
+          this.searchForm.code = this.searchInput.search;
+          this.searchForm.name = "";
+          this._search(this.searchForm);
+        }
+      } else {
+        this.searchForm.code = "";
+        this.searchForm.name = "";
+        this._search(this.searchForm);
+      }
+      console.log(this.searchInput);
     },
     reviseBtn(index, row) {
       this.aeIndex = 1;
       this.aeDialog.display = true;
+      this.aeDialog.flag = true;
       this.aeDialog.aeForm = Object.assign(this.aeDialog.aeForm, row);
       console.log("当前row数据", row);
     },
     pagationBtn() {},
     /*------ 弹框按钮 ------*/
     aeConfirmBtn() {
-      if (this.aeIndex == 0) {
-        this._add(this.aeDialog.aeForm);
-      } else {
-        this._revise(this.aeDialog.aeForm);
-      }
+      this.$refs.aeForm.validate(valid => {
+        if (valid) {
+          if (this.aeIndex == 0) {
+            this._add(this.aeDialog.aeForm);
+          } else {
+            this._revise(this.aeDialog.aeForm);
+          }
+        } else {
+          return false;
+        }
+      });
     },
     warBtn() {
-        let  obj = {}
-        obj.ids = this.tableObj.selectArr
-        this._remove(obj)
+      let obj = {};
+      obj.ids = this.tableObj.selectArr;
+      this._remove(obj);
     },
     /*------ api ------*/
     _add(obj) {
@@ -295,14 +376,15 @@ export default {
       });
     },
     _remove(obj) {
-      let data = obj; 
+      let data = obj;
       libraryInt.remove(data).then(res => {
         if (res.data.state == true) {
           this.$message.success(res.data.msg);
           this._search();
           this.warDialog.display = false;
+        } else {
+          this.$message.error(res.data.msg);
         }
-        console.log(res, "查询");
       });
     },
     _search(obj) {
@@ -310,6 +392,7 @@ export default {
       libraryInt.search(data).then(res => {
         if (res.data.state == true) {
           this.tableObj.tableData = res.data.row;
+          this.pagationObj.total = res.data.total;
         }
         console.log(res, "查询");
       });

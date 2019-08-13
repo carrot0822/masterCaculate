@@ -140,9 +140,18 @@ export default new Router({
         {
           path:'/magazineReserve',
           meta:{
-            title:'期刊典藏' 
+            title:'期刊典藏' ,
+            Mode: '1'
           },
           component:() => import('@/components/magazine/indexcataAdd.vue')
+        },
+        {
+          path:'/indexNumber/:id',
+          meta:{
+            title:'期刊号' ,
+            Mode: '1'
+          },
+          component:() => import('../components/magazine/indexNum.vue')
         },
         // 2.0 典藏管理
         {

@@ -171,6 +171,7 @@
               <!-- 这里的scope代表着什么 index是索引 row则是这一行的对象 -->
               <template slot-scope="scope">
                 <span class="edit" @click="EditBtn(scope.$index, scope.row)">修改</span>
+                <span class="edit" @click="indexBtn(scope.$index, scope.row)">期刊号</span>
               </template>
             </el-table-column>
           </el-table>
@@ -674,6 +675,10 @@ export default {
     }
   },
   methods: {
+    indexBtn(index,row){
+      let id = row.id
+      this.$router.push({ path: `/indexNumber/${id}` })
+    },
     SuitBookFun(val) {
       if ((val = false)) {
         this.addForm.setBooks = 0;
