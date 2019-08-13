@@ -1,189 +1,109 @@
 <template>
-  <div id="Notice">
-    <el-container>
-      <div class="commonMode" style="width:100%;overflow: auto">
-        <div class="sonTitle">
-          <span class="titleName">期刊典藏</span>
-        </div>
-        <!-- 2.0表单填写 -->
-        <section class="searchBox">
-          <div class="buttonBox">
-            <button class="add" @click="addBtn">
-              <i class="addIcon el-icon-plus"></i>添加
-            </button>
-            <button class="delete" @click="drawbackBtn(tableChecked)">
-              <i class="deleteIcon el-icon-delete"></i>批量删除
-            </button>
-            <button class="deongaree" @click="rejectBtn">
-              <i class="blueIcon el-icon-delete"></i>剔除
-            </button>
-            <button class="green" @click="tunnellingBtn">
-              <i class="el-icon-edit"></i>调馆
-            </button>
-          </div>
-          <div class="right">
-            <el-form :inline="true" :model="searchForm">
-              <el-form-item label="筛选 :">
-                <el-select
-                  v-model="searchForm.makeMethod"
-                  placeholder="搜索方式"
-                  clearable
-                  style="width: 150px"
-                  @change="selectSearchCheck(searchForm.makeMethod)"
-                >
-                  <el-option label="索取号" value="0"></el-option>
-                  <el-option label="馆藏码" value="1"></el-option>
-                  <el-option label="ISBN" value="2"></el-option>
-                  <el-option label="书名" value="3"></el-option>
-                  <el-option label="在馆状态" value="4"></el-option>
-                  <el-option label="丛编题名" value="5"></el-option>
-                </el-select>
-                <el-input
-                  v-model="searchForm.searchData"
-                  clearable
-                  placeholder="请输入相关内容"
-                  style="width: 250px"
-                ></el-input>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" class="button_s" @click="searchBtn">搜索</el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-        </section>
-        <!-- 3.0表格数据 -->
-        <section class="tableBox" v-loading="DomTable.loading">
-          <el-table
-            :header-cell-style="{background:'#0096FF', color:'#fff',height:'60px', fontSize:'14px',borderRight:'none'}"
-            empty-text="无数据"
-            style="width: 100%; text-align:center;"
-            :data="sTable.tableData"
-            :row-style="{height:'60px'}"
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column align="center" type="selection" width="100" fixed="left"></el-table-column>
-            <el-table-column
-              align="center"
-              prop="index"
-              type="index"
-              width="100"
-              label="序号"
-              fixed="left"
-            >
-              <template slot-scope="scope">
-                <span>{{(currentPage - 1) * pageSize + scope.$index + 1}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="callNumber"
-              label="索取号"
-              width="200"
-              :show-overflow-tooltip="true"
-            >
-              <template slot-scope="scope">
-                <span>{{scope.row.callNumber == null || scope.row.callNumber=='' ?'---':scope.row.callNumber}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="code" label="馆藏码" width="300"></el-table-column>
-            <el-table-column
-              align="center"
-              prop="isbn"
-              label="ISBN"
-              width="200"
-              :show-overflow-tooltip="true"
-            ></el-table-column>
-            <el-table-column
-              align="center"
-              prop="name"
-              label="书名"
-              width="200"
-              :show-overflow-tooltip="true"
-            ></el-table-column>
-            <el-table-column
-              align="center"
-              prop="clusterName"
-              label="丛编题名"
-              width="200"
-              :show-overflow-tooltip="true"
-            >
-              <template slot-scope="scope">
-                <span>{{scope.row.clusterName == null || scope.row.clusterName=='' ?'---':scope.row.clusterName}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="lendState" label="在馆状态" width="200">
-              <template slot-scope="scope">
-                <span v-if="scope.row.lendState==0">不在架</span>
-                <span v-else-if="scope.row.lendState==1">在架</span>
-                <span v-else-if="scope.row.lendState==2">借出</span>
-                <span v-else-if="scope.row.lendState==3">剔除</span>
-                <span v-else-if="scope.row.lendState==4">损坏</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="available" label="书籍状态" width="200">
-              <template slot-scope="scope">
-                <span v-if="scope.row.available==0">停用</span>
-                <span v-else-if="scope.row.available==1">启用</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" prop="otherState" label="特殊状态" width="200">
-              <template slot-scope="scope">
-                <span v-if="scope.row.otherState==0">无特殊状态</span>
-                <span v-else-if="scope.row.otherState==1">损坏</span>
-                <span v-else-if="scope.row.otherState==2">遗失</span>
-                <span v-else-if="scope.row.otherState==3">调馆</span>
-                <span v-else-if="scope.row.otherState==4">未还</span>
-                <span v-else-if="scope.row.otherState==5">被盗</span>
-                <span v-else-if="scope.row.otherState==6">陈旧</span>
-                <span v-else-if="scope.row.otherState==7">破损</span>
-                <span v-else-if="scope.row.otherState==8">其他</span>
-              </template>
-            </el-table-column>
-            <el-table-column align="center" label="操作" width="200" fixed="right">
-              <template slot-scope="scope">
-                <span
-                  class="green"
-                  @click="makeBtn(scope.$index, scope.row)"
-                >{{scope.row.available ==0?'启用':'停用'}}</span>
-                <span class="edit" @click="EditBtn(scope.$index, scope.row)">修改</span>
-                <span class="ban" @click="deleteBtn(scope.$index, scope.row)">报损</span>
-              </template>
-            </el-table-column>
-          </el-table>
-          <!-- 4.0 分页 -->
-          <section class="pagination mt_30">
-            <el-pagination
-              style="display: inline-block"
-              background
-              layout="prev, pager, next,total,slot"
-              :total="total"
-              :page-size="pageSize"
-              
-              @current-change="current_change"
-            >
-              <slot>
-                <span>
-                  前往
-                  <div class="el-input el-pagination__editor is-in-pagination">
-                    <input
-                      ref="text"
-                      type="number"
-                      v-model="pageInput"
-                      autocomplete="off"
-                      min="1"
-                      max="1"
-                      class="compo el-input__inner"
-                    />
-                  </div>页
-                </span>
-              </slot>
-            </el-pagination>
-            <el-button type="primary" class="ml_30" size="medium" @click="jumpBtn">确定</el-button>
-          </section>
-        </section>
+  <div id="indexCataBox">
+    <section class="titleBox">
+      <h2 class="title">馆藏地</h2>
+    </section>
+    <!-- 按钮集合 -->
+    <section class="changeBtnBox">
+      <div class="oprateBtn">
+        <button class="addBtn" @click="addBtn">
+          <i class="addIcon el-icon-plus"></i>添加
+        </button>
+        <button class="deleteBtn" @click="removeBtn">
+          <i class="deleteIcon el-icon-delete"></i>批量删除
+        </button>
       </div>
-      <!------ 弹框 ------->
-    </el-container>
+      <div class="searchBtn">
+        <el-form :inline="true" :model="searchInput">
+          <el-form-item label="筛选 :">
+            <el-select
+              style="width: 150px"
+              v-model="searchInput.option"
+              placeholder="请选择"
+              clearable
+            >
+              <el-option label="馆藏名" value="0"></el-option>
+              <el-option label="馆藏码" value="1"></el-option>
+            </el-select>
+            <el-input
+              v-model="searchInput.search"
+              placeholder="请输入相关信息"
+              clearable
+              style="width: 250px"
+            ></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="searchBtn">搜索</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </section>
+    <!-- 表格数据与分页 -->
+    <section class="tableBox">
+      <div class="table">
+        <el-table
+          :header-cell-style="tableObj.headerCellSty"
+          empty-text="无数据"
+          style="width: 100%; text-align:center;"
+          :data="tableObj.tableData"
+          :row-style="tableObj.rowStyle"
+          @selection-change="selectAll"
+        >
+          <el-table-column align="center" type="selection" width="100"></el-table-column>
+          <el-table-column align="center" prop="index" type="index" width="100" label="序号">
+            <template slot-scope="scope">
+              <span>{{(pagationObj.currentPage - 1) * pagationObj.pageSize + scope.$index + 1}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center" prop="code" label="馆藏地代码" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column align="center" prop="name" label="馆藏地名称" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column
+            align="center"
+            prop="creatTime"
+            label="创建时间"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="updateTime"
+            label="更新时间"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column align="center" prop="remark" label="备注信息" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column align="center" label="操作" fixed="right" width="200">
+            <!-- 这里的scope代表着什么 index是索引 row则是这一行的对象 -->
+            <template slot-scope="scope">
+              <span class="revise" @click="reviseBtn(scope.$index, scope.row)">修改</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="pagationBox">
+        <el-pagination
+          background
+          layout="prev, pager, next,total,slot"
+          :total=" pagationObj.total"
+          :page-size=" pagationObj.pageSize"
+          :current-page="pagationObj.currentPage"
+          @current-change="current_change"
+        >
+          <slot>
+            <span class="el-pagination__jump">
+              前往
+              <div class="el-input el-pagination__editor is-in-pagination">
+                <input
+                  ref="text"
+                  v-model.number="pagationObj.pageInput"
+                  autocomplete="off"
+                  class="compo el-input__inner"
+                />
+              </div>页
+            </span>
+          </slot>
+        </el-pagination>
+        <el-button type="primary" class="ml_30" size="medium" @click="jumpBtn">确定</el-button>
+      </div>
+    </section>
 
     <!-- 新增与修改弹框 -->
     <el-dialog
@@ -194,24 +114,24 @@
       width="900px;"
     >
       <div id="indexCataAdd" class="content">
-        <el-form label-width="80px" :model="aeForm" style="width:840px;">
+        <el-form ref="aeForm" label-width="80px" :model="aeDialog.aeForm" style="width:840px;">
           <section class="firstInfoBox">
             <div class="searchForm">
               <el-form-item label="ISSN:">
                 <el-input
                   style="width:350px;"
-                  v-model="aeForm.issn"
+                  v-model="aeDialog.aeForm.issn"
                   placeholder="请输入ISSN进行搜索选择相关数据"
                 >
                   <el-button slot="append" type="primary" @click="sIssnBtn" icon="el-icon-search"></el-button>
                 </el-input>
               </el-form-item>
               <div class="otherInput">
-                <el-checkbox style="margin:0;" v-model="aeForm.checked">含有复本</el-checkbox>
+                <el-checkbox style="margin:0;" v-model="aeDialog.aeForm.checked">含有复本</el-checkbox>
                 <el-input-number
                   style="width:80px;"
-                  :disabled="aeForm.checked"
-                  v-model="aeForm.changeNum"
+                  :disabled="aeDialog.aeForm.checked"
+                  v-model="aeDialog.aeForm.changeNum"
                   controls-position="right"
                   @change="handleChange"
                   :min="1"
@@ -225,7 +145,7 @@
                 <el-form-item style="width:100%" label="期刊名称:">
                   <el-input
                     style="width:720px;"
-                    v-model="aeForm.isbn"
+                    v-model="aeDialog.aeForm.isbn"
                     placeholder="请输入ISSN进行搜索选择相关数据"
                   ></el-input>
                 </el-form-item>
@@ -234,7 +154,7 @@
                 <el-form-item label="期刊名称:">
                   <el-input
                     style="width:720px;"
-                    v-model="aeForm.isbn"
+                    v-model="aeDialog.aeForm.isbn"
                     placeholder="请输入ISSN进行搜索选择相关数据"
                   ></el-input>
                 </el-form-item>
@@ -243,14 +163,14 @@
                 <el-form-item label="主编:">
                   <el-input
                     style="width:250px;"
-                    v-model="aeForm.isbn"
+                    v-model="aeDialog.aeForm.isbn"
                     placeholder="请输入ISSN进行搜索选择相关数据"
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="发行单位:">
                   <el-input
                     style="width:320px;"
-                    v-model="aeForm.isbn"
+                    v-model="aeDialog.aeForm.isbn"
                     placeholder="请输入ISSN进行搜索选择相关数据"
                   ></el-input>
                 </el-form-item>
@@ -259,21 +179,21 @@
                 <el-form-item label="统一刊号:">
                   <el-input
                     style="width:180px;"
-                    v-model="aeForm.isbn"
+                    v-model="aeDialog.aeForm.isbn"
                     placeholder="请输入ISSN进行搜索选择相关数据"
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="邮发代号:">
                   <el-input
                     style="width:180px;"
-                    v-model="aeForm.isbn"
+                    v-model="aeDialog.aeForm.isbn"
                     placeholder="请输入ISSN进行搜索选择相关数据"
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="发行周期:">
                   <el-input
                     style="width:180px;"
-                    v-model="aeForm.isbn"
+                    v-model="aeDialog.aeForm.isbn"
                     placeholder="请输入ISSN进行搜索选择相关数据"
                   ></el-input>
                 </el-form-item>
@@ -285,7 +205,7 @@
               <el-form-item label="期刊号:">
                 <el-input
                   style="width:350px;"
-                  v-model="aeForm.isbn"
+                  v-model="aeDialog.aeForm.isbn"
                   placeholder="请填入期刊号新增数据或点击搜索选取已有期刊号"
                 >
                   <el-button slot="append" type="primary" @click="sIndexBtn" icon="el-icon-search"></el-button>
@@ -298,14 +218,14 @@
                 <el-form-item label="主编:">
                   <el-input
                     style="width:250px;"
-                    v-model="aeForm.isbn"
+                    v-model="aeDialog.aeForm.isbn"
                     placeholder="请输入ISSN进行搜索选择相关数据"
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="发行单位:">
                   <el-input
                     style="width:320px;"
-                    v-model="aeForm.isbn"
+                    v-model="aeDialog.aeForm.isbn"
                     placeholder="请输入ISSN进行搜索选择相关数据"
                   ></el-input>
                 </el-form-item>
@@ -314,7 +234,7 @@
                 <el-form-item label="期刊名称:">
                   <el-input
                     style="width:720px;"
-                    v-model="aeForm.isbn"
+                    v-model="aeDialog.aeForm.isbn"
                     placeholder="请输入ISSN进行搜索选择相关数据"
                   ></el-input>
                 </el-form-item>
@@ -327,35 +247,35 @@
                 <el-form-item label="统一刊号:">
                   <el-input
                     style="width:180px;"
-                    v-model="aeForm.isbn"
+                    v-model="aeDialog.aeForm.isbn"
                     placeholder="请输入ISSN进行搜索选择相关数据"
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="邮发代号:">
                   <el-input
                     style="width:180px;"
-                    v-model="aeForm.isbn"
+                    v-model="aeDialog.aeForm.isbn"
                     placeholder="请输入ISSN进行搜索选择相关数据"
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="发行周期:">
                   <el-input
                     style="width:180px;"
-                    v-model="aeForm.isbn"
+                    v-model="aeDialog.aeForm.isbn"
                     placeholder="请输入ISSN进行搜索选择相关数据"
                   ></el-input>
                 </el-form-item>
               </div>
             </div>
             <div class="mutilyBox">
-              <el-checkbox style="margin:0;" v-model="aeForm.checked">含有复本</el-checkbox>
-              <el-checkbox style="margin:0;" v-model="aeForm.checked">含有复本</el-checkbox>
-              <el-checkbox style="margin:0;" v-model="aeForm.checked">含有复本</el-checkbox>
+              <el-checkbox style="margin:0;" v-model="aeDialog.aeForm.checked">含有复本</el-checkbox>
+              <el-checkbox style="margin:0;" v-model="aeDialog.aeForm.checked">含有复本</el-checkbox>
+              <el-checkbox style="margin:0;" v-model="aeDialog.aeForm.checked">含有复本</el-checkbox>
             </div>
           </section>
           <div class="dialogBoxBtn">
-            <span class="dialogButton true mr_40" @click="submitDialog">确 定</span>
-            <span class="dialogButton cancel" @click="cancelDialog">取 消</span>
+            <span class="dialogButton true mr_40" @click="aeConfirmBtn">确 定</span>
+            <span class="dialogButton cancel" @click="aeDialog.display = false">取 消</span>
           </div>
         </el-form>
       </div>
@@ -419,15 +339,13 @@
               </el-table>
             </div>
             <div class="dialogBoxBtn textCenter">
-              <span class="dialogButton cancel" @click="cancelDialog">取 消</span>
+              <span class="dialogButton cancel" @click="indexNumDlg.display = false">取 消</span>
             </div>
           </div>
         </el-dialog>
       </div>
       <!--- 馆藏地树弹框 --->
-      <div id="treeBox">
-        
-      </div>
+      <div id="treeBox"></div>
     </el-dialog>
     <!-- ISSN搜索弹框 -->
     <!-- 期刊号弹框 -->
@@ -438,43 +356,66 @@
 </template>
 
 <script>
-import axios from "axios";
-import {reserveInt} from "@/request/api/magazine";
-import { collection } from "@request/api/base.js";
-
+import { reserveInt } from "@/request/api/magazine";
 export default {
   data() {
     return {
+      /*------ 非弹框组 ------*/
+      // 查询表单
+      searchInput: {
+        option: "", // 选择框
+        search: "" // 输入框
+      },
+      searchForm: {
+        name: "",
+        code: "",
+        remark: "",
+        pageSize: 10,
+        currentPage: 1
+      },
+      // 表格DOM数据
+      tableObj: {
+        tableData: [], // 表格数据
+        headerCellSty: {
+          background: "#0096FF",
+          color: "#fff",
+          height: "60px",
+          fontSize: "14px",
+          borderRight: "none"
+        },
+        rowStyle: { height: "60px" },
+        selectAll: []
+      },
+      //分页DOM
+      pagationObj: {
+        total: 0,
+        currentPage: 1,
+        pageSize: 10,
+        pageInput: 1
+      },
       /*------ 展示数据初始化 ------*/
-      sTable:{ // 表格查询与分页查询对象
-        tableData:[], // 查询数据table
-        searchReq:{}, // 查询条件
-        total:0, // 数据总条数
-        currentPage:1, // 当前页码
-      },
-      DomTable:{ // 表格样式和其余操作
-        loading:false, // 加载中
-      },
       /*------ 弹框数据 ------*/
       // a: add e:edit
       aeDialog: {
+        flag: false,
         display: false,
-        title: ["新增", "修改"]
+        title: ["新增", "修改"],
+        aeForm: {
+          issn: "",
+          id: "", // 期刊ID
+          checked: false,
+          changeNum: 0
+        }
       },
       aeindex: 0, //控制添加和编辑弹框的切换
-      aeForm: {
-        issn: "",
-        id:"", // 期刊ID
-        checked: false,
-        changeNum: 0,
-      },
+
       // issn搜索语言弹框
       issnDialog: {
         display: false,
         title: ["本地数据预览"],
-        tableData: [],
+        tableData: []
       },
-      
+
       // 表头样式
       tableNomalHead: {
         background: "#0096FF",
@@ -486,1184 +427,387 @@ export default {
       },
       tableRowHead: {},
       // 期刊号弹框
-      indexNumDlg:{
-        display:false,
-        title:'期刊号选择',
-        tableData:[]
+      indexNumDlg: {
+        display: false,
+        title: "期刊号选择",
+        tableData: []
       },
-      
-      /*====== 2.0表单搜索区域 ======*/
-      libraryName: "",
-      duplicateDisable: true,
-      messageData: [],
-      libraryData: [],
-      duplicateNum: 1,
-      duplicate: false,
-      widthMessage: "",
-      loading: false,
-      options: [],
-      addForm: {
-        batchNumber: "", //批次号
-        isbn: "",
-        code: "", //馆藏码
-        callNumber: "", //索书号
-        callNumber1: "",
-        callNumber2: "",
-        callNumber3: "",
-        place: "", //藏馆地
-        dailyRent: "", //默认日租金
-        lendingPermission: "", //不外借
-        available: true //启用
-      },
-      showData: {
-        id: "",
-        isbn: "",
-        titleProper: "", //正题名
-        bulkBook: "", //套装书
-        subtitle: "", //副题名
-        abstract: "", //摘要
-        cluster: "", //丛编题名
-        classificationCode: "", //分类号
-        edition: "", //版次
-        volumeNum: "", //卷册号
-        contributors: "", //编著者
-        bindingLayout: "", //装订版面
-        publishHouse: "", //出版社
-        comeoutTime: "", //出版时间
-        appendix: "", //附件
-        pageNumber: "", //页码
-        format: "", //开本
-        price: "", //价格
-        orderNum: "" //种次号
-      },
-      numberValidateForm: {
-        cause: "" //剔除原因
-      },
-      rules: {
-        isbn: [
-          {
-            required: true,
-            message: "请输入ISBN查询相应书籍信息",
-            trigger: "blur"
-          }
-        ],
-        name: [{ required: true, message: "请输入正题名", trigger: "blur" }],
-        code: [{ required: true, message: "请输入馆藏码", trigger: "blur" }],
-        callNumber: [
-          { required: true, message: "请输入索取号", trigger: "blur" }
-        ],
-        place: [{ required: true, message: "请输入馆藏地", trigger: "blur" }],
-        causesDamage: [
-          { required: true, message: "请选择损坏原因", trigger: "change" }
-        ],
-        amountCompensation: [
-          { required: true, message: "请输入赔偿金额", trigger: "change" }
-        ],
-        cause: [
-          { required: true, message: "请选择剔除原因", trigger: "change" }
-        ]
-      },
-      harmForm: {
-        cardNumber: "", //卡号
-        Number: "", //编号
-        bookIndex: "", //索取号
-        libAdress: "", //馆藏地
-        isbn: "", //isbn
-        bookName: "", //正题名
-        price: "", //价格
-        pageNumber: "", //页码
-        putTime: "", //出版时间
-        causesDamage: "", //损坏原因
-        amountCompensation: "", //赔偿金额
-        remarks: "" //备注
-      },
-      dialogFormVisible: false, // // 新增修改弹框的展示和消失
-      centerDialogVisible: false, // 删除弹框
-      Dialogtitle: ["修改", "书籍典藏(新增)"],
-      Secondarytitle: [
-        "调馆",
-        "批量删除",
-        "启用",
-        "报损",
-        "停用",
-        "剔除设置",
-        "数据添加"
-      ],
-      i: null, // 切换弹框标题
-      j: null,
-      searchForm: {
-        // 接受搜索表单的数据
-        makeMethod: "",
-        searchData: ""
-      },
-      searchData: "",
-      selectSearchForm: {
-        searchNumber: "", //索书号
-        code: "", //馆藏码
-        isbn: "", //isbn
-        bookName: "", //书名
-        state: "", //状态
-        clusterName: "" //丛编题名
-      },
-      tableLoading: true,
-      currentPage: 1,
-      pageInput: 1,
-      pageSize: 10,
-      total: 0,
-      tableData: [],
-      id: "",
-      tableChecked: [], // 全选绑定的数据
-      damageId: "",
-      bookId: "",
-      decideData: [],
-      selectIsbnData: [],
-      decide: false,
-      disabled: false,
-      startNum: "",
-      startCallNumber: ""
+       // war:waring 否定弹框
+      warIndex: 0, // 控制标题
+      warDialog: {
+        display: false,
+        title: ["删除分馆"]
+      }
     };
   },
   computed: {
-    searchTimeForm() {
-      let newState = "";
-
-      if (this.searchData) {
-        switch (this.searchData / 1) {
-          case 0:
-            this.selectSearchForm.searchNumber = this.searchForm.searchData;
-            break;
-          case 1:
-            this.selectSearchForm.code = this.searchForm.searchData;
-            break;
-          case 2:
-            this.selectSearchForm.isbn = this.searchForm.searchData;
-            break;
-          case 3:
-            this.selectSearchForm.bookName = this.searchForm.searchData;
-            break;
-          case 4:
-            this.selectSearchForm.state = this.searchForm.searchData;
-            if (this.selectSearchForm.state == "不在架") {
-              newState = 0;
-            } else if (this.selectSearchForm.state == "在架") {
-              newState = 1;
-            } else if (this.selectSearchForm.state == "借出") {
-              newState = 2;
-            } else if (this.selectSearchForm.state == "剔除") {
-              newState = 3;
-            } else if (this.selectSearchForm.state == "损坏") {
-              newState = 4;
-            }
-            break;
-          case 5:
-            this.selectSearchForm.clusterName = this.searchForm.searchData;
-            break;
-        }
-      } else {
-        this.selectSearchForm.searchNumber = "";
-        this.selectSearchForm.code = "";
-        this.selectSearchForm.isbn = "";
-        this.selectSearchForm.bookName = "";
-        this.selectSearchForm.clusterName = "";
-        newState = "";
-      }
-      let newData = {
-        callNumber: this.selectSearchForm.searchNumber,
-        code: this.selectSearchForm.code,
-        isbn: this.selectSearchForm.isbn,
-        bookName: this.selectSearchForm.bookName,
-        clusterName: this.selectSearchForm.clusterName,
-        state: newState,
-        pageSize: this.pageSize,
-        currentPage: 1
-      };
-
-      return newData;
-    },
-    addFormData() {
-      if (this.addForm.callNumber != this.startCallNumber) {
-        this.showData.orderNum = "";
-      }
-      let newData = {
-        startNum: this.showData.orderNum,
-        duplicate: this.duplicateNum,
-        fkCataBookId: this.showData.id,
-        code: this.addForm.barcode,
-        callNumber: this.addForm.callNumber,
-        place: this.addForm.place,
-        code: this.addForm.code,
-        dailyRent: this.addForm.dailyRent == true ? 1 : 0,
-        lendingPermission: this.addForm.lendingPermission == true ? 1 : 0,
-        available: this.addForm.available == true ? 1 : 0,
-        pageSize: this.pageSize,
-        currentPage: 1
-      };
-      return newData;
-    },
-    editFormData() {
-      let newData = {
-        id: this.addForm.id,
-        code: this.addForm.code,
-        callNumber: this.addForm.callNumber,
-        place: this.addForm.place,
-        dailyRent: this.addForm.dailyRent == true ? 1 : 0,
-        lendingPermission: this.addForm.lendingPermission == true ? 1 : 0,
-        pageSize: this.pageSize,
-        currentPage: 1
-      };
-
-      return newData;
+    pageCount() {
+      let pageSize = 10;
+      let all = parseInt(this.pagationObj.total);
+      return Math.ceil(all / pageSize);
     }
   },
   methods: {
-    //选中馆藏地
-    libraryOn(row, index) {
-      $(".libraryAddressMessage").fadeOut();
-      this.addForm.place = index.name;
+    /*------ 通信框架函数 ------*/
+    selectCheck() {},
+    selectAll(val) {
+      let arr = [];
+      for (let item of val) {
+        arr.push(item.id);
+      }
+      this.tableObj.selectAll = arr;
+      console.log("全选的内容", val);
     },
-    searchLibrary() {
-      var libraryName = { name: this.libraryName };
-      this.libraryDataFun(libraryName);
+    current_change(val) {
+      this.searchForm.currentPage = val;
+      this.pagationObj.currentPage = val;
+      this._search(this.searchForm);
+      console.log(val);
     },
-    //是否有复本
-    duplicateFun(val) {
-      if (val == true) {
-        this.duplicateDisable = false;
+    // 跳页
+    jumpBtn() {
+      let pageNum = this.pagationObj.pageInput;
+      if (typeof pageNum != "number") {
+        this.pagationObj.pageInput;
+      }
+      if (pageNum < 0 || pageNum > this.pageCount) {
+        this.pagationObj.pageInput = 1;
+        this.$refs.text.value = 1;
       } else {
-        this.duplicateDisable = true;
+        this.pagationObj.pageInput = parseInt(pageNum);
+        this.$refs.text.value = parseInt(pageNum);
+      }
+      this.searchForm.currentPage = this.pagationObj.pageInput;
+      this.pagationObj.currentPage = this.pagationObj.pageInput;
+      this._search(this.searchForm);
+    },
+    handleChange() {},
+    /*------ 非弹框触发按钮 ------*/
+    addBtn() {
+      if (this.aeDialog.flag) {
+        this.$refs.aeForm.resetFields();
+      }
+      this.aeIndex = 0;
+      this.aeDialog.flag = true;
+      this.clearValue(this.aeDialog.aeForm);
+      this.aeDialog.display = true;
+    },
+    removeBtn() {
+      let length = this.tableObj.selectAll.length;
+      if (length) {
+        this.warDialog.display = true;
+      } else {
+        this.$message.error("请先选择需要删除的对象");
       }
     },
-    //索取号弹窗
-    callNumberFun() {
-      $(".callNumberMessage").fadeIn();
-    },
-    //索取号弹窗确定按钮
-    callNumberMessageDefine() {
-      var orderNum = parseInt(this.showData.orderNum) + 1;
-      var orderNum1 = parseInt(this.showData.orderNum) + 2;
-      var orderNum2 = parseInt(this.showData.orderNum) + 3;
-      var orderNum3 = parseInt(this.showData.orderNum) + 4;
-      if (this.showData.volumeNum != null) {
-        this.startCallNumber =
-          this.showData.fkTypeCode +
-          "v" +
-          this.showData.volumeNum +
-          "/" +
-          this.showData.orderNum;
-        this.addForm.callNumber =
-          this.showData.fkTypeCode +
-          "v" +
-          this.showData.volumeNum +
-          "/" +
-          orderNum;
-        this.addForm.callNumber1 =
-          this.showData.fkTypeCode +
-          "v" +
-          this.showData.volumeNum +
-          "/" +
-          orderNum1;
-        this.addForm.callNumber2 =
-          this.showData.fkTypeCode +
-          "v" +
-          this.showData.volumeNum +
-          "/" +
-          orderNum2;
-        this.addForm.callNumber3 =
-          this.showData.fkTypeCode +
-          "v" +
-          this.showData.volumeNum +
-          "/" +
-          orderNum3;
+    searchBtn() {
+      if (this.searchInput.option) {
+        if (this.searchInput.option == "0") {
+          this.searchForm.name = this.searchInput.search;
+          this.searchForm.code = "";
+          this._search(this.searchForm);
+        } else {
+          this.searchForm.code = this.searchInput.search;
+          this.searchForm.name = "";
+          this._search(this.searchForm);
+        }
       } else {
-        this.startCallNumber =
-          this.showData.fkTypeCode + "/" + this.showData.orderNum;
-        this.addForm.callNumber = this.showData.fkTypeCode + "/" + orderNum;
-        this.addForm.callNumber1 = this.showData.fkTypeCode + "/" + orderNum1;
-        this.addForm.callNumber2 = this.showData.fkTypeCode + "/" + orderNum2;
-        this.addForm.callNumber3 = this.showData.fkTypeCode + "/" + orderNum3;
+        this.searchForm.code = "";
+        this.searchForm.name = "";
+        this._search(this.searchForm);
       }
-      $(".callNumberMessage").fadeOut();
+      console.log(this.searchInput);
     },
-    //索取号弹窗取消按钮
-    callNumberMessageClose() {
-      $(".callNumberMessage").fadeOut();
+    reviseBtn(index, row) {
+      this.aeIndex = 1;
+      this.aeDialog.display = true;
+      this.aeDialog.flag = true;
+      this.aeDialog.aeForm = Object.assign(this.aeDialog.aeForm, row);
+      console.log("当前row数据", row);
     },
-    //馆藏地弹窗
-    libraryAddressFun() {
-      $(".libraryAddressMessage").fadeIn();
-      this.libraryDataFun();
+    pagationBtn() {},
+    /*------ 弹框按钮 ------*/
+    aeConfirmBtn() {
+      this.$refs.aeForm.validate(valid => {
+        if (valid) {
+          if (this.aeIndex == 0) {
+            this._add(this.aeDialog.aeForm);
+          } else {
+            this._revise(this.aeDialog.aeForm);
+          }
+        } else {
+          return false;
+        }
+      });
     },
-    libraryDataFun(value) {
-      this.axios.get(collection.getLibName, { params: value }).then(res => {
+    warBtn() {
+      let obj = {};
+      obj.ids = this.tableObj.selectArr;
+      this._remove(obj);
+    },
+
+    // 功能弹框 s: search 外层表单弹框
+    sIssnBtn() {
+      // 做数据验证
+      let obj = {};
+      obj.issn = this.aeDialog.aeForm.issn;
+
+      console.log(obj, "传递的数据");
+      this._getLocal(obj);
+    },
+    // 期刊号查询按钮
+    sIndexBtn() {
+      let obj = {};
+      obj.issn = this.aeDialog.aeForm.issn;
+      obj.cataPeriodicalId = this.aeDialog.aeForm.id;
+      this._getIndexNum(obj);
+    },
+    /*--- ISSN搜索数据弹框 ---*/
+    getLocalBtn(index, row) {
+      this.aeDialog.aeForm.id = row.id;
+      this.issnDialog.display = false;
+      let obj = {};
+      obj.issn = this.aeDialog.aeForm.issn;
+      obj.cataPeriodicalId = this.aeDialog.aeForm.id;
+      this._getNumber(obj);
+      console.log(row, "获取的数据");
+    },
+    // 期刊号弹框
+    getIndexBtn(index, row) {},
+    /*------ api ------*/
+    _add(obj) {
+      let data = obj;
+      reserveInt.add(data).then(res => {
+        console.log(res, "添加");
+      });
+    },
+    _remove(obj) {
+      let data = obj;
+      libraryInt.remove(data).then(res => {
         if (res.data.state == true) {
-          this.libraryData = res.data.row;
+          this.$message.success(res.data.msg);
+          this._search();
+          this.warDialog.display = false;
         } else {
           this.$message.error(res.data.msg);
         }
       });
     },
-    //馆藏地弹窗确定按钮
-    libraryAddressDefine() {},
-    //馆藏地弹窗取消按钮
-    libraryAddressClose() {
-      $(".libraryAddressMessage").fadeOut();
-    },
-    //复本数量函数
-    handleChange(value) {
-      //console.log(value);
-    },
-    //选中某条数据的按钮
-    decideOn(index, row) {
-      this.AccumFun(row.id);
-      this.centerDialogVisible = false;
-    },
-    //累加值
-    AccumFun(val) {
-      this.axios
-        .get(collection.selectFromCataID, { params: { fkCataBookId: val } })
-        .then(res => {
-          if (res.data.state == true) {
-            this.messageData = res.data.row;
-          }
-        });
-      this.axios
-        .get(collection.selectCataOrderByID, { params: { id: val } })
-        .then(res => {
-          if (res.data.state == true) {
-            this.showData = res.data.row;
-            this.disabled = true;
-            this.showData.volumeNum = res.data.row.volumeNum;
-            this.showData.orderNum = res.data.row.orderNum;
-
-            var orderNum = this.showData.orderNum + 1;
-            var orderNum1 = this.showData.orderNum + 2;
-            var orderNum2 = this.showData.orderNum + 3;
-            var orderNum3 = this.showData.orderNum + 4;
-            if (this.showData.volumeNum != null) {
-              this.startCallNumber =
-                this.showData.fkTypeCode +
-                "v" +
-                this.showData.volumeNum +
-                "/" +
-                this.showData.orderNum;
-              this.addForm.callNumber =
-                this.showData.fkTypeCode +
-                "v" +
-                this.showData.volumeNum +
-                "/" +
-                orderNum;
-              this.addForm.callNumber1 =
-                this.showData.fkTypeCode +
-                "v" +
-                this.showData.volumeNum +
-                "/" +
-                orderNum1;
-              this.addForm.callNumber2 =
-                this.showData.fkTypeCode +
-                "v" +
-                this.showData.volumeNum +
-                "/" +
-                orderNum2;
-              this.addForm.callNumber3 =
-                this.showData.fkTypeCode +
-                "v" +
-                this.showData.volumeNum +
-                "/" +
-                orderNum3;
-            } else {
-              this.startCallNumber =
-                this.showData.fkTypeCode + "/" + this.showData.orderNum;
-              this.addForm.callNumber =
-                this.showData.fkTypeCode + "/" + orderNum;
-              this.addForm.callNumber1 =
-                this.showData.fkTypeCode + "/" + orderNum1;
-              this.addForm.callNumber2 =
-                this.showData.fkTypeCode + "/" + orderNum2;
-              this.addForm.callNumber3 =
-                this.showData.fkTypeCode + "/" + orderNum3;
-            }
-          }
-        });
-      this.axios
-        .get(collection.getAllOrder, { params: { id: val } })
-        .then(res => {
-          if (res.data.state == true) {
-            this.addForm.code = res.data.row;
-          }
-        });
-    },
-    selectSearchCheck(val) {
-      this.searchForm.searchData = "";
-      for (const index in this.selectSearchForm) {
-        this.selectSearchForm[index] = "";
-      }
-      this.searchData = val;
-    },
-    findCherries(fruit) {
-      return fruit.value === this.damageId;
-    },
-
-    selectCheck(val) {
-      let harmData = [];
-
-      this.damageId = val;
-      harmData = this.options.find(this.findCherries);
-
-      if (harmData.type == 1) {
-        this.harmForm.amountCompensation = harmData.num * this.harmForm.price;
-      } else {
-        this.harmForm.amountCompensation = harmData.num;
-      }
-    },
-    harmMethod() {
-      this.axios.get(collection.harmSelect).then(res => {
-        this.options.length = 0;
-        for (const item of res.data.row) {
-          this.options.push({
-            label: item.damageName,
-            value: item.id,
-            type: item.compensationType,
-            num: item.compensationNum
-          });
-        }
-      });
-    },
-    //批量选择
-    handleSelectionChange(val) {
-      this.tableChecked = val;
-    },
-    //剔除按钮
-    rejectBtn() {
-      this.widthMessage = "400px";
-      if (this.tableChecked.length) {
-        this.j = 5;
-        this.centerDialogVisible = true;
-      } else {
-        this.$message.error("请先选择剔除对象");
-      }
-    },
-    //导出按钮
-    deriveBtn() {
-      this.i = 6;
-      this.centerDialogVisible = true;
-    },
-    //删除按钮
-    drawbackBtn() {
-      this.widthMessage = "400px";
-      if (this.tableChecked.length) {
-        this.j = 1;
-        this.centerDialogVisible = true;
-      } else {
-        this.$message.error("请先选择删除对象");
-      }
-    },
-
-    //添加isbn数据搜索
-    isbnData() {
-      this.axios
-        .get(collection.isbn, { params: { isbn: this.addForm.isbn } })
-        .then(res => {
-          if (res.data.state === true) {
-            if (res.data.row.length > 1) {
-              this.j = 6;
-              this.centerDialogVisible = true;
-              this.widthMessage = "700px";
-              this.selectIsbnData = res.data.row;
-            } else if ((res.data.row.length = 1)) {
-              this.AccumFun(res.data.row[0].id);
-            } else {
-              this.$message({
-                message: "没有此ISBN的相关数据，请重新搜索",
-                type: "error"
-              });
-            }
-          } else {
-            this.$message({
-              message: res.data.msg,
-              type: "error"
-            });
-          }
-        });
-    },
-    //修改弹框
-    EditBtn(index, row) {
-      console.log("修改的单条数据", row);
-      this.i = 0;
-      this.dialogFormVisible = true;
-      this.addForm = row;
-      this.showData = row;
-      this.addForm.dailyRent = row.dailyRent == 1 ? true : false;
-      this.addForm.lendingPermission =
-        row.lendingPermission == 0 ? false : true;
-      this.addForm.available = row.available == 1 ? true : false;
-      this.disabled = true;
-    },
-    // 修改添加弹框确定按钮
-    submitForm() {
-      if (this.i == 1) {
-        if (this.addForm.isbn) {
-          this.addApi(this.addFormData);
-        } else {
-          this.$message({
-            message: "请先输入ISBN搜索相关书籍再进行新增操作",
-            type: "info"
-          });
-        }
-      } else if (this.i == 0) {
-        this.editApi(this.editFormData);
-      }
-    },
-    addApi(value) {
-      this.axios.post(collection.add, value).then(res => {
+    _search(obj) {
+      let data = obj;
+      reserveInt.search(data).then(res => {
         if (res.data.state == true) {
-          this.$message({
-            message: res.data.msg,
-            type: "success"
-          });
-          this.closeForm();
-          this.dialogFormVisible = false;
-          this.searchApi(this.searchTimeForm);
-        } else {
-          this.$message({
-            message: res.data.msg,
-            type: "error"
-          });
+          this.tableObj.tableData = res.data.row;
+          this.pagationObj.total = res.data.total;
         }
+        console.log(res, "查询");
       });
     },
-    editApi(value) {
-      this.axios.post(collection.edit, value).then(res => {
+    _revise(obj) {
+      let data = obj;
+      libraryInt.revise(data).then(res => {
         if (res.data.state == true) {
-          this.$message({
-            message: res.data.msg,
-            type: "success"
-          });
-          this.closeForm();
-          this.dialogFormVisible = false;
-          this.searchApi(this.searchTimeForm);
+          this.$message.success(res.data.msg);
+          this._search();
+          this.aeDialog.display = false;
         } else {
-          this.$message({
-            message: res.data.msg,
-            type: "error"
-          });
+          this.$message.error(res.data.msg);
         }
       });
     },
-    //添加修改弹框取消按钮
-    resetForm() {
-      this.dialogFormVisible = false;
-    },
-    //添加修改关闭按钮
-    closeForm() {
-      // 弹框关闭的时候执行 清空数据
-      if (this.j == 3) {
-        this.$refs[this.harmForm].resetFields(); // 调用这个方法进行清除登陆状态 打开的时候再清理？
-        for (var i in this.harmForm) {
-          this.harmForm[i] = "";
-        }
-      } else if (this.i == 1 || this.i == 0) {
-        this.$refs[this.addForm].resetFields();
-        for (var index in this.showData) {
-          this.showData[index] = "";
-        }
-        for (var i in this.addForm) {
-          this.addForm[i] = "";
-        }
-        this.disabled = false;
-        this.selectIsbnData.length = 0;
-        $(".callNumberMessage").fadeOut();
-        this.duplicate = false;
-        this.duplicateNum = 1;
-        this.duplicateDisable = true;
-      }
-      //this.dialogFormVisible = false
-      this.searchApi(this.searchTimeForm);
-    },
-    // 查询按钮
-    searchBtn() {
-      this.searchApi(this.searchTimeForm); // 查询后 把新数据保存到分页表单中
-      this.currentPage = 1;
-    },
-    //报损弹框
-    deleteBtn(index, row) {
-      this.widthMessage = "920px";
-      this.j = 3;
-      this.addForm.id = row.id;
-      this.bookId = row.id;
-      this.centerDialogVisible = true;
+    /*------ 过滤函数 filter ------*/
+    clearValue(obj) {
+      // 不使用for in 避免遍历出原型属性
+      let { keys, values, entries } = Object;
 
-      this.harmForm.bookIndex = row.callNumber;
-      this.harmForm.libAdress = row.place;
-      this.harmForm.isbn = row.isbn;
-      this.harmForm.bookName = row.name;
-      this.harmForm.price = row.price;
-      this.harmForm.pageNumber = row.pageNumber;
-      this.harmForm.putTime = row.publishingTime;
-      this.disabled = true;
-    },
-    //报损弹框确定按钮
-    definiteCheck() {
-      this.axios
-        .post(collection.damage, {
-          damageId: this.damageId,
-          remarks: this.harmForm.remarks,
-          bookId: [this.bookId],
-          cardNum: this.harmForm.cardNumber
-        })
-        .then(res => {
-          if (res.data.state == true) {
-            this.$message({
-              message: res.data.msg,
-              type: "success"
-            });
-            this.cancelCheck();
-            this.searchApi(this.searchTimeForm);
-          } else {
-            this.$message({
-              message: res.data.msg,
-              type: "error"
-            });
-          }
-        });
-    },
-    //调馆按钮
-    tunnellingBtn() {
-      this.widthMessage = "400px";
-      if (this.tableChecked.length) {
-        this.j = 0;
-        this.centerDialogVisible = true;
-      } else {
-        this.$message.error("请先选择调馆对象");
+      for (let key of keys(obj)) {
+        obj[key] = "";
       }
     },
-    //启用按钮
-    makeBtn(index, row) {
-      if (row.available == 0) {
-        this.widthMessage = "400px";
-        this.j = 2;
-      } else if (row.available == 1) {
-        this.widthMessage = "400px";
-        this.j = 4;
-      }
-      this.addForm.id = row.id;
-      this.centerDialogVisible = true;
-    },
-    submitDialog() {
-      let idData = [];
-      let bookId = [];
-      for (var item of this.tableChecked) {
-        idData.push({ id: item.id });
-        bookId.push(item.id);
-      }
-      /*Secondarytitle:['调馆','删除','启用','报损','停用','剔除设置',"数据添加"],*/
-      if (this.j == 2) {
-        this.axios
-          .post(collection.state, { id: this.addForm.id, available: 1 })
-          .then(res => {
-            if (res.data.state == true) {
-              this.$message({
-                message: res.data.msg,
-                type: "success"
-              });
-              this.centerDialogVisible = false;
-              this.searchApi(this.searchTimeForm);
-            } else {
-              this.$message({
-                message: res.data.msg,
-                type: "error"
-              });
-            }
-          });
-      } else if (this.j == 4) {
-        this.axios
-          .post(collection.state, { id: this.addForm.id, available: 0 })
-          .then(res => {
-            if (res.data.state == true) {
-              this.$message({
-                message: res.data.msg,
-                type: "success"
-              });
-              this.centerDialogVisible = false;
-              this.searchApi(this.searchTimeForm);
-            } else {
-              this.$message({
-                message: res.data.msg,
-                type: "error"
-              });
-            }
-          });
-      } else if (this.j == 1) {
-        this.axios.post(collection.delete, idData).then(res => {
-          if (res.data.state == true) {
-            this.$message({
-              message: res.data.msg,
-              type: "success"
-            });
-            this.centerDialogVisible = false;
-            this.searchApi(this.searchTimeForm);
-          } else {
-            this.$message({
-              message: res.data.msg,
-              type: "error"
-            });
-          }
-        });
-      } else if (this.j == 0) {
-        this.axios.post(collection.letLeave, idData).then(res => {
-          if (res.data.state == true) {
-            this.$message({
-              message: res.data.msg,
-              type: "success"
-            });
-            this.centerDialogVisible = false;
-            this.searchApi(this.searchTimeForm);
-          } else {
-            this.$message({
-              message: res.data.msg,
-              type: "error"
-            });
-          }
-        });
-      } else if (this.j == 5) {
-        this.$refs[this.numberValidateForm].validate(valid => {
-          if (valid) {
-            this.axios
-              .post(collection.letRemove, {
-                bookId: bookId,
-                remove: this.numberValidateForm.cause
-              })
-              .then(res => {
-                if (res.data.state == true) {
-                  this.$message({
-                    message: res.data.msg,
-                    type: "success"
-                  });
-                  this.centerDialogVisible = false;
-                  this.searchApi(this.searchTimeForm);
-                } else {
-                  this.$message({
-                    message: res.data.msg,
-                    type: "error"
-                  });
-                }
-              });
-          } else {
-            return false;
-          }
-        });
-      }
-    },
-    cancelCheck() {
-      this.$refs[this.harmForm].resetFields(); // 调用这个方法进行清除登陆状态 打开的时候再清理？
-      for (var i in this.harmForm) {
-        this.harmForm[i] = "";
-      }
-      this.centerDialogVisible = false;
-    },
-    cancelDialog() {
-      this.centerDialogVisible = false;
-    },
-    // 分页按钮
-    jumpBtn() {
-      // v-mode绑定好像会默认转数据类型
 
-      let page = Math.ceil(this.total / this.pageSize);
-      page == 0 ? 1 : page;
-      if (this.pageInput > page || this.pageInput == "" || this.pageInput < 0) {
-        this.pageInput = 1;
-        this.$nextTick(() => {
-          this.$refs.text.value = 1; // hack方法
-        });
-      } else {
-        this.pageInput = parseInt(this.pageInput);
-        this.$refs.text.value = parseInt(this.pageInput);
-        let num = parseInt(this.pageInput);
-        this.current_change(num);
-      }
-    },
-    /*------ Api ------*/
-    searchApi(value) {
-      //获取登录记录
-
-      this.tableLoading = true;
-      axios
-        .get(collection.select, {
-          params: value
-        })
-        .then(res => {
-          if (res.data.state === true) {
-            console.log("典藏表格查询数据", res);
-            this.tableData = res.data.row; //获取返回数据
-            this.total = res.data.total; //总条目数
-            this.paginationForm = Object.assign({}, value); // 保存上次的查询结果
-            this.currentPage = 1; // 回到第一页显示
-            this.tableLoading = false;
-          } else {
-            this.$message({
-              message: res.data.msg,
-              type: "error"
-            });
-            this.tableLoading = false;
-          }
-        })
-        .catch(error => {});
-    },
-    paginationApi(value) {
-      //获取登录记录
-
-      this.tableLoading = true;
-      axios
-        .get(collection.select, {
-          params: value
-        })
-        .then(res => {
-          if (res.data.state === true) {
-            this.tableData = res.data.row; //获取返回数据
-            this.total = res.data.total; //总条目数
-            this.paginationForm = Object.assign({}, value); // 保存上次的查询结果
-            this.tableLoading = false;
-          } else {
-            this.$message({
-              message: res.data.msg,
-              type: "error"
-            });
-            this.tableLoading = false;
-          }
-        })
-        .catch(error => {});
-    },
-    current_change(currentPage) {
-      //分页查询
-      this.currentPage = currentPage; //点击第几页
-      this.paginationForm.currentPage = currentPage;
-
-      this.paginationApi(this.paginationForm); // 这里的分页应该默认提交上次查询的条件
-    },
-    /*------ 按钮触发区 ------*/
-    addBtn(){
-      // 触发新增弹框的时候 情况数据和验证情况
-      this.aeindex = 1
-      this.aeDialog.display = true
-    },
-    /*------ 弹框按钮 ------*/
-    // 功能弹框 s: search 外层表单弹框
-    sIssnBtn(){
-      // 做数据验证
-      let obj = {}
-      obj.issn = this.aeForm.issn
-      
-      console.log(obj,'传递的数据')
-      this._getLocal(obj)
-    },
-    // 期刊号查询按钮
-    sIndexBtn(){
-      let obj = {}
-      obj.issn = this.aeForm.issn
-      obj.cataPeriodicalId = this.aeForm.id
-      this._getIndexNum(obj)
-    },
-    /*--- ISSN搜索数据弹框 ---*/
-    getLocalBtn(index,row){
-      this.aeForm.id = row.id
-      this.issnDialog.display = false
-      let obj = {}
-      obj.issn = this.aeForm.issn
-      obj.cataPeriodicalId = this.aeForm.id
-      this._getNumber(obj)
-      console.log(row,'获取的数据')
-    },
-    // 期刊号弹框
-    getIndexBtn(index,row){
-
-    },
-
-    // 否定弹框
     /*------ 2019/8/10接盘版 api区 ------*/
-    // 常规增删查改四连 数据都是过滤掉的
-    _search(obj){
-      let data = obj
-      reserveInt.search(data).then((res) => {
-        console.log(res,'最新的查询')
-        if(res.data.state == true){
-          this.sTable.tableData = res.data.row
-          this.sTable.total = res.data.total
-        } else {
-          return
-        } 
-      })
-    },
-    _add(obj){
-      let data = obj
-      reserveInt.add(data).then((res) => {
-        console.log(res,'添加')
-      })
-    },
+
     /*------ 额外API ------*/
     // 获取本地期刊数据
-    _getLocal(obj){
-      let data = obj
-      reserveInt.getLocal(data).then((res) => {
-        if(res.data.state == true ){
-          this.issnDialog.display = true
-          this.issnDialog.tableData = res.data.row
+    _getLocal(obj) {
+      let data = obj;
+      reserveInt.getLocal(data).then(res => {
+        if (res.data.state == true) {
+          this.issnDialog.display = true;
+          this.issnDialog.tableData = res.data.row;
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.data.msg);
         }
-        console.log('获取本地ISSN',res)
-      })
+        console.log("获取本地ISSN", res);
+      });
     },
     // 获取期刊号数据
-    _getIndexNum(obj){
-      let data = obj
-      reserveInt.getIndex(data).then((res) => {
-        if(res.data.state == true ){
-          this.indexNumDlg.display = true
-          this.indexNumDlg.tableData = res.data.row
+    _getIndexNum(obj) {
+      let data = obj;
+      reserveInt.getIndex(data).then(res => {
+        if (res.data.state == true) {
+          this.indexNumDlg.display = true;
+          this.indexNumDlg.tableData = res.data.row;
         } else {
-          this.$message.error(res.data.msg)
+          this.$message.error(res.data.msg);
         }
-        console.log('获取本地期刊号',res)
-      })
+        console.log("获取本地期刊号", res);
+      });
     },
     // 获取索书号
-    _getNumber(obj){
-      let data = obj
-      reserveInt.getNumber(data).then((res) => {
-        console.log(res,'索取号')
-      })
-    },
+    _getNumber(obj) {
+      let data = obj;
+      reserveInt.getNumber(data).then(res => {
+        console.log(res, "索取号");
+      });
+    }
     // 获取馆藏地
   },
   created() {
-    this.harmMethod();
-    
-    this._search()
+    this._search();
   }
 };
 </script>
 
-<style scoped>
-.searchButton {
-  cursor: default;
-  background-color: #0096ff;
-  height: 39px;
-  width: 60px;
-  border-radius: 3px;
-  position: absolute;
-  left: 910px;
-}
-.searchButton:hover {
-  background-color: rgba(0, 150, 255, 0.8);
-}
-.edit {
-  color: #00d7f0;
-  cursor: pointer;
-  margin-right: 20px;
-}
-.blue {
-  color: #4d94ff;
-  cursor: pointer;
-}
-.ban {
-  color: #ff5c3c;
-  cursor: pointer;
-}
-.green {
-  color: #01d793;
-  cursor: pointer;
-  margin-right: 20px;
-}
-.buttonBox {
-  margin-bottom: 30px;
-}
-.buttonBox button {
-  padding-left: 18px;
-  padding-right: 18px;
-  height: 40px;
-  font-size: 16px;
-  color: #fff;
-  display: inline-block;
-  line-height: 1;
-  white-space: nowrap;
-  cursor: pointer;
-  background: #fff;
-  border: none;
-  -webkit-appearance: none;
-  text-align: center;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  outline: 0;
-  margin: 0;
-  -webkit-transition: 0.1s;
-  transition: 0.1s;
-  font-weight: 500;
-}
-.buttonBox .add {
-  background: rgba(255, 146, 49, 1);
-  border-radius: 10px;
-  margin-right: 10px;
-}
-.buttonBox .add .addIcon {
-  margin-right: 6px;
-}
-.buttonBox .delete {
-  background: rgba(255, 92, 60, 1);
-  border-radius: 10px;
-  margin-right: 10px;
-}
-.buttonBox .delete .deleteIcon {
-  margin-right: 6px;
-}
-.buttonBox .blue {
-  background: #31d6ff;
-  border-radius: 10px;
-}
-.buttonBox .blue .blueIcon {
-  margin-right: 6px;
-}
-.buttonBox .deongaree {
-  background: #4d94ff;
-  border-radius: 10px;
-}
-.buttonBox .green {
-  background: #01eeca;
-  border-radius: 10px;
-  margin-left: 10px;
-}
-#Notice {
-  background: #ffffff;
-}
-#Notice .searchBox {
-  display: flex;
-  justify-content: space-between;
-}
-.page_div {
-  text-align: center;
-  margin-top: 30px;
-}
-
-.confirm_bt {
-  display: inline-block;
-  text-align: center;
-  width: 70px;
-  padding: 8px 8px;
-}
-.gray_radio_border {
-  border: 1px solid #dcdcdc;
-  width: 850px;
-  border-radius: 5px;
-  padding: 10px 20px;
-}
-.button_s {
-  width: 90px;
-  font-size: 16px;
-  text-align: center;
-}
-
-#loginrecord {
-  background: #ffffff;
-}
-
-.time_p {
-  margin-left: 30px;
-}
-
-/*.el-select-dropdown__item {*/
-/*color: #878787;*/
-/*}*/
-
-#title {
-  display: inline-block;
-  padding-left: 10px;
-  border-left: 5px solid #1e9eff;
-  color: #878787;
-}
-
-#loginrecord .el-table {
-  border: 1px solid #eaeaea;
-  /*border-width: 0 1px 1px 1px ;*/
-  border-bottom: 0;
-}
-#isbnSearch {
-  width: 25px;
-  width: 25px;
-  margin-left: 18px;
-  margin-top: 7px;
-}
-a {
-  text-decoration: none;
-  font-size: 15px;
-  color: #409eff;
-  text-decoration: underline;
-}
-</style>
 <style lang="scss">
-#indexCataAdd {
-  .firstInfoBox {
-    .searchForm {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
-    .indexInfo {
-      padding: 20px 15px;
-      border: 1px solid #d3dfe6;
-
-      .el-form-item {
-        margin-bottom: 0px;
-      }
-      .el-input__inner {
-        border: none;
-        border-bottom: 1px solid #d3dfe6;
-      }
+#indexCataBox {
+  background-color: #ffffff;
+  padding: 30px;
+  .titleBox {
+    margin-bottom: 35px;
+    .title {
+      padding-left: 5px;
+      border-left: 4px;
+      border-left-color: #0096ff;
+      border-left-style: solid;
+      font-size: 16px;
+      color: #878787;
     }
   }
-  .twiceInfoBox {
-    margin: 22px 0;
-    .indexNumInfo {
-      padding: 20px 15px;
-      border: 1px solid #d3dfe6;
-
-      .el-form-item {
-        margin-bottom: 0px;
-      }
-      .el-input__inner {
-        border: none;
-        border-bottom: 1px solid #d3dfe6;
-      }
-    }
-  }
-  .threeInfoBox {
-    padding: 20px 15px;
-    border: 1px solid #d3dfe6;
-  }
-  .dialogBoxBtn {
-    text-align: center;
-    padding-top: 20px;
-  }
-  /*------ 通用样式 ------*/
-  .diagtwoInput {
-    justify-content: space-between;
-  }
-  .diagThreeInput {
-    justify-content: space-between;
-    .el-form-item {
-      margin-bottom: 0px;
-    }
-  }
-  .flexRow {
+  .changeBtnBox {
+    margin-bottom: 30px;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    .oprateBtn {
+      button {
+        padding-left: 18px;
+        padding-right: 18px;
+        height: 40px;
+        font-size: 16px;
+        color: #fff;
+        display: inline-block;
+        line-height: 1;
+        white-space: nowrap;
+        cursor: pointer;
+        background: #fff;
+        border: none;
+        -webkit-appearance: none;
+        text-align: center;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        outline: 0;
+        margin: 0;
+        -webkit-transition: 0.1s;
+        transition: 0.1s;
+        font-weight: 500;
+      }
+      .addBtn {
+        background: rgba(255, 146, 49, 1);
+        border-radius: 10px;
+        margin-right: 10px;
+      }
+      .deleteBtn {
+        background: rgba(255, 92, 60, 1);
+        border-radius: 10px;
+        margin-right: 10px;
+      }
+    }
+    .searchBtn {
+    }
   }
-  .el-form-item__label {
-    text-align: right;
+  .tableBox {
+    .table {
+      margin-bottom: 50px;
+      .revise {
+        cursor: pointer;
+      }
+    }
+    .pagationBox {
+      display: flex;
+      flex-basis: row;
+      justify-content: center;
+      align-items: center;
+    }
   }
-}
-#issnTable {
-  .issnTableBox {
-    margin-bottom: 30px;
-    .el-table__fixed-right-patch{
-      background:rgb(0, 150, 255);
+  /*弹框组*/
+  #indexCataAdd {
+    .firstInfoBox {
+      .searchForm {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      .indexInfo {
+        padding: 20px 15px;
+        border: 1px solid #d3dfe6;
+
+        .el-form-item {
+          margin-bottom: 0px;
+        }
+        .el-input__inner {
+          border: none;
+          border-bottom: 1px solid #d3dfe6;
+        }
+      }
+    }
+    .twiceInfoBox {
+      margin: 22px 0;
+      .indexNumInfo {
+        padding: 20px 15px;
+        border: 1px solid #d3dfe6;
+
+        .el-form-item {
+          margin-bottom: 0px;
+        }
+        .el-input__inner {
+          border: none;
+          border-bottom: 1px solid #d3dfe6;
+        }
+      }
+    }
+    .threeInfoBox {
+      padding: 20px 15px;
+      border: 1px solid #d3dfe6;
+    }
+    .dialogBoxBtn {
+      text-align: center;
+      padding-top: 20px;
+    }
+    /*------ 通用样式 ------*/
+    .diagtwoInput {
+      justify-content: space-between;
+    }
+    .diagThreeInput {
+      justify-content: space-between;
+      .el-form-item {
+        margin-bottom: 0px;
+      }
+    }
+    .flexRow {
+      display: flex;
+      flex-direction: row;
+    }
+    .el-form-item__label {
+      text-align: right;
+    }
+  }
+  #issnTable {
+    .issnTableBox {
+      margin-bottom: 30px;
+      .el-table__fixed-right-patch {
+        background: rgb(0, 150, 255);
+      }
     }
   }
 }

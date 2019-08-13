@@ -306,7 +306,7 @@ export default {
       for (let item of val) {
         arr.push(item.id);
       }
-      this.tableObj.selectArr = arr;
+      this.tableObj.selectAll = arr;
       console.log("全选的内容", val);
     },
     current_change(val) {
@@ -343,7 +343,7 @@ export default {
       this.aeDialog.display = true;
     },
     removeBtn() {
-      let length = this.tableObj.selectArr.length;
+      let length = this.tableObj.selectAll.length;
       if (length) {
         this.warDialog.display = true;
       } else {
