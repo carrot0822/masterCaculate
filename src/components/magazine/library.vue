@@ -310,12 +310,13 @@ export default {
       this.aeDialog.display = true;
     },
     removeBtn() {
-      let length = this.tableObj.selectArr.length;
+      console.log(this.tableObj.selectAll)
+       let length = this.tableObj.selectAll.length;
       if (length) {
         this.warDialog.display = true;
       } else {
         this.$message.error("请先选择需要删除的对象");
-      }
+      } 
     },
     searchBtn() {
       if (this.searchInput.option) {
@@ -359,7 +360,8 @@ export default {
     },
     warBtn() {
       let obj = {};
-      obj.ids = this.tableObj.selectArr;
+      obj.ids = this.tableObj.selectAll;
+      console.log(obj)
       this._remove(obj);
     },
     /*------ api ------*/
@@ -377,6 +379,7 @@ export default {
     },
     _remove(obj) {
       let data = obj;
+      console.log('删除',data)
       libraryInt.remove(data).then(res => {
         if (res.data.state == true) {
           this.$message.success(res.data.msg);

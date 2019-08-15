@@ -77,12 +77,12 @@
   padding-left: 12px;
   padding-right: 39px;
 }
-#collectionAdd .countInput .el-input-number.is-controls-right .el-input-number__decrease, .el-input-number.is-controls-right .el-input-number__increase {
+#collectionAdd .countInput .el-input-number.is-controls-right .el-input-number__decrease,#collectionAdd .countInput .el-input-number.is-controls-right .el-input-number__increase {
   height: 10px;
   line-height: 10px;
   width: 25px;
 }
-#collectionAdd .countInput .el-input-number.is-controls-right .el-input-number__decrease, .el-input-number.is-controls-right .el-input-number__decrease {
+#collectionAdd .countInput .el-input-number.is-controls-right .el-input-number__decrease,#collectionAdd .countInput .el-input-number.is-controls-right .el-input-number__decrease {
   height: 10px;
   line-height: 10px;
   width: 25px;
@@ -677,11 +677,11 @@
   border-left: 1px solid #DCDFE6;
   border-radius: 0 0 4px;
 }
-.numberInput .el-input-number.is-controls-right .el-input-number__decrease, .el-input-number.is-controls-right .el-input-number__increase {
+.numberInput .el-input-number.is-controls-right .el-input-number__decrease, .numberInput .el-input-number.is-controls-right .el-input-number__increase {
   height: 11px;
   line-height: 11px;
 }
-.numberInput .el-input-number__decrease, .el-input-number__increase {
+.numberInput .el-input-number__decrease, .numberInput .el-input-number__increase {
   position: absolute;
   z-index: 1;
   top: 8px;

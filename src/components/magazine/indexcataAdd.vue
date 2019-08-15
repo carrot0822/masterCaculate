@@ -1,7 +1,7 @@
 <template>
   <div id="indexCataBox">
     <section class="titleBox">
-      <h2 class="title">馆藏地</h2>
+      <h2 class="title">期刊典藏</h2>
     </section>
     <!-- 按钮集合 -->
     <section class="changeBtnBox">
@@ -22,8 +22,12 @@
               placeholder="请选择"
               clearable
             >
-              <el-option label="馆藏名" value="0"></el-option>
-              <el-option label="馆藏码" value="1"></el-option>
+              <el-option
+                v-for="(item,index) of searchInput.optionsArr"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
             <el-input
               v-model="searchInput.search"
@@ -55,25 +59,119 @@
               <span>{{(pagationObj.currentPage - 1) * pagationObj.pageSize + scope.$index + 1}}</span>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="code" label="馆藏地代码" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column align="center" prop="name" label="馆藏地名称" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column
+            width="100"
             align="center"
-            prop="creatTime"
-            label="创建时间"
+            prop="callNumber"
+            label="索取号"
             :show-overflow-tooltip="true"
           ></el-table-column>
           <el-table-column
+            width="100"
             align="center"
-            prop="updateTime"
-            label="更新时间"
+            prop="code"
+            label="馆藏码"
             :show-overflow-tooltip="true"
           ></el-table-column>
-          <el-table-column align="center" prop="remark" label="备注信息" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column
+            width="200"
+            align="center"
+            prop="issn"
+            label="ISSN"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+
+          <el-table-column
+            width="200"
+            align="center"
+            prop="name"
+            label="期刊名称"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column
+            width="200"
+            align="center"
+            prop="place"
+            label="馆藏地"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column
+            width="100"
+            align="center"
+            prop="issn"
+            label="在馆状态"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column align="center" prop="anumber" label="刊期号" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column
+            width="100"
+            align="center"
+            prop="openBook"
+            label="开本"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column
+            width="200"
+            align="center"
+            prop="publicationDate"
+            label="出版日期"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column
+            width="100"
+            align="center"
+            prop="fkTypeCode"
+            label="分类号"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column
+            width="100"
+            align="center"
+            prop
+            label="典藏者"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column
+            width="100"
+            align="center"
+            prop="language"
+            label="语种"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column
+            width="100"
+            align="center"
+            prop="periodicalTypeName"
+            label="期刊类型"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column
+            width="100"
+            align="center"
+            prop="toAvailable"
+            label="启用状态"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column
+            width="100"
+            align="center"
+            prop="toLendState"
+            label="在架状态"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+          <el-table-column
+            width="100"
+            align="center"
+            prop="toOtherState"
+            label="其他状态"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
           <el-table-column align="center" label="操作" fixed="right" width="200">
             <!-- 这里的scope代表着什么 index是索引 row则是这一行的对象 -->
             <template slot-scope="scope">
               <span class="revise" @click="reviseBtn(scope.$index, scope.row)">修改</span>
+              <span class="revise" @click="reviseBtn(scope.$index, scope.row)">启用</span>
+              <span class="revise" @click="reviseBtn(scope.$index, scope.row)">报损</span>
             </template>
           </el-table-column>
         </el-table>
@@ -127,15 +225,15 @@
                 </el-input>
               </el-form-item>
               <div class="otherInput">
-                <el-checkbox style="margin:0;" v-model="aeDialog.aeForm.checked">含有复本</el-checkbox>
+                <el-checkbox style="margin:0;" v-model="aeDialog.checkObj.control">含有复本</el-checkbox>
                 <el-input-number
                   style="width:80px;"
-                  :disabled="aeDialog.aeForm.checked"
-                  v-model="aeDialog.aeForm.changeNum"
+                  :disabled="!aeDialog.checkObj.control"
+                  v-model="aeDialog.checkObj.value"
                   controls-position="right"
                   @change="handleChange"
                   :min="1"
-                  :max="10"
+                  :max="99"
                 ></el-input-number>
               </div>
             </div>
@@ -145,33 +243,17 @@
                 <el-form-item style="width:100%" label="期刊名称:">
                   <el-input
                     style="width:720px;"
-                    v-model="aeDialog.aeForm.isbn"
-                    placeholder="请输入ISSN进行搜索选择相关数据"
+                    v-model="aeDialog.showLocalForm.name"
+                    :disabled="aeDialog.inputDisabled"
                   ></el-input>
                 </el-form-item>
               </div>
               <div class="diagOneInput">
-                <el-form-item label="期刊名称:">
+                <el-form-item label="并列题名:">
                   <el-input
                     style="width:720px;"
-                    v-model="aeDialog.aeForm.isbn"
-                    placeholder="请输入ISSN进行搜索选择相关数据"
-                  ></el-input>
-                </el-form-item>
-              </div>
-              <div class="diagtwoInput flexRow">
-                <el-form-item label="主编:">
-                  <el-input
-                    style="width:250px;"
-                    v-model="aeDialog.aeForm.isbn"
-                    placeholder="请输入ISSN进行搜索选择相关数据"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="发行单位:">
-                  <el-input
-                    style="width:320px;"
-                    v-model="aeDialog.aeForm.isbn"
-                    placeholder="请输入ISSN进行搜索选择相关数据"
+                    v-model="aeDialog.showLocalForm.parallelTitle"
+                    :disabled="aeDialog.inputDisabled"
                   ></el-input>
                 </el-form-item>
               </div>
@@ -179,98 +261,177 @@
                 <el-form-item label="统一刊号:">
                   <el-input
                     style="width:180px;"
-                    v-model="aeDialog.aeForm.isbn"
-                    placeholder="请输入ISSN进行搜索选择相关数据"
+                    v-model="aeDialog.showLocalForm.unifyNum"
+                    :disabled="aeDialog.inputDisabled"
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="邮发代号:">
                   <el-input
                     style="width:180px;"
-                    v-model="aeDialog.aeForm.isbn"
-                    placeholder="请输入ISSN进行搜索选择相关数据"
+                    v-model="aeDialog.showLocalForm.postIssueNumber"
+                    :disabled="aeDialog.inputDisabled"
                   ></el-input>
                 </el-form-item>
                 <el-form-item label="发行周期:">
                   <el-input
                     style="width:180px;"
-                    v-model="aeDialog.aeForm.isbn"
-                    placeholder="请输入ISSN进行搜索选择相关数据"
+                    v-model="aeDialog.showLocalForm.releaseCycle"
+                    :disabled="aeDialog.inputDisabled"
+                  ></el-input>
+                </el-form-item>
+              </div>
+              <div class="diagThreeInput flexRow">
+                <el-form-item label="分类号:">
+                  <el-input
+                    style="width:180px;"
+                    v-model="aeDialog.showLocalForm.fkTypeCode"
+                    :disabled="aeDialog.inputDisabled"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="参考开本:">
+                  <el-input
+                    style="width:180px;"
+                    v-model="aeDialog.showLocalForm.openBook"
+                    :disabled="aeDialog.inputDisabled"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="参考单价:">
+                  <el-input
+                    style="width:180px;"
+                    v-model="aeDialog.showLocalForm.issnPrice"
+                    :disabled="aeDialog.inputDisabled"
+                  ></el-input>
+                </el-form-item>
+              </div>
+              <div class="diagtwoInput flexRow">
+                <el-form-item label="主编:">
+                  <el-input
+                    style="width:250px;"
+                    v-model="aeDialog.showLocalForm.author"
+                    :disabled="aeDialog.inputDisabled"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="发行单位:">
+                  <el-input
+                    style="width:320px;"
+                    v-model="aeDialog.showLocalForm.fkPressName"
+                    :disabled="aeDialog.inputDisabled"
+                  ></el-input>
+                </el-form-item>
+              </div>
+              <div class="diagOneInput">
+                <el-form-item label="摘要:">
+                  <el-input
+                    style="width:720px;"
+                    v-model="aeDialog.showLocalForm.introduction"
+                    :disabled="aeDialog.inputDisabled"
                   ></el-input>
                 </el-form-item>
               </div>
             </div>
           </section>
+          <!-- 期刊号 -->
           <section class="twiceInfoBox">
             <div class="indexNum">
               <el-form-item label="期刊号:">
                 <el-input
                   style="width:350px;"
-                  v-model="aeDialog.aeForm.isbn"
-                  placeholder="请填入期刊号新增数据或点击搜索选取已有期刊号"
+                  v-model="aeDialog.showIndexForm.aNumber"
+                  :disabled="aeDialog.issnDiabled"
+                  placeholder="请点击搜索按钮选取期刊号"
                 >
                   <el-button slot="append" type="primary" @click="sIndexBtn" icon="el-icon-search"></el-button>
                 </el-input>
               </el-form-item>
             </div>
-            <!--- 期刊号输入信息 --->
+            <!--- 期刊号输入回显信息 --->
             <div class="indexNumInfo">
               <div class="diagtwoInput flexRow">
-                <el-form-item label="主编:">
+                <el-form-item label="总期号:">
                   <el-input
                     style="width:250px;"
-                    v-model="aeDialog.aeForm.isbn"
-                    placeholder="请输入ISSN进行搜索选择相关数据"
+                    v-model="aeDialog.showIndexForm.sNumber"
+                    :disabled="aeDialog.issnDiabled"
+                    placeholder="请输入总期号"
                   ></el-input>
                 </el-form-item>
-                <el-form-item label="发行单位:">
+                <el-form-item label="出版日期:">
                   <el-input
                     style="width:320px;"
-                    v-model="aeDialog.aeForm.isbn"
-                    placeholder="请输入ISSN进行搜索选择相关数据"
+                    v-model="aeDialog.showIndexForm.publicationDateStr"
+                    :disabled="aeDialog.issnDiabled"
+                    placeholder="请输入出版日期"
+                  ></el-input>
+                </el-form-item>
+              </div>
+              <div class="diagtwoInput flexRow">
+                <el-form-item label="定价:">
+                  <el-input
+                    style="width:250px;"
+                    v-model="aeDialog.showIndexForm.price"
+                    :disabled="aeDialog.issnDiabled"
+                    placeholder="请输入定价"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="页数:">
+                  <el-input
+                    style="width:320px;"
+                    v-model="aeDialog.showIndexForm.page"
+                    :disabled="aeDialog.issnDiabled"
+                    placeholder="请输入页数"
                   ></el-input>
                 </el-form-item>
               </div>
               <div class="diagOneInput">
-                <el-form-item label="期刊名称:">
+                <el-form-item label="备注:">
                   <el-input
                     style="width:720px;"
-                    v-model="aeDialog.aeForm.isbn"
-                    placeholder="请输入ISSN进行搜索选择相关数据"
+                    v-model="aeDialog.showIndexForm.remark"
+                    :disabled="aeDialog.issnDiabled"
+                    placeholder="请输入备注"
                   ></el-input>
                 </el-form-item>
               </div>
             </div>
           </section>
+          <!-- 条码号 期刊号回显  -->
           <section class="threeInfoBox">
             <div class="number">
               <div class="diagThreeInput flexRow">
-                <el-form-item label="统一刊号:">
+                <el-form-item label="条码号:">
                   <el-input
                     style="width:180px;"
-                    v-model="aeDialog.aeForm.isbn"
-                    placeholder="请输入ISSN进行搜索选择相关数据"
+                    v-model="aeDialog.aeForm.code"
+                    placeholder="请输入条码号"
                   ></el-input>
                 </el-form-item>
-                <el-form-item label="邮发代号:">
+                <el-form-item label="索书号:">
                   <el-input
                     style="width:180px;"
-                    v-model="aeDialog.aeForm.isbn"
-                    placeholder="请输入ISSN进行搜索选择相关数据"
+                    v-model="aeDialog.aeForm.callNumber"
+                    placeholder="请输入索书号"
                   ></el-input>
                 </el-form-item>
-                <el-form-item label="发行周期:">
-                  <el-input
-                    style="width:180px;"
-                    v-model="aeDialog.aeForm.isbn"
-                    placeholder="请输入ISSN进行搜索选择相关数据"
-                  ></el-input>
+                <el-form-item label="馆藏地:">
+                  <el-select
+                    value-key="id"
+                    @change="watchValue"
+                    v-model="aeDialog.libIndex"
+                    placeholder="输入馆藏地"
+                  >
+                    <el-option
+                      v-for="(item,index) of aeDialog.libSelect"
+                      :key="index"
+                      :label="item.name"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
                 </el-form-item>
               </div>
             </div>
             <div class="mutilyBox">
-              <el-checkbox style="margin:0;" v-model="aeDialog.aeForm.checked">含有复本</el-checkbox>
-              <el-checkbox style="margin:0;" v-model="aeDialog.aeForm.checked">含有复本</el-checkbox>
-              <el-checkbox style="margin:0;" v-model="aeDialog.aeForm.checked">含有复本</el-checkbox>
+              <el-checkbox style="margin-right:130px; margin-left:20px;" v-model="aeDialog.aeForm.available">启用</el-checkbox>
+              <el-checkbox style="margin:0;" v-model="aeDialog.aeForm.lendingPermission">不外借</el-checkbox>
             </div>
           </section>
           <div class="dialogBoxBtn">
@@ -325,15 +486,15 @@
                 style="width: 100%;"
                 :row-style="{height:'30px'}"
               >
-                <el-table-column width="120" prop="date" label="日期"></el-table-column>
-                <el-table-column width="120" prop="name" label="姓名"></el-table-column>
-                <el-table-column width="120" prop="address" label="地址"></el-table-column>
-                <el-table-column width="120" prop="date" label="日期"></el-table-column>
-                <el-table-column width="120" prop="name" label="姓名"></el-table-column>
-                <el-table-column width="120" prop="address" label="地址"></el-table-column>
+                <el-table-column align="center" width="120" prop="aNumber" label="期刊号"></el-table-column>
+                <el-table-column align="center" width="120" prop="sNumber" label="总期号"></el-table-column>
+                <el-table-column align="center" width="120" prop="publicationDateStr" label="出版日期"></el-table-column>
+                <el-table-column align="center" width="120" prop="price" label="价格"></el-table-column>
+                <el-table-column align="center" width="120" prop="page" label="页码"></el-table-column>
+                <!-- <el-table-column width="120" prop="remark" label="备注"></el-table-column> -->
                 <el-table-column align="center" label="操作" width="120" fixed="right">
                   <template slot-scope="scope">
-                    <span class="ban" @click="deleteBtn(scope.$index, scope.row)">获取</span>
+                    <span class="ban" @click="getIndexBtn(scope.$index, scope.row)">获取</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -345,13 +506,22 @@
         </el-dialog>
       </div>
       <!--- 馆藏地树弹框 --->
-      <div id="treeBox"></div>
     </el-dialog>
-    <!-- ISSN搜索弹框 -->
-    <!-- 期刊号弹框 -->
-    <!-- 期刊号 增加与修改弹框 -->
-
-    <!------ 确定与取消弹框 用于删除 调馆 ------>
+    <!-- 否定弹框 只有确定和取消的弹框 -->
+    <section class="waringDialog">
+      <el-dialog
+        :title="warDialog.title[warIndex]"
+        :visible.sync="warDialog.display"
+        width="400px"
+        center
+      >
+        <div class="dialogBody">是否{{warDialog.title[warIndex]}}?</div>
+        <div style="margin-bottom: 20px">
+          <span class="dialogButton true mr_40" @click="warBtn">确 定</span>
+          <span class="dialogButton cancel" @click="warDialog.display=false">取 消</span>
+        </div>
+      </el-dialog>
+    </section>
   </div>
 </template>
 
@@ -364,12 +534,36 @@ export default {
       // 查询表单
       searchInput: {
         option: "", // 选择框
-        search: "" // 输入框
+        search: "", // 输入框
+        optionsArr: [
+          {
+            label: "藏馆码",
+            value: 1
+          },
+          {
+            label: "期刊名",
+            value: 2
+          },
+          {
+            label: "并列题名",
+            value: 3
+          },
+          {
+            label: "ISSN",
+            value: 4
+          },
+          {
+            label: "备注",
+            value: 5
+          }
+        ]
       },
       searchForm: {
-        name: "",
-        code: "",
-        remark: "",
+        libraryBookCode: "", // 藏馆码
+        name: "", // 名字
+        parallelTitle: "", // 并列题名
+        remark: "", // 备注
+        queryIssn: "", // issn
         pageSize: 10,
         currentPage: 1
       },
@@ -400,11 +594,61 @@ export default {
         flag: false,
         display: false,
         title: ["新增", "修改"],
+        inputDisabled: true, // 输入框禁用
+        issnDiabled:true, // 期刊号备用禁用
+        callNumberCopy: "", // 对比索引号是否被修改了
+        checkObj: {
+          // 控制复本
+          control: false,
+          value: 0
+        },
+        libSelect: [],
+        libIndex: {
+          code: "",
+          id: "",
+          name: ""
+        }, // 用这个去数组找元素
         aeForm: {
-          issn: "",
-          id: "", // 期刊ID
-          checked: false,
-          changeNum: 0
+          duplicate: 0, // 复本
+          issn: "", // issn
+          fkCataPeriodicalId: "", // 期刊ID
+          pNumberId: "", // 期刊号ID
+          code: "", // 条码号
+          callNumber: "", // 索引号
+          alteration: 0, // 索引号码是否改动
+          placeCode: "", // 馆内码
+          available: true, // 是否启用
+          lendingPermission: false // 是否外借
+        },
+        showLocalForm: {
+          name: "", //正题名
+          parallelTitle: "", //并列题名
+          unifyNum: "", // 统一刊号
+          author: "", // 主编信息
+          postIssueNumber: "", // 邮发代号
+          releaseCycle: "", // 发行周期
+          fkTypeCode: "", //分类号
+          fkTypeName: "", //分类名
+          fkPressName: "", //出版社
+          fkPressCode: "", //出版码
+          publishingPleace: "", //出版地
+          language: "", //语种
+          languageCode: "汉语", // 语言类型
+          periodicalTypeId: "1", //文献类别
+          openBook: "32", //开本
+          issnPrice: "", //价格
+          themeWord: "", //主题词
+          annotations: "", //附注
+          introduction: "" //摘要
+        },
+        showIndexForm: {
+          aNumber: "", // 期刊号
+          sNumber: "", // 总刊数
+          price: "", // 价格
+          page: " ", // 页码
+          publicationDateStr: "", // 发布日期
+          remark: "", // 备注
+          fkCataPeriodicalId: ""
         }
       },
       aeindex: 0, //控制添加和编辑弹框的切换
@@ -432,7 +676,7 @@ export default {
         title: "期刊号选择",
         tableData: []
       },
-       // war:waring 否定弹框
+      // war:waring 否定弹框
       warIndex: 0, // 控制标题
       warDialog: {
         display: false,
@@ -453,7 +697,7 @@ export default {
     selectAll(val) {
       let arr = [];
       for (let item of val) {
-        arr.push(item.id);
+        arr.push(item.code);
       }
       this.tableObj.selectAll = arr;
       console.log("全选的内容", val);
@@ -489,7 +733,14 @@ export default {
       }
       this.aeIndex = 0;
       this.aeDialog.flag = true;
+      // 清空数据回显问题
       this.clearValue(this.aeDialog.aeForm);
+      this.clearValue(this.aeDialog.showLocalForm);
+      this.clearValue(this.aeDialog.showIndexForm);
+      this.aeDialog.checkObj.control = false;
+      this.aeDialog.checkObj.value = 0;
+      this.aeDialog.aeForm.available = true;
+      this.aeDialog.aeForm.lendingPermission = false;
       this.aeDialog.display = true;
     },
     removeBtn() {
@@ -501,35 +752,81 @@ export default {
       }
     },
     searchBtn() {
-      if (this.searchInput.option) {
-        if (this.searchInput.option == "0") {
-          this.searchForm.name = this.searchInput.search;
-          this.searchForm.code = "";
-          this._search(this.searchForm);
-        } else {
-          this.searchForm.code = this.searchInput.search;
-          this.searchForm.name = "";
-          this._search(this.searchForm);
+      let value = this.searchInput.option;
+      console.log(value);
+      if (value) {
+        switch (value) {
+          case 1:
+            this.clearValue(this.searchForm);
+            this.searchForm.libraryBookCode = this.searchInput.search;
+            break;
+          case 2:
+            this.clearValue(this.searchForm);
+            this.searchForm.name = this.searchInput.search;
+            break;
+          case 3:
+            this.clearValue(this.searchForm);
+            this.searchForm.parallelTitle = this.searchInput.search;
+            break;
+          case 4:
+            this.clearValue(this.searchForm);
+            this.searchForm.queryIssn = this.searchInput.search;
+
+          case 5:
+            this.clearValue(this.searchForm);
+            this.searchForm.remark = this.searchInput.search;
+            break;
         }
       } else {
-        this.searchForm.code = "";
-        this.searchForm.name = "";
-        this._search(this.searchForm);
+        this.clearValue(this.searchForm);
       }
-      console.log(this.searchInput);
+      this.searchForm.pageSize = 10;
+      this.searchForm.currentPage = 1;
+      this._search(this.searchForm);
+      console.log(this.searchInput, this.searchForm);
     },
     reviseBtn(index, row) {
       this.aeIndex = 1;
-      this.aeDialog.display = true;
+      let obj = {}
+      obj.id = row.id
+      this._getFront(obj)
       this.aeDialog.flag = true;
-      this.aeDialog.aeForm = Object.assign(this.aeDialog.aeForm, row);
-      console.log("当前row数据", row);
+      this.aeDialog.aeForm.available = this.aeDialog.aeForm.available
+        ? true
+        : false;
+      this.aeDialog.aeForm.lendingPermission = this.aeDialog.aeForm.lendingPermission
+        ? true
+        : false;
+      this.aeDialog.display = true;
+      console.log("当前row数据", row, this.aeDialog.aeForm);
     },
     pagationBtn() {},
     /*------ 弹框按钮 ------*/
     aeConfirmBtn() {
+      console.log(this.aeDialog.aeForm, "检测");
       this.$refs.aeForm.validate(valid => {
         if (valid) {
+          // 复本要做判定
+          if (this.aeDialog.checkObj.control) {
+            this.aeDialog.aeForm.duplicate = this.aeDialog.checkObj.value;
+          } else {
+          }
+          // 索取号判定
+          if (this.callNumberCopy == this.callNumber) {
+            this.aeDialog.aeForm.alteration = 0;
+          } else {
+            this.aeDialog.aeForm.alteration = 1;
+          }
+          // true和false
+          this.aeDialog.aeForm.available = this.aeDialog.aeForm.available
+            ? 1
+            : 0;
+          this.aeDialog.aeForm.lendingPermission = this.aeDialog.aeForm
+            .lendingPermission
+            ? 1
+            : 0;
+          this.aeDialog.aeForm.placeCode = this.aeDialog.libIndex.code;
+          console.log(this.aeDialog.aeForm, "检测");
           if (this.aeIndex == 0) {
             this._add(this.aeDialog.aeForm);
           } else {
@@ -542,7 +839,7 @@ export default {
     },
     warBtn() {
       let obj = {};
-      obj.ids = this.tableObj.selectArr;
+      obj.codes = this.tableObj.selectAll;
       this._remove(obj);
     },
 
@@ -550,7 +847,7 @@ export default {
     sIssnBtn() {
       // 做数据验证
       let obj = {};
-      obj.issn = this.aeDialog.aeForm.issn;
+      obj.queryIssn = this.aeDialog.aeForm.issn;
 
       console.log(obj, "传递的数据");
       this._getLocal(obj);
@@ -559,31 +856,56 @@ export default {
     sIndexBtn() {
       let obj = {};
       obj.issn = this.aeDialog.aeForm.issn;
-      obj.cataPeriodicalId = this.aeDialog.aeForm.id;
-      this._getIndexNum(obj);
+      obj.cataPeriodicalId = this.aeDialog.aeForm.fkCataPeriodicalId;
+      if(obj.cataPeriodicalId){
+        this._getIndexNum(obj);
+      } else {
+        this.$message.error('请先输入ISSN选取对应期刊后再选取期刊号')
+      }
+      console.log(obj)
+      
     },
     /*--- ISSN搜索数据弹框 ---*/
     getLocalBtn(index, row) {
-      this.aeDialog.aeForm.id = row.id;
+      this.aeDialog.aeForm.fkCataPeriodicalId = row.id;
       this.issnDialog.display = false;
+      this.aeDialog.showLocalForm = Object.assign(
+        this.aeDialog.showLocalForm,
+        row
+      );
+      // 调用 期刊号接口
       let obj = {};
       obj.issn = this.aeDialog.aeForm.issn;
-      obj.cataPeriodicalId = this.aeDialog.aeForm.id;
+      obj.cataPeriodicalId = row.id;
       this._getNumber(obj);
       console.log(row, "获取的数据");
     },
     // 期刊号弹框
-    getIndexBtn(index, row) {},
+    getIndexBtn(index, row) {
+      console.log(row, "期刊号ID？", this.aeDialog.aeForm, "表单");
+      this.aeDialog.aeForm.pNumberId = row.id;
+      this.aeDialog.showIndexForm = Object.assign(
+        this.aeDialog.showIndexForm,
+        row
+      );
+      this.indexNumDlg.display = false;
+    },
     /*------ api ------*/
     _add(obj) {
       let data = obj;
       reserveInt.add(data).then(res => {
-        console.log(res, "添加");
+        if (res.data.state) {
+          this.aeDialog.display = false;
+          this._search();
+          this.$message.success(res.data.msg);
+        } else {
+          this.$message.error(res.data.msg);
+        }
       });
     },
     _remove(obj) {
       let data = obj;
-      libraryInt.remove(data).then(res => {
+      reserveInt.remove(data).then(res => {
         if (res.data.state == true) {
           this.$message.success(res.data.msg);
           this._search();
@@ -597,6 +919,11 @@ export default {
       let data = obj;
       reserveInt.search(data).then(res => {
         if (res.data.state == true) {
+          for (let item of res.data.row) {
+            item.toAvailable = this.toAvailable(item.available);
+            item.toLendState = this.toLendState(item.lendState);
+            item.toOtherState = this.toOtherState(item.otherState);
+          }
           this.tableObj.tableData = res.data.row;
           this.pagationObj.total = res.data.total;
         }
@@ -605,7 +932,7 @@ export default {
     },
     _revise(obj) {
       let data = obj;
-      libraryInt.revise(data).then(res => {
+      reserveInt.revise(data).then(res => {
         if (res.data.state == true) {
           this.$message.success(res.data.msg);
           this._search();
@@ -623,8 +950,55 @@ export default {
       for (let key of keys(obj)) {
         obj[key] = "";
       }
+    }, // 一层清空不完整
+    // 健壮性未做 类型判定未做
+    toAvailable(num) {
+      let str = "";
+      switch (num) {
+        case 0:
+          str = "停用";
+          break;
+        case 1:
+          str = "启用";
+          break;
+      }
+      return str;
     },
-
+    toLendState(num) {
+      let str = "";
+      switch (num) {
+        case 0:
+          str = "不在架";
+          break;
+        case 1:
+          str = "在架";
+          break;
+        case 2:
+          str = "借出";
+      }
+      return str;
+    },
+    toOtherState(num) {
+      let str = "";
+      switch (num) {
+        case 0:
+          str = "无特殊状态";
+          break;
+        case 1:
+          str = "损坏";
+          break;
+        case 2:
+          str = "遗失";
+          break;
+        case 3:
+          str = "调馆";
+          break;
+        case 4:
+          str = "剔除";
+          break;
+      }
+      return str;
+    },
     /*------ 2019/8/10接盘版 api区 ------*/
 
     /*------ 额外API ------*/
@@ -658,12 +1032,47 @@ export default {
     _getNumber(obj) {
       let data = obj;
       reserveInt.getNumber(data).then(res => {
-        console.log(res, "索取号");
+        if (res.data.state == true) {
+          let dataMe = JSON.parse(res.data.row);
+          this.aeDialog.aeForm.code = dataMe.code;
+          this.aeDialog.aeForm.callNumber = dataMe.callNumber;
+          this.aeDialog.callNumberCopy = dataMe.callNumber;
+          console.log(dataMe, "索取号", this.aeDialog.aeForm);
+        } else {
+          this.$message.error(res.data.msg);
+        }
       });
-    }
+    },
     // 获取馆藏地
+    _getCity(obj) {
+      let data = obj;
+      reserveInt.getCity(data).then(res => {
+        if (res.data.state == true) {
+          this.aeDialog.libSelect = res.data.row;
+          console.log(res, "馆藏地");
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    // 点击获取
+    _getFront(obj){
+      let data = obj;
+      reserveInt.getFront(data).then(res => {
+        if (res.data.state == true) {
+          console.log(res,'编辑回显')
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    watchValue(val) {
+      //this.aeDialog.libIndex = Object.assign(this.aeDialog.libIndex,val)
+      console.log(val, this.aeDialog.libIndex);
+    }
   },
   created() {
+    this._getCity();
     this._search();
   }
 };
@@ -747,6 +1156,7 @@ export default {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        
       }
       .indexInfo {
         padding: 20px 15px;
@@ -779,6 +1189,12 @@ export default {
     .threeInfoBox {
       padding: 20px 15px;
       border: 1px solid #d3dfe6;
+      .number{
+        margin-bottom: 10px;
+      }
+      .mutilyBox{
+        
+      }
     }
     .dialogBoxBtn {
       text-align: center;
@@ -809,6 +1225,22 @@ export default {
         background: rgb(0, 150, 255);
       }
     }
+  }
+  .waringDialog {
+    .dialogBody {
+      text-align: center;
+      font-size: 16px;
+      margin-top: 15px;
+      margin-bottom: 30px;
+    }
+  }
+  /*------ 覆盖样式 ------*/
+  .el-input.is-disabled .el-input__inner{
+    background-color: rgba(0,0,0,0)
+  }
+  .otherInput .el-input .el-input__inner{
+    height: 40px;
+    line-height: 40px;
   }
 }
 </style>

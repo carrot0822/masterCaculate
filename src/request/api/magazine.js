@@ -1,4 +1,5 @@
 import axios from 'axios'
+
 var url = window.glob.url;
 var imgurl = window.glob.imgurl;
 var fileUrl = window.glob.fileUrl;
@@ -26,22 +27,26 @@ const reserveUrl = {
   add: `${url}periodicalmodule/periodicalTbCollectionInfo/add`,
   revise: `${url}periodicalmodule/periodicalTbCollectionInfo/edit`,
   delete: `${url}periodicalmodule/periodicalTbCollectionInfo/delete`,
+  getFront:`${url}periodicalmodule/periodicalTbCollectionInfo/selectOne`, // 
   // other接口
   reject: `${url}periodicalmodule/periodicalTbCollectionInfo/ridOf`, // 剔除
   getLocal: `${url}periodicalmodule/periodicalTbCollectionInfo/selectLocal`, // 获取本地issn
   getIndex: `${url}periodicalmodule/periodicalTbCollectionInfo/getPN`, // 获取所有期刊号
   getNumber: `${url}periodicalmodule/periodicalTbCollectionInfo/getcs`, // 获取索书号等
+  getCity:`${url}periodicalmodule/periodicalTbCollectionInfo/getLB`, // 查询所有藏馆
   
 }
 export const reserveInt = {
   search,
   add,
   revise,
-  del,
+  remove,
   reject,
   getIndex,
   getLocal,
-  getNumber
+  getNumber,
+  getCity,
+  getFront
 }
 
 function search(obj) {
@@ -64,8 +69,8 @@ function revise(data) {
   })
 }
 
-function del(data) {
-  return axios.delete(reserveUrl.delete, data).then((res) => {
+function remove(data) {
+  return axios.delete(reserveUrl.delete, {data}).then((res) => {
     return Promise.resolve(res)
   })
 }
@@ -94,6 +99,22 @@ function getIndex(obj) {
 
 function getNumber(obj) {
   return axios.get(reserveUrl.getNumber, {
+    params: obj
+  }).then((res) => {
+    return Promise.resolve(res)
+  })
+}
+
+function getCity(obj) {
+  return axios.get(reserveUrl.getCity, {
+    params: obj
+  }).then((res) => {
+    return Promise.resolve(res)
+  })
+}
+
+function getFront(obj) {
+  return axios.get(reserveUrl.getFront, {
     params: obj
   }).then((res) => {
     return Promise.resolve(res)
