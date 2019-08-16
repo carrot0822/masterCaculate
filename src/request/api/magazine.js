@@ -34,7 +34,8 @@ const reserveUrl = {
   getIndex: `${url}periodicalmodule/periodicalTbCollectionInfo/getPN`, // 获取所有期刊号
   getNumber: `${url}periodicalmodule/periodicalTbCollectionInfo/getcs`, // 获取索书号等
   getCity:`${url}periodicalmodule/periodicalTbCollectionInfo/getLB`, // 查询所有藏馆
-  
+  closeIndex:`${url}periodicalmodule/periodicalTbCollectionInfo/stopUs`, // 停用
+  openIndex:`${url}periodicalmodule/periodicalTbCollectionInfo/startUs` // 启用
 }
 export const reserveInt = {
   search,
@@ -46,7 +47,9 @@ export const reserveInt = {
   getLocal,
   getNumber,
   getCity,
-  getFront
+  getFront,
+  closeIndex,
+  openIndex
 }
 
 function search(obj) {
@@ -64,7 +67,7 @@ function add(data) {
 }
 
 function revise(data) {
-  return axios.post(reserveUrl.revise, data).then((res) => {
+  return axios.put(reserveUrl.revise, data).then((res) => {
     return Promise.resolve(res)
   })
 }
@@ -76,7 +79,7 @@ function remove(data) {
 }
 
 function reject(data) {
-  return axios.delete(reserveUrl.reject, data).then((res) => {
+  return axios.put(reserveUrl.reject, data).then((res) => {
     return Promise.resolve(res)
   })
 }
@@ -117,6 +120,16 @@ function getFront(obj) {
   return axios.get(reserveUrl.getFront, {
     params: obj
   }).then((res) => {
+    return Promise.resolve(res)
+  })
+}
+function openIndex(data) {
+  return axios.put(reserveUrl.openIndex, data).then((res) => {
+    return Promise.resolve(res)
+  })
+}
+function closeIndex(data) {
+  return axios.put(reserveUrl.closeIndex, data).then((res) => {
     return Promise.resolve(res)
   })
 }
