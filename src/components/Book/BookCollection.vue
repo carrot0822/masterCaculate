@@ -845,6 +845,7 @@ export default {
         place: this.addForm.place,
         dailyRent: this.addForm.dailyRent == true ? 1 : 0,
         lendingPermission: this.addForm.lendingPermission == true ? 1: 0,
+        available: this.addForm.available == true ? 1 : 0,
         pageSize: this.pageSize,
         currentPage: 1
       };
@@ -1100,11 +1101,12 @@ export default {
     },
     // 修改添加弹框确定按钮
     submitForm() {
-
+      console.log('提交的数据',this.addFormData)
       if (this.i == 1) {
         if (this.addForm.isbn) {
 
           this.addApi(this.addFormData);
+          
         } else {
           this.$message({
             message: "请先输入ISBN搜索相关书籍再进行新增操作",

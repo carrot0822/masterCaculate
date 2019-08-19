@@ -1,7 +1,7 @@
 <template>
-  <div id="indexCataBox">
+  <div id="indexMeger">
     <section class="titleBox">
-      <h2 class="title">期刊典藏</h2>
+      <h2 class="title">过刊合订</h2>
     </section>
     <!-- 按钮集合 -->
     <section class="changeBtnBox">
@@ -224,7 +224,7 @@
       :visible.sync="aeDialog.display"
       width="900px;"
     >
-      <div id="indexCataAdd" class="content">
+      <div id="mergeAdd" class="content">
         <el-form
           ref="aeForm"
           :rules="aeDialog.aeRules"
@@ -360,68 +360,25 @@
               </div>
             </div>
           </section>
-          <!-- 期刊号 -->
-          <section class="twiceInfoBox">
-            <div class="indexNum">
-              <el-form-item prop="pNumberId" label="期刊号:">
-                <el-input
-                  style="width:350px;"
-                  v-model="aeDialog.showIndexForm.aNumber"
-                  :disabled="aeDialog.issnDiabled"
-                  placeholder="请点击搜索按钮选取期刊号"
-                >
-                  <el-button slot="append" type="primary" @click="sIndexBtn" icon="el-icon-search"></el-button>
-                </el-input>
-              </el-form-item>
+          <!-- 子刊号 -->
+          <section class="sonIndexBox">
+            <div class="sonIndex">
+              <span>管理>></span>
             </div>
-            <!--- 期刊号输入回显信息 --->
-            <div class="indexNumInfo">
-              <div class="diagtwoInput flexRow">
-                <el-form-item label="总期号:">
-                  <el-input
-                    style="width:250px;"
-                    v-model="aeDialog.showIndexForm.sNumber"
-                    :disabled="aeDialog.issnDiabled"
-                    placeholder="请输入总期号"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="出版日期:">
-                  <el-input
-                    style="width:320px;"
-                    v-model="aeDialog.showIndexForm.publicationDateStr"
-                    :disabled="aeDialog.issnDiabled"
-                    placeholder="请输入出版日期"
-                  ></el-input>
-                </el-form-item>
-              </div>
-              <div class="diagtwoInput flexRow">
-                <el-form-item label="定价:">
-                  <el-input
-                    style="width:250px;"
-                    v-model="aeDialog.showIndexForm.price"
-                    :disabled="aeDialog.issnDiabled"
-                    placeholder="请输入定价"
-                  ></el-input>
-                </el-form-item>
-                <el-form-item label="页数:">
-                  <el-input
-                    style="width:320px;"
-                    v-model="aeDialog.showIndexForm.page"
-                    :disabled="aeDialog.issnDiabled"
-                    placeholder="请输入页数"
-                  ></el-input>
-                </el-form-item>
-              </div>
-              <div class="diagOneInput">
-                <el-form-item label="备注:">
-                  <el-input
-                    style="width:720px;"
-                    v-model="aeDialog.showIndexForm.remark"
-                    :disabled="aeDialog.issnDiabled"
-                    placeholder="请输入备注"
-                  ></el-input>
-                </el-form-item>
-              </div>
+            <div class="table"></div>
+
+            <!--- 子刊号选择回显信息 --->
+            <div class="flexRow">
+              <el-form-item prop="code" label="条码号:">
+                <el-input style="width:180px;" v-model="aeDialog.aeForm.code" placeholder="请输入条码号"></el-input>
+              </el-form-item>
+              <el-form-item prop="callNumber" label="索书号:">
+                <el-input
+                  style="width:180px;"
+                  v-model="aeDialog.aeForm.callNumber"
+                  placeholder="请输入索书号"
+                ></el-input>
+              </el-form-item>
             </div>
           </section>
           <!-- 条码号 期刊号回显  -->
@@ -509,39 +466,112 @@
         </el-dialog>
       </div>
       <!--- 期刊号弹框 --->
-      <div id="indexNumBox">
-        <el-dialog :title="indexNumDlg.title" :visible.sync="indexNumDlg.display" append-to-body>
-          <div id="indexNumTable">
-            <div class="indexNumTableBox" style="marginBottom:20px;">
-              <el-table
-                :data="indexNumDlg.tableData"
-                max-height="250"
-                :header-row-style="tableNomalHead"
-                :header-cell-style="tableNomalHead"
-                empty-text="无数据"
-                style="width: 100%;"
-                :row-style="{height:'30px'}"
-              >
-                <el-table-column align="center" width="120" prop="aNumber" label="期刊号"></el-table-column>
-                <el-table-column align="center" width="120" prop="sNumber" label="总期号"></el-table-column>
-                <el-table-column align="center" width="120" prop="publicationDateStr" label="出版日期"></el-table-column>
-                <el-table-column align="center" width="120" prop="price" label="价格"></el-table-column>
-                <el-table-column align="center" width="120" prop="page" label="页码"></el-table-column>
-                <!-- <el-table-column width="120" prop="remark" label="备注"></el-table-column> -->
-                <el-table-column align="center" label="操作" width="120" fixed="right">
-                  <template slot-scope="scope">
-                    <span class="ban" @click="getIndexBtn(scope.$index, scope.row)">获取</span>
-                  </template>
-                </el-table-column>
-              </el-table>
+      <div class="index">
+        <el-dialog
+          id="indexNumBox"
+          :title="indexNumDlg.title"
+          :visible.sync="indexNumDlg.display"
+          append-to-body
+        >
+          <div class="content">
+            <div class="leftBox">
+              <section class="mypagation"></section>
+              <section class="searchIndex">
+                <button class="addBtn" @click="addBtn">
+                  <i class="addIcon el-icon-plus"></i>选取
+                </button>
+                <el-input
+                  style="width:350px;"
+                  :disabled="aeDialog.searchDisabled"
+                  v-model="aeDialog.aeForm.issn"
+                  placeholder="按条码编号或期刊号筛选"
+                >
+                  <el-button
+                    :disabled="aeDialog.searchDisabled"
+                    slot="append"
+                    type="primary"
+                    @click="sIssnBtn"
+                    icon="el-icon-search"
+                  ></el-button>
+                </el-input>
+              </section>
+              <section class="tableData">
+                <el-table
+                  :header-cell-style="tableNomalHead"
+                  empty-text="无数据"
+                  style="width: 100%; text-align:center; height:370px;"
+                  :data="tableObj.tableData"
+                  :row-style="tableNomalHead"
+                  @selection-change="selectAll"
+                  max-height="370px"
+                >
+                  <el-table-column align="center" type="selection" width="100"></el-table-column>
+                  <el-table-column align="center" prop="index" type="index" label="序号">
+                    <template slot-scope="scope">
+                      <span>{{(pagationObj.currentPage - 1) * pagationObj.pageSize + scope.$index + 1}}</span>
+                    </template>
+                  </el-table-column>
+
+                  <el-table-column align="center" prop="toLendState" label="期刊号"></el-table-column>
+                  <el-table-column align="center" prop="toLendState" label="价格"></el-table-column>
+                  <el-table-column align="center" prop="toLendState" label="在架状态"></el-table-column>
+                </el-table>
+              </section>
             </div>
-            <div class="dialogBoxBtn textCenter">
-              <span class="dialogButton cancel" @click="indexNumDlg.display = false">取 消</span>
+            <div class="rightBox">
+              <section class="tableData">
+                <el-table
+                  :header-cell-style="tableNomalHead"
+                  empty-text="无数据"
+                  style="width: 100%; text-align:center;"
+                  :data="tableObj.tableData"
+                  :row-style="tableNomalHead"
+                  max-height="470px;"
+                  height="470px;"
+                >
+                  <el-table-column align="center" prop="index" type="index" width="100" label="序号">
+                    <template slot-scope="scope">
+                      <span>{{(pagationObj.currentPage - 1) * pagationObj.pageSize + scope.$index + 1}}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    width="100"
+                    align="center"
+                    prop="toLendState"
+                    label="条码编号"
+                    :show-overflow-tooltip="true"
+                  ></el-table-column>
+                  <el-table-column
+                    width="100"
+                    align="center"
+                    prop="toLendState"
+                    label="期刊号"
+                    :show-overflow-tooltip="true"
+                  ></el-table-column>
+                  <el-table-column
+                    width="100"
+                    align="center"
+                    prop="toLendState"
+                    label="价格"
+                    :show-overflow-tooltip="true"
+                  ></el-table-column>
+                  <el-table-column align="center" label="操作" fixed="right" width="80">
+                    <!-- 这里的scope代表着什么 index是索引 row则是这一行的对象 -->
+                    <template slot-scope="scope">
+                      <span class="revise" @click="reviseBtn(scope.$index, scope.row)">移除</span>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </section>
             </div>
+          </div>
+
+          <div class="dialogBoxBtn textCenter">
+            <span class="dialogButton true mr_40" @click="warBtn">确 定</span>
+            <span class="dialogButton cancel" @click="indexNumDlg.display = false">取 消</span>
           </div>
         </el-dialog>
       </div>
-      <!--- 馆藏地树弹框 --->
     </el-dialog>
     <!-- 否定弹框 只有确定和取消的弹框 -->
     <section class="waringDialog">
@@ -593,7 +623,7 @@
 </template>
 
 <script>
-import { reserveInt } from "@/request/api/magazine";
+import { mergeInt } from "@request/api/magazine/merge";
 export default {
   data() {
     return {
@@ -662,7 +692,7 @@ export default {
       // a: add e:edit
       aeDialog: {
         flag: false,
-        display: false,
+        display: true,
         title: "",
         titleBox: ["添加期刊", "修改期刊"],
         searchDisabled: false, // 搜索禁用
@@ -764,9 +794,12 @@ export default {
       tableRowHead: {},
       // 期刊号弹框
       indexNumDlg: {
-        display: false,
+        display: true,
         title: "期刊号选择",
-        tableData: []
+        searchInput: "",
+        tableDataL: [],
+        tableDataR: [],
+        searchForm: {}
       },
       // war:waring 否定弹框
       warIndex: 0, // 控制标题
@@ -1084,7 +1117,7 @@ export default {
     /*------ api ------*/
     _add(obj) {
       let data = obj;
-      reserveInt.add(data).then(res => {
+      mergeInt.add(data).then(res => {
         if (res.data.state) {
           this.aeDialog.display = false;
           this._search();
@@ -1096,7 +1129,7 @@ export default {
     },
     _remove(obj) {
       let data = obj;
-      reserveInt.remove(data).then(res => {
+      mergeInt.remove(data).then(res => {
         if (res.data.state == true) {
           this.$message.success(res.data.msg);
           this._search();
@@ -1108,7 +1141,7 @@ export default {
     },
     _search(obj) {
       let data = obj;
-      reserveInt.search(data).then(res => {
+      mergeInt.search(data).then(res => {
         if (res.data.state == true) {
           for (let item of res.data.row) {
             item.toAvailable = this.toAvailable(item.available);
@@ -1123,7 +1156,7 @@ export default {
     },
     _revise(obj) {
       let data = obj;
-      reserveInt.revise(data).then(res => {
+      mergeInt.revise(data).then(res => {
         if (res.data.state == true) {
           this.$message.success(res.data.msg);
           this._search();
@@ -1135,7 +1168,7 @@ export default {
     },
     _reject(obj) {
       let data = obj;
-      reserveInt.reject(data).then(res => {
+      mergeInt.reject(data).then(res => {
         if (res.data.state == true) {
           this.$message.success(res.data.msg);
           this._search();
@@ -1225,7 +1258,7 @@ export default {
     // 获取本地期刊数据
     _getLocal(obj) {
       let data = obj;
-      reserveInt.getLocal(data).then(res => {
+      mergeInt.getLocal(data).then(res => {
         if (res.data.state == true) {
           this.issnDialog.display = true;
           this.issnDialog.tableData = res.data.row;
@@ -1238,7 +1271,7 @@ export default {
     // 获取期刊号数据
     _getIndexNum(obj) {
       let data = obj;
-      reserveInt.getIndex(data).then(res => {
+      mergeInt.getIndex(data).then(res => {
         if (res.data.state == true) {
           this.indexNumDlg.display = true;
           this.indexNumDlg.tableData = res.data.row;
@@ -1251,7 +1284,7 @@ export default {
     // 获取索书号
     _getNumber(obj) {
       let data = obj;
-      reserveInt.getNumber(data).then(res => {
+      mergeInt.getNumber(data).then(res => {
         if (res.data.state == true) {
           let dataMe = JSON.parse(res.data.row);
           this.aeDialog.aeForm.code = dataMe.code;
@@ -1266,7 +1299,7 @@ export default {
     // 获取馆藏地
     _getCity(obj) {
       let data = obj;
-      reserveInt.getCity(data).then(res => {
+      mergeInt.getCity(data).then(res => {
         if (res.data.state == true) {
           this.aeDialog.libSelect = res.data.row;
           console.log(res, "馆藏地");
@@ -1279,7 +1312,7 @@ export default {
     _getFront(obj) {
       let data = obj;
 
-      reserveInt.getFront(data).then(res => {
+      mergeInt.getFront(data).then(res => {
         if (res.data.state == true) {
           console.log(res, "编辑回显");
           let dataNom = res.data.row;
@@ -1316,7 +1349,7 @@ export default {
     // 启用
     _openIndex(obj) {
       let data = obj;
-      reserveInt.openIndex(data).then(res => {
+      mergeInt.openIndex(data).then(res => {
         if (res.data.state == true) {
           this.$message.success(res.data.msg);
           this._search();
@@ -1328,7 +1361,7 @@ export default {
     },
     _closeIndex(obj) {
       let data = obj;
-      reserveInt.closeIndex(data).then(res => {
+      mergeInt.closeIndex(data).then(res => {
         if (res.data.state == true) {
           this.$message.success(res.data.msg);
           this._search();
@@ -1351,7 +1384,7 @@ export default {
 </script>
 
 <style lang="scss">
-#indexCataBox {
+#indexMeger {
   background-color: #ffffff;
   padding: 30px;
   .titleBox {
@@ -1437,7 +1470,7 @@ export default {
       }
       .damage {
         color: #ff5c3c;
-        
+
         cursor: pointer;
       }
     }
@@ -1449,7 +1482,7 @@ export default {
     }
   }
   /*弹框组*/
-  #indexCataAdd {
+  #mergeAdd {
     .firstInfoBox {
       .searchForm {
         display: flex;
@@ -1479,14 +1512,6 @@ export default {
       .indexNumInfo {
         padding: 20px 15px;
         border: 1px solid #d3dfe6;
-
-        .el-form-item {
-          margin-bottom: 0px;
-        }
-        .el-input__inner {
-          border: none;
-          border-bottom: 1px solid #d3dfe6;
-        }
       }
     }
     .threeInfoBox {
@@ -1528,6 +1553,7 @@ export default {
       }
     }
   }
+
   /*剔除弹框*/
   /*警告弹框*/
   .waringDialog,
@@ -1551,6 +1577,26 @@ export default {
   .otherInput .el-input .el-input__inner {
     height: 40px;
     line-height: 40px;
+  }
+}
+#indexNumBox {
+  .el-dialog {
+    width: 56%;
+  }
+  .content {
+    display: flex;
+    flex-direction: row;
+    .leftBox {
+      width: 600px;
+      margin-right: 20px;
+    }
+    .rightBox {
+      width: 340px;
+      height: 480px;
+    }
+  }
+  .el-table__fixed-right-patch {
+    background: rgb(0, 150, 255);
   }
 }
 </style>

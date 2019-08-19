@@ -27,7 +27,7 @@ const reserveUrl = {
   add: `${url}periodicalmodule/periodicalTbCollectionInfo/add`,
   revise: `${url}periodicalmodule/periodicalTbCollectionInfo/edit`,
   delete: `${url}periodicalmodule/periodicalTbCollectionInfo/delete`,
-  getFront:`${url}periodicalmodule/periodicalTbCollectionInfo/selectOne`, // 
+  getFront:`${url}periodicalmodule/periodicalTbCollectionInfo/selectOne`, // 获取修改回显信息
   // other接口
   reject: `${url}periodicalmodule/periodicalTbCollectionInfo/ridOf`, // 剔除
   getLocal: `${url}periodicalmodule/periodicalTbCollectionInfo/selectLocal`, // 获取本地issn

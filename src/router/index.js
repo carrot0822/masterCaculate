@@ -146,6 +146,14 @@ export default new Router({
           component:() => import('@/components/magazine/indexcataAdd.vue')
         },
         {
+          path:'/magazineMerge',
+          meta:{
+            title:'过刊合订' ,
+            Mode: '1'
+          },
+          component:() => import('@/components/magazine/merge.vue')
+        },
+        {
           path:'/indexNumber/:id',
           meta:{
             title:'期刊号' ,
@@ -153,6 +161,7 @@ export default new Router({
           },
           component:() => import('../components/magazine/indexNum.vue')
         },
+
         // 2.0 典藏管理
         {
           path: '/libInfo',

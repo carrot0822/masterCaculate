@@ -50,3 +50,8 @@ export function throttle(method,delay) {
 // 数据过滤
 
 // 插件验证
+
+// 深拷贝
+
+
+// 浅拷贝
