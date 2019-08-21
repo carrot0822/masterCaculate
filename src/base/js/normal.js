@@ -55,3 +55,5 @@ export function throttle(method,delay) {
 
 
 // 浅拷贝
+
+// 替换字符串的空格 先查找再更改 最后返回

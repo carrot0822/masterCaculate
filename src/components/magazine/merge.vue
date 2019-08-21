@@ -250,22 +250,6 @@
                   ></el-button>
                 </el-input>
               </el-form-item>
-              <div class="otherInput">
-                <el-checkbox
-                  :disabled="aeDialog.checkObj.checkControl"
-                  style="margin:0;"
-                  v-model="aeDialog.checkObj.control"
-                >含有复本</el-checkbox>
-                <el-input-number
-                  style="width:80px;"
-                  :disabled="!aeDialog.checkObj.control"
-                  v-model="aeDialog.checkObj.value"
-                  controls-position="right"
-                  @change="handleChange"
-                  :min="1"
-                  :max="99"
-                ></el-input-number>
-              </div>
             </div>
             <!-- 输出的信息 -->
             <div class="indexInfo">
@@ -362,21 +346,43 @@
           </section>
           <!-- 子刊号 -->
           <section class="sonIndexBox">
-            <div class="sonIndex">
-              <span>管理>></span>
+            <div class="backout">
+              <div class="sonIndex">
+                <span @click="sIndexBtn">管理>></span>
+              </div>
+              <div class="table">
+                <el-table
+                  :data="aeDialog.showIndexForm.tableData"
+                  max-height="120"
+                  :header-row-style="tableNomalHead"
+                  :header-cell-style="tableNomalHead"
+                  empty-text="无数据"
+                  style="width: 100%;"
+                  :row-style="{height:'30px'}"
+                >
+                  <el-table-column align="center" prop="index" type="index" width="60" label="序号"></el-table-column>
+                  <el-table-column align="center" prop="callNumber" label="条码号"></el-table-column>
+                  <el-table-column align="center" prop="anumber" label="期刊号"></el-table-column>
+                  <el-table-column align="center" prop="price" label="价格"></el-table-column>
+                  <el-table-column align="center" prop="toLendState" label="在馆状态"></el-table-column>
+                </el-table>
+              </div>
             </div>
-            <div class="table"></div>
 
             <!--- 子刊号选择回显信息 --->
             <div class="flexRow">
-              <el-form-item prop="code" label="条码号:">
-                <el-input style="width:180px;" v-model="aeDialog.aeForm.code" placeholder="请输入条码号"></el-input>
-              </el-form-item>
-              <el-form-item prop="callNumber" label="索书号:">
+              <el-form-item label-width="85px" prop="hkPrice" label="合刊估价:">
                 <el-input
-                  style="width:180px;"
-                  v-model="aeDialog.aeForm.callNumber"
-                  placeholder="请输入索书号"
+                  style="width:230px;"
+                  v-model="aeDialog.aeForm.hkPrice"
+                  placeholder="请输入合刊估价"
+                ></el-input>
+              </el-form-item>
+              <el-form-item prop="hkRemarks" label-width="95px" label="合刊备注:">
+                <el-input
+                  style="width:430px;"
+                  v-model="aeDialog.aeForm.hkRemarks"
+                  placeholder="请输入合刊备注"
                 ></el-input>
               </el-form-item>
             </div>
@@ -475,90 +481,76 @@
         >
           <div class="content">
             <div class="leftBox">
-              <section class="mypagation"></section>
+              <section class="mypagation">
+                <pagationOwn @pageChange="pageSelect" :allData="indexNumDlg.pagatiomnObj.alldata"></pagationOwn>
+              </section>
               <section class="searchIndex">
-                <button class="addBtn" @click="addBtn">
+                <span class="getBtn" @click="transformBtn">
                   <i class="addIcon el-icon-plus"></i>选取
-                </button>
+                </span>
                 <el-input
                   style="width:350px;"
-                  :disabled="aeDialog.searchDisabled"
-                  v-model="aeDialog.aeForm.issn"
+                  v-model="indexNumDlg.searchInput"
                   placeholder="按条码编号或期刊号筛选"
                 >
                   <el-button
-                    :disabled="aeDialog.searchDisabled"
                     slot="append"
                     type="primary"
-                    @click="sIssnBtn"
+                    @click="searchSelect"
                     icon="el-icon-search"
                   ></el-button>
                 </el-input>
               </section>
               <section class="tableData">
                 <el-table
+                  ref="leftTable"
+                  :data="indexNumDlg.tableDataL"
+                  max-height="370"
+                  :header-row-style="tableNomalHead"
                   :header-cell-style="tableNomalHead"
                   empty-text="无数据"
-                  style="width: 100%; text-align:center; height:370px;"
-                  :data="tableObj.tableData"
-                  :row-style="tableNomalHead"
-                  @selection-change="selectAll"
-                  max-height="370px"
+                  style="width: 100%;"
+                  @selection-change="indexSelect"
+                  :row-style="{height:'30px'}"
                 >
-                  <el-table-column align="center" type="selection" width="100"></el-table-column>
-                  <el-table-column align="center" prop="index" type="index" label="序号">
+                  <el-table-column align="center" type="selection" width="60"></el-table-column>
+                  <el-table-column align="center" width="100" prop="remarkIndex" label="序号"></el-table-column>
+                  <!-- <el-table-column align="center" prop="index" type="index" width="60" label="序号">
                     <template slot-scope="scope">
                       <span>{{(pagationObj.currentPage - 1) * pagationObj.pageSize + scope.$index + 1}}</span>
                     </template>
-                  </el-table-column>
-
-                  <el-table-column align="center" prop="toLendState" label="期刊号"></el-table-column>
-                  <el-table-column align="center" prop="toLendState" label="价格"></el-table-column>
-                  <el-table-column align="center" prop="toLendState" label="在架状态"></el-table-column>
+                  </el-table-column>-->
+                  <el-table-column align="center" width="100" prop="callNumber" label="条码号"></el-table-column>
+                  <el-table-column align="center" width="100" prop="anumber" label="期刊号"></el-table-column>
+                  <el-table-column align="center" width="100" prop="price" label="价格"></el-table-column>
+                  <el-table-column align="center" prop="toLendState" label="在馆状态"></el-table-column>
                 </el-table>
               </section>
             </div>
             <div class="rightBox">
               <section class="tableData">
                 <el-table
+                  :data="indexNumDlg.tableDataR"
+                  max-height="470"
+                  :header-row-style="tableNomalHead"
                   :header-cell-style="tableNomalHead"
                   empty-text="无数据"
-                  style="width: 100%; text-align:center;"
-                  :data="tableObj.tableData"
-                  :row-style="tableNomalHead"
-                  max-height="470px;"
-                  height="470px;"
+                  style="width: 100%;"
+                  :row-style="{height:'30px'}"
                 >
-                  <el-table-column align="center" prop="index" type="index" width="100" label="序号">
+                  <!-- <el-table-column align="center" prop="index" type="index" width="60" label="序号">
                     <template slot-scope="scope">
                       <span>{{(pagationObj.currentPage - 1) * pagationObj.pageSize + scope.$index + 1}}</span>
                     </template>
-                  </el-table-column>
-                  <el-table-column
-                    width="100"
-                    align="center"
-                    prop="toLendState"
-                    label="条码编号"
-                    :show-overflow-tooltip="true"
-                  ></el-table-column>
-                  <el-table-column
-                    width="100"
-                    align="center"
-                    prop="toLendState"
-                    label="期刊号"
-                    :show-overflow-tooltip="true"
-                  ></el-table-column>
-                  <el-table-column
-                    width="100"
-                    align="center"
-                    prop="toLendState"
-                    label="价格"
-                    :show-overflow-tooltip="true"
-                  ></el-table-column>
-                  <el-table-column align="center" label="操作" fixed="right" width="80">
-                    <!-- 这里的scope代表着什么 index是索引 row则是这一行的对象 -->
+                  </el-table-column>-->
+                  <el-table-column align="center" width="100" prop="remarkIndex" label="序号"></el-table-column>
+                  <el-table-column align="center" width="100" prop="callNumber" label="条码号"></el-table-column>
+                  <el-table-column align="center" width="100" prop="anumber" label="期刊号"></el-table-column>
+                  <el-table-column align="center" width="100" prop="price" label="价格"></el-table-column>
+                  <el-table-column align="center" prop="toLendState" label="在馆状态"></el-table-column>
+                  <el-table-column align="center" fixed="right" label="操作" width="80">
                     <template slot-scope="scope">
-                      <span class="revise" @click="reviseBtn(scope.$index, scope.row)">移除</span>
+                      <span class="ban" @click="singleRemove(scope.$index, scope.row)">移除</span>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -567,7 +559,7 @@
           </div>
 
           <div class="dialogBoxBtn textCenter">
-            <span class="dialogButton true mr_40" @click="warBtn">确 定</span>
+            <span class="dialogButton true mr_40" @click="confirmSelect">确 定</span>
             <span class="dialogButton cancel" @click="indexNumDlg.display = false">取 消</span>
           </div>
         </el-dialog>
@@ -624,6 +616,7 @@
 
 <script>
 import { mergeInt } from "@request/api/magazine/merge";
+import pagationOwn from "@/common/pagation/pagation"
 export default {
   data() {
     return {
@@ -692,12 +685,12 @@ export default {
       // a: add e:edit
       aeDialog: {
         flag: false,
-        display: true,
+        display: false,
         title: "",
         titleBox: ["添加期刊", "修改期刊"],
         searchDisabled: false, // 搜索禁用
         inputDisabled: true, // 回显框禁用
-        issnDiabled: true, // 期刊号备用禁用
+        issnDiabled: false, // 期刊号备用禁用
         callNumberCopy: "", // 对比索引号是否被修改了
         checkObj: {
           // 控制复本
@@ -711,10 +704,12 @@ export default {
           code: "00"
         }, // 用这个去数组找元素
         aeForm: {
-          duplicate: 0, // 复本
+          ids: [], // 合刊刊号ID
           issn: "", // issn
           fkCataPeriodicalId: "", // 期刊ID
           pNumberId: "", // 期刊号ID
+          hkPrice: 0, // 合刊价格
+          hkRemarks: "", // 合刊备注
           code: "", // 条码号
           callNumber: "", // 索引号
           alteration: 0, // 索引号码是否改动
@@ -764,15 +759,10 @@ export default {
           introduction: "" //摘要
         },
         showIndexForm: {
-          aNumber: "", // 期刊号
-          sNumber: "", // 总刊数
-          price: "", // 价格
-          page: " ", // 页码
-          publicationDateStr: "", // 发布日期
-          remark: "", // 备注
-          fkCataPeriodicalId: ""
+          tableData: []
         }
       },
+
       aeindex: 0, //控制添加和编辑弹框的切换
 
       // issn搜索语言弹框
@@ -794,18 +784,29 @@ export default {
       tableRowHead: {},
       // 期刊号弹框
       indexNumDlg: {
-        display: true,
+        display: false,
         title: "期刊号选择",
-        searchInput: "",
+        searchInput: "", // 搜索存储
         tableDataL: [],
         tableDataR: [],
-        searchForm: {}
+        searchForm: {
+          cataPeriodicalId:"",
+          libraryBookCode:"", // 馆内码
+          periodicalNum:"", // 刊期号
+          pageSize:10,
+          currentPage:1, 
+        }, // 搜索表单
+        rowTable: [] ,// 全选按钮暂存
+        pagatiomnObj:{
+          alldata:0,
+
+        }
       },
       // war:waring 否定弹框
       warIndex: 0, // 控制标题
       warDialog: {
         display: false,
-        title: "",
+        title: "删除",
         titleData: ["删除", "启用", "停用"]
       },
       // reject剔除 other 其余弹框
@@ -848,6 +849,9 @@ export default {
       }
     };
   },
+  components:{
+    pagationOwn
+  },
   computed: {
     pageCount() {
       let pageSize = 10;
@@ -865,11 +869,7 @@ export default {
     /*------ 通信框架函数 ------*/
     selectCheck() {},
     selectAll(val) {
-      let arr = [];
-      for (let item of val) {
-        arr.push(item.code);
-      }
-      this.tableObj.selectAll = arr;
+      this.tableObj.selectAll = val;
       console.log("全选的内容", val);
     },
     current_change(val) {
@@ -907,7 +907,7 @@ export default {
       // 清空数据回显问题
       this.clearValue(this.aeDialog.aeForm);
       this.clearValue(this.aeDialog.showLocalForm);
-      this.clearValue(this.aeDialog.showIndexForm);
+      this.aeDialog.showIndexForm.tableData = [];
       this.aeDialog.checkObj.checkControl = false;
       this.aeDialog.searchDisabled = false;
       this.aeDialog.checkObj.control = false;
@@ -1048,9 +1048,13 @@ export default {
     warBtn() {
       let value = this.warIndex;
       let obj = {};
+      let arr = [];
       switch (value) {
         case 0:
-          obj.codes = this.tableObj.selectAll;
+          for (let item of this.tableObj.selectAll) {
+            arr.push(item.id);
+          }
+          obj.ids = arr;
           this._remove(obj);
           break;
         case 1:
@@ -1064,7 +1068,11 @@ export default {
     },
     otherDialogBtn() {
       let obj = {};
-      obj.codes = this.tableObj.selectAll;
+      let arr = [];
+      for (let item of this.tableObj.selectAll) {
+        arr.push(item.code);
+      }
+      obj.codes = arr;
       obj.state = this.otherDialog.otherForm.state;
       this._reject(obj);
     },
@@ -1077,18 +1085,23 @@ export default {
       console.log(obj, "传递的数据");
       this._getLocal(obj);
     },
-    // 期刊号查询按钮
+    // 子刊号管理按钮
     sIndexBtn() {
       let obj = {};
       obj.issn = this.aeDialog.aeForm.issn;
       obj.cataPeriodicalId = this.aeDialog.aeForm.fkCataPeriodicalId;
+      this.indexNumDlg.tableDataR = [];
+      this.indexNumDlg.tableDataR = this.aeDialog.showIndexForm.tableData;
       if (obj.cataPeriodicalId) {
-        this._getIndexNum(obj);
+        this.indexNumDlg.searchForm = Object.assign(this.indexNumDlg.searchForm,obj)
+        this._getMore(this.indexNumDlg.searchForm);
       } else {
         this.$message.error("请先输入ISSN选取对应期刊后再选取期刊号");
       }
       console.log(obj);
     },
+    // 期刊号内部查询
+    innerIndexBtn() {},
     /*--- ISSN搜索数据弹框 ---*/
     getLocalBtn(index, row) {
       this.aeDialog.aeForm.fkCataPeriodicalId = row.id;
@@ -1103,16 +1116,6 @@ export default {
       obj.cataPeriodicalId = row.id;
       this._getNumber(obj);
       console.log(row, "获取的数据");
-    },
-    // 期刊号弹框
-    getIndexBtn(index, row) {
-      console.log(row, "期刊号ID？", this.aeDialog.aeForm, "表单");
-      this.aeDialog.aeForm.pNumberId = row.id;
-      this.aeDialog.showIndexForm = Object.assign(
-        this.aeDialog.showIndexForm,
-        row
-      );
-      this.indexNumDlg.display = false;
     },
     /*------ api ------*/
     _add(obj) {
@@ -1201,56 +1204,24 @@ export default {
       return str;
     },
     toLendState(num) {
-      let str = "";
+      let arr = ["不在架", "在架", "借出", "剔除", "剔除"];
 
-      switch (num) {
-        case 0:
-          str = "不在架";
-          break;
-        case 1:
-          str = "在架";
-          break;
-        case 2:
-          str = "借出";
-        case 3:
-          str = "剔除";
-        case 4:
-          str = "报损";
-      }
-      return str;
+      return arr[num];
     },
     toOtherState(num) {
       let str = "";
-      switch (num) {
-        case 0:
-          str = "无特殊状态";
-          break;
-        case 1:
-          str = "损坏";
-          break;
-        case 2:
-          str = "遗失";
-          break;
-        case 3:
-          str = "调馆";
-          break;
-        case 4:
-          str = "未还";
-          break;
-        case 5:
-          str = "被盗";
-          break;
-        case 6:
-          str = "陈旧";
-          break;
-        case 7:
-          str = "破损";
-          break;
-        case 8:
-          str = "其他";
-          break;
-      }
-      return str;
+      let arr = [
+        "无特殊状态",
+        "损坏",
+        "遗失",
+        "调馆",
+        "未还",
+        "被盗",
+        "陈旧",
+        "破损",
+        "其他"
+      ];
+      return arr[num];
     },
     /*------ 2019/8/10接盘版 api区 ------*/
 
@@ -1269,16 +1240,26 @@ export default {
       });
     },
     // 获取期刊号数据
-    _getIndexNum(obj) {
+    _getMore(obj) {
       let data = obj;
-      mergeInt.getIndex(data).then(res => {
+      mergeInt.getMore(data).then(res => {
         if (res.data.state == true) {
           this.indexNumDlg.display = true;
-          this.indexNumDlg.tableData = res.data.row;
+          let supName = res.data.row; // sup 辅助变量
+          res.data.row.forEach((item, index) => {
+            item.toLendState = this.toLendState(item.lendState);
+            item.remarkIndex = index;
+          });
+          // 过滤元素 对查询的数据进行去重处理
+          if (this.indexNumDlg.tableDataR.length) {
+            this.clearArr(supName, this.indexNumDlg.tableDataR);
+          }
+          this.indexNumDlg.pagatiomnObj.alldata = res.data.total;
+          this.indexNumDlg.tableDataL = supName;
         } else {
           this.$message.error(res.data.msg);
         }
-        console.log("获取本地期刊号", res);
+        console.log("获取子刊号", res);
       });
     },
     // 获取索书号
@@ -1374,7 +1355,97 @@ export default {
     watchValue(val) {
       //this.aeDialog.libIndex = Object.assign(this.aeDialog.libIndex,val)
       console.log(val, this.aeDialog.libIndex);
+    },
+    /*------ 期刊一套的增删查改 ------*/
+    // 全选按钮
+    indexSelect(row) {
+      this.indexNumDlg.rowTable = row;
+      console.log(row, "选择的数据");
+    },
+    // 选取按钮
+    transformBtn() {
+      // 排序 对选择出的函数进行排序处理
+      this.indexNumDlg.tableDataR = this.indexNumDlg.tableDataR.concat(
+        this.indexNumDlg.rowTable
+      );
+
+      this.clearArr(this.indexNumDlg.tableDataL, this.indexNumDlg.rowTable);
+      this.$refs.leftTable.clearSelection();
+      this.indexNumDlg.rowTable = [];
+      console.log("执行了吗");
+    },
+    // 查询条件
+    searchSelect() {
+      this.indexNumDlg.searchForm.periodicalNum = this.indexNumDlg.searchInput;
+      this._getMore(this.indexNumDlg.searchForm);
+      console.log('？？')
+    },
+    // 单个选取
+    singleSelect() {
+      
+    },
+    pageSelect(val){
+      console.log(val);
+       this.indexNumDlg.searchForm.currentPage = val;
+       this._getMore(this.indexNumDlg.searchForm);
+    },
+    // 单个移除
+    singleRemove(index, row) {
+      let len = this.indexNumDlg.tableDataL.length;
+      let loopArr = this.indexNumDlg.tableDataL;
+      let insert = 0;
+      console.log(len, loopArr, "为什么没走循环");
+      if (len == 10) {
+        this.indexNumDlg.tableDataR.splice(index, 1);
+      } else {
+        for (let j = len - 1; j >= 0; j--) {
+          console.log(loopArr[j].remarkIndex, row.remarkIndex);
+          if (loopArr[j].remarkIndex < row.remarkIndex) {
+            insert = j + 1;
+            break;
+          }
+        }
+        console.log("插入的位置", insert);
+        loopArr.splice(insert, 0, row);
+        this.indexNumDlg.tableDataR.splice(index, 1);
+      }
+    },
+    // 确认选择
+    confirmSelect() {
+      /* if(this.this.indexNumDlg.tableDataR){
+
+      } */
+      this.aeDialog.showIndexForm.tableData = this.indexNumDlg.tableDataR;
+      let arr = [];
+      for (let item of this.indexNumDlg.tableDataR) {
+        arr.push(item.id);
+      }
+      this.aeDialog.aeForm.ids = arr;
+      this.indexNumDlg.display = false;
+    },
+    // 消除两数组的交集 创建一个新数组然后赋值也可以 直接删除引用也行 消除传入第一个数组
+    // 并不完美 这个函数
+    clearArr(delArr, testArr) {
+      let delLen = delArr.length;
+      let testLen = testArr.length;
+      let deleteIndex = [];
+      // 输出排序原来被对比数组限定了
+      for (let i = 0; i < delLen; i++) {
+        for (let j = 0; j < testLen; j++) {
+          if (delArr[i].id == testArr[j].id) {
+            deleteIndex.push(i);
+          }
+        }
+      }
+      console.log(deleteIndex, "删除序号");
+      // 逆向删除
+      let splLen = deleteIndex.length;
+      for (let l = splLen - 1; l >= 0; l--) {
+        let index = deleteIndex[l];
+        delArr.splice(index, 1);
+      }
     }
+    // 批量删除数组元素
   },
   created() {
     this._getCity();
@@ -1507,11 +1578,21 @@ export default {
         }
       }
     }
-    .twiceInfoBox {
-      margin: 22px 0;
-      .indexNumInfo {
-        padding: 20px 15px;
-        border: 1px solid #d3dfe6;
+    .sonIndexBox {
+      .backout {
+        border: 1px solid #dcdcdc;
+        border-bottom: none;
+        margin: 20px 0;
+        .sonIndex {
+          font-size: 16px;
+          color: #0096ff;
+          line-height: 28px;
+
+          text-indent: 12px;
+          span {
+            cursor: pointer;
+          }
+        }
       }
     }
     .threeInfoBox {
@@ -1589,6 +1670,22 @@ export default {
     .leftBox {
       width: 600px;
       margin-right: 20px;
+      .searchIndex {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        .getBtn {
+          display: inline-block;
+          padding: 0 20px;
+          color: #fff;
+          cursor: pointer;
+          height: 36px;
+          line-height: 36px;
+          text-align: center;
+          background-color: #0096ff;
+        }
+      }
     }
     .rightBox {
       width: 340px;

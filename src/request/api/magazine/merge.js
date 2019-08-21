@@ -30,7 +30,8 @@ export const mergeInt = {
   revise,
   remove,
   reject,
-  getIndex,
+  getMore,
+  
   getLocal,
   getNumber,
   getCity,
@@ -79,8 +80,8 @@ function getLocal(obj) {
   })
 }
 
-function getIndex(obj) {
-  return axios.get(mergeUrl.getIndex, {
+function getMore(obj) {
+  return axios.get(mergeUrl.getMore, {
     params: obj
   }).then((res) => {
     return Promise.resolve(res)
