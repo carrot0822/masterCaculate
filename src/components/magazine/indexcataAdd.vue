@@ -184,7 +184,7 @@
               >{{scope.row.available?"停用":"启用"}}</span>
               <span class="revise" @click="reviseBtn(scope.$index, scope.row)">修改</span>
 
-              <span class="damage" @click="reviseBtn(scope.$index, scope.row)">报损</span>
+              <span class="damage" @click="damageBtn(scope.$index, scope.row)">报损</span>
             </template>
           </el-table-column>
         </el-table>
@@ -497,7 +497,7 @@
                 <el-table-column width="120" align="center" prop="fkTypeCode" label="分类号"></el-table-column>
                 <el-table-column align="center" fixed="right" label="操作" width="120">
                   <template slot-scope="scope">
-                    <span class="ban" @click="getLocalBtn(scope.$index, scope.row)">获取</span>
+                    <span class="getBtn" @click="getLocalBtn(scope.$index, scope.row)">获取</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -562,20 +562,28 @@
         center
       >
         <div class="dialogBody">
-          <el-form
-            ref="otherForm"
-            :rules="otherDialog.otherRules"
-            label-width="90px"
-            :model="otherDialog.otherForm"
-          >
-            <div class="diagOneInput">
-              <el-form-item prop="state" style="width:100%" label="剔除原因:">
-                <el-select v-model="otherDialog.otherForm.state" placeholder="选择剔除原因">
+          <el-form ref="otherForm" label-width="90px" :model="otherForm">
+            <div v-if="otherDialog.otherIndex == 0" class="diagOneInput">
+              <el-form-item style="width:100%" label="剔除原因:">
+                <el-select v-model="otherDialog.otherInput" placeholder="选择剔除原因">
                   <el-option
-                    v-for="(item,index) of otherDialog.otherOptions"
+                    v-for="(item,index) of otherDialog.rejectOptions"
                     :key="index"
                     :label="item.label"
                     :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <!-- 馆藏地 -->
+            <div v-if="otherDialog.otherIndex == 1" class="diagOneInput">
+              <el-form-item style="width:100%" label="馆藏地:">
+                <el-select v-model="otherDialog.otherInput" placeholder="选择馆藏地">
+                  <el-option
+                    v-for="(item,index) of otherDialog.translateOptions"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.code"
                   ></el-option>
                 </el-select>
               </el-form-item>
@@ -586,6 +594,72 @@
         <div style="margin-bottom: 20px">
           <span class="dialogButton true mr_40" @click="otherDialogBtn">确 定</span>
           <span class="dialogButton cancel" @click="otherDialog.display=false">取 消</span>
+        </div>
+      </el-dialog>
+    </section>
+    <!-- 报损弹框 -->
+    <section id="damageDialog">
+      <el-dialog
+        :title="damageDialog.title"
+        :visible.sync="damageDialog.display"
+        width="900px"
+        center
+      >
+        <div class="dialogBody">
+          <div class="showMessage">
+            <div class="backShow">
+              <span class="label">编号:</span>
+              <p class="showContent">回显数据</p>
+            </div>
+            <div class="backShow">
+              <span class="label">索取号:</span>
+              <p class="showContent"></p>
+            </div>
+            <div class="backShow">
+              <span class="label">馆藏地:</span>
+              <p class="showContent"></p>
+            </div>
+            <div class="backShow">
+              <span class="label">ISBN:</span>
+              <p class="showContent"></p>
+            </div>
+            <div class="backShow">
+              <span class="label">期刊名称:</span>
+              <p class="hidden showContent"></p>
+            </div>
+            <div class="backShow">
+              <span class="label">期刊类型:</span>
+              <p class="showContent"></p>
+            </div>
+            <div class="backShow">
+              <span class="label">价格:</span>
+              <p class="showContent"></p>
+            </div>
+            <div class="backShow">
+              <span class="label">编号</span>
+              <p class="showContent"></p>
+            </div>
+            <div class="backShow">
+              <span class="label">编号</span>
+              <p class="showContent"></p>
+            </div>
+          </div>
+          <div class="showBody">
+            <div class="showBodyBox">
+              <el-form :model="damageDialog.form">
+                <div class="left">
+
+                </div>
+                <div class="right">
+                  
+                </div>
+              </el-form>
+            </div>
+          </div>
+        </div>
+        <div style="margin-bottom: 20px">
+          <span class="dialogButton true mr_40" @click="damageDlgBtn">确 定</span>
+          <span class="dialogButton cancel" @click="damageDialog.display=false">取 消</span>
         </div>
       </el-dialog>
     </section>
@@ -667,7 +741,7 @@ export default {
         titleBox: ["添加期刊", "修改期刊"],
         searchDisabled: false, // 搜索禁用
         inputDisabled: true, // 回显框禁用
-        issnDiabled: true, // 期刊号备用禁用
+        issnDiabled: false, // 期刊号备用禁用
         callNumberCopy: "", // 对比索引号是否被修改了
         checkObj: {
           // 控制复本
@@ -706,7 +780,7 @@ export default {
           placeCode: [
             {
               required: true,
-              message: "剔除原因馆藏地不得为空",
+              message: "馆藏地不得为空",
               trigger: "change"
             }
           ]
@@ -779,8 +853,13 @@ export default {
       otherDialog: {
         display: false,
         otherIndex: 0,
-        otherInupt: "",
-        otherOptions: [
+        otherInput: "",
+        otherOptions: [],
+        title: "剔除",
+        otherForm: {},
+        titleData: ["剔除", "调馆"],
+        // 剔除下拉
+        rejectOptions: [
           {
             label: "未还",
             value: "4"
@@ -802,16 +881,32 @@ export default {
             value: "8"
           }
         ],
-        title: "剔除",
-        otherForm: {
+        rejectForm: {
           codes: [],
           state: ""
         },
-        otherRules: {
-          state: [
-            { required: true, message: "剔除原因不得为空", trigger: "change" }
-          ]
+        // 调馆下拉
+        translateOptions: [],
+        translateForm: {
+          code: "", // 藏馆code
+          ids: [] // 数组
         }
+      },
+      // 报损弹框
+      damageDialog: {
+        display: false,
+        title: "报损",
+        index: 0,
+        titleData: ["报损"],
+        form: {
+          cardNumber: "",
+          damage: "",
+          price: "",
+          remark: ""
+        },
+        rules: {},
+        showData: {},
+        damageOptions: []
       }
     };
   },
@@ -826,17 +921,23 @@ export default {
       obj.id = this.aeDialog.rowId;
       obj = Object.assign(obj, this.aeDialog.aeForm);
       return obj;
+    },
+    otherForm() {
+      switch (this.otherDialog.otherIndex) {
+        case 0:
+          return this.otherDialog.rejectForm;
+          break;
+        case 1:
+          return this.otherDialog.translateForm;
+          break;
+      }
     }
   },
   methods: {
     /*------ 通信框架函数 ------*/
     selectCheck() {},
     selectAll(val) {
-      let arr = [];
-      for (let item of val) {
-        arr.push(item.code);
-      }
-      this.tableObj.selectAll = arr;
+      this.tableObj.selectAll = val;
       console.log("全选的内容", val);
     },
     current_change(val) {
@@ -878,6 +979,8 @@ export default {
       this.aeDialog.checkObj.checkControl = false;
       this.aeDialog.searchDisabled = false;
       this.aeDialog.checkObj.control = false;
+      this.aeDialog.issnDiabled;
+
       this.aeDialog.checkObj.value = 0;
       this.aeDialog.aeForm.available = true;
       this.aeDialog.aeForm.lendingPermission = false;
@@ -887,6 +990,8 @@ export default {
       let length = this.tableObj.selectAll.length;
       if (length) {
         this.warDialog.display = true;
+        this.warIndex = 0;
+        this.warDialog.title = this.warDialog.titleData[0];
       } else {
         this.$message.error("请先选择需要删除的对象");
       }
@@ -930,6 +1035,7 @@ export default {
       this.aeDialog.title = this.aeDialog.titleBox[1];
       this.aeDialog.checkObj.checkControl = true;
       this.aeDialog.searchDisabled = true;
+      this.aeDialog.issnDiabled = true;
       let obj = {};
       this.aeDialog.rowId = row.id;
       obj.id = row.id;
@@ -942,7 +1048,6 @@ export default {
         .lendingPermission
         ? true
         : false;
-      this.aeDialog.display = true;
 
       console.log("当前row数据", row, this.aeDialog.aeForm);
     },
@@ -950,14 +1055,28 @@ export default {
     rejectBtn() {
       let length = this.tableObj.selectAll.length;
       if (length) {
+        this.otherDialog.otherIndex = 0;
+        this.otherDialog.title = this.otherDialog.titleData[0];
+
         this.otherDialog.display = true;
-        this.otherDialog.otherForm.state = "";
+        this.otherDialog.otherInput = "";
       } else {
         this.$message.error("请先选择需要剔除的对象");
       }
     },
     // 批量调馆
-    transferBtn() {},
+    transferBtn() {
+      let length = this.tableObj.selectAll.length;
+      if (length) {
+        this.otherDialog.otherIndex = 1;
+        this.otherDialog.title = this.otherDialog.titleData[1];
+
+        this.otherDialog.display = true;
+        this.otherDialog.otherInput = "";
+      } else {
+        this.$message.error("请先选择需要调馆的对象");
+      }
+    },
     // 导出
     outputBtn() {},
 
@@ -976,6 +1095,12 @@ export default {
       this.warDialog.display = true;
     },
     pagationBtn() {},
+    // 报损
+    damageBtn(index, row) {
+      console.log("报损回显", row);
+      this.damageDialog.display = true;
+    },
+    damageDlgBtn() {},
     /*------ 弹框按钮 ------*/
     aeConfirmBtn() {
       console.log(this.aeDialog.aeForm, "检测");
@@ -1017,7 +1142,12 @@ export default {
       let obj = {};
       switch (value) {
         case 0:
-          obj.codes = this.tableObj.selectAll;
+          let arr = [];
+          for (let item of this.tableObj.selectAll) {
+            arr.push(item.code);
+          }
+
+          obj.codes = arr;
           this._remove(obj);
           break;
         case 1:
@@ -1031,9 +1161,25 @@ export default {
     },
     otherDialogBtn() {
       let obj = {};
-      obj.codes = this.tableObj.selectAll;
-      obj.state = this.otherDialog.otherForm.state;
-      this._reject(obj);
+      let arr = [];
+      switch (this.otherDialog.otherIndex) {
+        case 0:
+          for (let item of this.tableObj.selectAll) {
+            arr.push(item.code);
+          }
+          obj.codes = arr;
+          obj.state = this.otherDialog.otherInput;
+          this._reject(obj);
+          break;
+        case 1:
+          for (let item of this.tableObj.selectAll) {
+            arr.push(item.id);
+          }
+          obj.ids = arr;
+          obj.code = this.otherDialog.otherInput;
+          this._translate(obj);
+          break;
+      }
     },
     // 功能弹框 s: search 外层表单弹框
     sIssnBtn() {
@@ -1269,6 +1415,7 @@ export default {
       reserveInt.getCity(data).then(res => {
         if (res.data.state == true) {
           this.aeDialog.libSelect = res.data.row;
+          this.otherDialog.translateOptions = res.data.row;
           console.log(res, "馆藏地");
         } else {
           this.$message.error(res.data.msg);
@@ -1307,6 +1454,7 @@ export default {
             ? true
             : false;
           this.aeDialog.aeForm.duplicate = 0;
+          this.aeDialog.display = true;
           console.log(this.aeDialog, "赋值失败？");
         } else {
           this.$message.error(res.data.msg);
@@ -1326,6 +1474,7 @@ export default {
         }
       });
     },
+    // 停用
     _closeIndex(obj) {
       let data = obj;
       reserveInt.closeIndex(data).then(res => {
@@ -1333,6 +1482,32 @@ export default {
           this.$message.success(res.data.msg);
           this._search();
           this.warDialog.display = false;
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    // 调馆
+    _translate(obj) {
+      let data = obj;
+      reserveInt.translate(data).then(res => {
+        if (res.data.state == true) {
+          this.$message.success(res.data.msg);
+          this._search();
+          this.otherDialog.display = false;
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    // 报损
+    _damage(obj) {
+      let data = obj;
+      reserveInt.damage(data).then(res => {
+        if (res.data.state == true) {
+          this.$message.success(res.data.msg);
+          this._search();
+          this.damageDialog.display = false;
         } else {
           this.$message.error(res.data.msg);
         }
@@ -1437,7 +1612,7 @@ export default {
       }
       .damage {
         color: #ff5c3c;
-        
+
         cursor: pointer;
       }
     }
@@ -1520,14 +1695,7 @@ export default {
       text-align: right;
     }
   }
-  #issnTable {
-    .issnTableBox {
-      margin-bottom: 30px;
-      .el-table__fixed-right-patch {
-        background: rgb(0, 150, 255);
-      }
-    }
-  }
+
   /*剔除弹框*/
   /*警告弹框*/
   .waringDialog,
@@ -1551,6 +1719,63 @@ export default {
   .otherInput .el-input .el-input__inner {
     height: 40px;
     line-height: 40px;
+  }
+}
+#issnTable {
+  .issnTableBox {
+    margin-bottom: 30px;
+    .getBtn {
+      display: inline-block;
+      padding: 0 20px;
+      color: #fff;
+      cursor: pointer;
+      height: 36px;
+      line-height: 36px;
+      text-align: center;
+      background-color: #0096ff;
+    }
+    .el-table__fixed-right-patch {
+      background: rgb(0, 150, 255);
+    }
+  }
+}
+#damageDialog {
+  .dialogBody {
+    .showMessage {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 20px 0;
+      padding-bottom: 25px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+      .backShow {
+        width: 280px;
+        line-height: 30px;
+
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+
+        .label {
+          width: 80px;
+          padding-right: 20px;
+          box-sizing: border-box;
+          display: inline-block;
+          text-align: right;
+        }
+        .showContent {
+          display: inline-block;
+          width: 180px;
+          border-bottom: 1px solid #ccc;
+        }
+      }
+    }
+    .showBody {
+      margin-bottom: 20px;
+      .showBodyBox {
+      }
+    }
   }
 }
 </style>

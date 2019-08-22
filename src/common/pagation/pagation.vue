@@ -9,20 +9,22 @@
           <span>首页</span>
         </button>
         <button @click="prev">
-          <span>上一页</span>
+          <span>上页</span>
         </button>
         <button @click="next">
-          <span>下一页</span>
+          <span>下页</span>
         </button>
         <button>
           <span @click="last">尾页</span>
         </button>
       </div>
       <div class="jump">
-        <input v-model.number="pageInput" class="inputBox" type="text" />
-        <span>当前第{{currentPage}}页</span>
+        
+        <span>当前第{{currentPage}}页/</span>
          <span>共{{pageMax}}页</span>
-        <button @click="jumpBtn">跳转</button>
+         <span>前往</span>
+        <input v-model.number="pageInput" class="inputBox" type="text" />
+        <button class="pagationBtn" @click="jumpBtn">确定</button>
       </div>
     </div>
   </div>
@@ -116,23 +118,31 @@ export default {
     .buttonBox {
     }
     .jump {
+      margin-left: 5px;
       .inputBox {
-        border: 1px solid #123;
+        border: 1px solid #eaeaea;
         border-radius: 2px;
         width: 40px;
         margin: 0px 10px 0px 10px;
+        padding: 5px;
         text-align: center;
         height: 16px;
       }
+      span{
+        font-size: 14px;
+      }
+      .pagationBtn{
+
+      }
     }
     button {
-      padding: 1px 10px;
-      border: 1px solid #123;
+      padding: 5px 15px;
+      border: 1px solid #eaeaea;
       border-radius: 2px;
-      height: 20px;
-      margin: 0 5px;
+      
+      
       display: inline-block;
-      line-height: 1;
+      
       white-space: nowrap;
       cursor: pointer;
       background: #fff;
@@ -148,7 +158,7 @@ export default {
       -moz-user-select: none;
       font-size: 14px;
       &:hover span{
-        color: aqua;
+        color: rgb(0, 150, 255);
       }
     }
   }

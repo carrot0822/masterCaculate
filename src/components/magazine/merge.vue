@@ -378,10 +378,10 @@
                   placeholder="请输入合刊估价"
                 ></el-input>
               </el-form-item>
-              <el-form-item prop="hkRemarks" label-width="95px" label="合刊备注:">
+              <el-form-item prop="hkRemark" label-width="95px" label="合刊备注:">
                 <el-input
                   style="width:430px;"
-                  v-model="aeDialog.aeForm.hkRemarks"
+                  v-model="aeDialog.aeForm.hkRemark"
                   placeholder="请输入合刊备注"
                 ></el-input>
               </el-form-item>
@@ -460,7 +460,7 @@
                 <el-table-column width="120" align="center" prop="fkTypeCode" label="分类号"></el-table-column>
                 <el-table-column align="center" fixed="right" label="操作" width="120">
                   <template slot-scope="scope">
-                    <span class="ban" @click="getLocalBtn(scope.$index, scope.row)">获取</span>
+                    <span class="getBtn" @click="getLocalBtn(scope.$index, scope.row)">获取</span>
                   </template>
                 </el-table-column>
               </el-table>
@@ -707,9 +707,9 @@ export default {
           ids: [], // 合刊刊号ID
           issn: "", // issn
           fkCataPeriodicalId: "", // 期刊ID
-          pNumberId: "", // 期刊号ID
+          
           hkPrice: 0, // 合刊价格
-          hkRemarks: "", // 合刊备注
+          hkRemark: "", // 合刊备注
           code: "", // 条码号
           callNumber: "", // 索引号
           alteration: 0, // 索引号码是否改动
@@ -718,10 +718,9 @@ export default {
           lendingPermission: false // 是否外借
         },
         aeRules: {
-          issn: [{ required: true, message: "issn不得为空", trigger: "blur" }],
-          pNumberId: [
-            { required: true, message: "期刊号不得为空", trigger: "blur" }
-          ],
+          hkPrice:[{
+            required: true, message: "合刊价格不得为空", trigger: "blur"
+          }],
           code: [
             { required: true, message: "条码号不得为空", trigger: "blur" }
           ],
@@ -731,7 +730,7 @@ export default {
           placeCode: [
             {
               required: true,
-              message: "剔除原因馆藏地不得为空",
+              message: "馆藏地不得为空",
               trigger: "change"
             }
           ]
@@ -911,6 +910,7 @@ export default {
       this.aeDialog.checkObj.checkControl = false;
       this.aeDialog.searchDisabled = false;
       this.aeDialog.checkObj.control = false;
+      this.aeDialog.issnDiabled = false
       this.aeDialog.checkObj.value = 0;
       this.aeDialog.aeForm.available = true;
       this.aeDialog.aeForm.lendingPermission = false;
@@ -920,6 +920,8 @@ export default {
       let length = this.tableObj.selectAll.length;
       if (length) {
         this.warDialog.display = true;
+        this.warIndex = 0;
+        this.warDialog.title = this.warDialog.titleData[0];
       } else {
         this.$message.error("请先选择需要删除的对象");
       }
@@ -963,6 +965,7 @@ export default {
       this.aeDialog.title = this.aeDialog.titleBox[1];
       this.aeDialog.checkObj.checkControl = true;
       this.aeDialog.searchDisabled = true;
+      this.aeDialog.issnDiabled = true
       let obj = {};
       this.aeDialog.rowId = row.id;
       obj.id = row.id;
@@ -975,7 +978,7 @@ export default {
         .lendingPermission
         ? true
         : false;
-      this.aeDialog.display = true;
+      
 
       console.log("当前row数据", row, this.aeDialog.aeForm);
     },
@@ -1014,11 +1017,7 @@ export default {
       console.log(this.aeDialog.aeForm, "检测");
       this.$refs.aeForm.validate(valid => {
         if (valid) {
-          // 复本要做判定
-          if (this.aeDialog.checkObj.control) {
-            this.aeDialog.aeForm.duplicate = this.aeDialog.checkObj.value;
-          } else {
-          }
+
           // 索取号判定
           if (this.callNumberCopy == this.callNumber) {
             this.aeDialog.aeForm.alteration = 0;
@@ -1305,13 +1304,17 @@ export default {
             this.aeDialog.showLocalForm,
             dataNom.cataTbPeriodicalInfo
           );
-          this.aeDialog.showIndexForm = Object.assign(
-            this.aeDialog.showIndexForm,
-            dataNom.periodicalTbNumber
-          );
-          this.aeDialog.aeForm.issn = dataNom.cataTbPeriodicalInfo.issn;
+
+          this.aeDialog.showIndexForm.tableData = dataNom.periodicalTbCollectionInfos;
+          for (let item of dataNom.periodicalTbCollectionInfos) {
+            
+            item.toLendState = this.toLendState(item.lendState);
+            
+          }
+
           this.aeDialog.aeForm.fkCataPeriodicalId = dataNom.fkCataPeriodicalId;
-          this.aeDialog.aeForm.pNumberId = dataNom.pNumberId;
+          this.aeDialog.aeForm.hkPrice = dataNom.hkPrice;
+          this.aeDialog.aeForm.hkRemark = dataNom.hkRemark
           this.aeDialog.aeForm.code = dataNom.code;
           this.aeDialog.aeForm.callNumber = dataNom.callNumber;
           this.aeDialog.callNumberCopy = dataNom.callNumber;
@@ -1320,7 +1323,8 @@ export default {
           this.aeDialog.aeForm.lendingPermission = dataNom.lendingPermission
             ? true
             : false;
-          this.aeDialog.aeForm.duplicate = 0;
+          
+          this.aeDialog.display = true;
           console.log(this.aeDialog, "赋值失败？");
         } else {
           this.$message.error(res.data.msg);
@@ -1626,14 +1630,7 @@ export default {
       text-align: right;
     }
   }
-  #issnTable {
-    .issnTableBox {
-      margin-bottom: 30px;
-      .el-table__fixed-right-patch {
-        background: rgb(0, 150, 255);
-      }
-    }
-  }
+
 
   /*剔除弹框*/
   /*警告弹框*/
@@ -1660,6 +1657,7 @@ export default {
     line-height: 40px;
   }
 }
+// 这两个弹框直接脱离标准的文档流 直接插入到body的 所以scss会失效
 #indexNumBox {
   .el-dialog {
     width: 56%;
@@ -1670,6 +1668,9 @@ export default {
     .leftBox {
       width: 600px;
       margin-right: 20px;
+      .mypagation{
+        margin-bottom: 10px;
+      }
       .searchIndex {
         display: flex;
         flex-direction: row;
@@ -1696,4 +1697,17 @@ export default {
     background: rgb(0, 150, 255);
   }
 }
+
+  #issnTable {
+    .issnTableBox {
+      margin-bottom: 30px;
+      .el-table__fixed-right-patch {
+        background: rgb(0, 150, 255);
+      }
+      .getBtn{
+        color: rgb(0, 150, 255);
+        cursor: pointer;
+      }
+    }
+  }
 </style>

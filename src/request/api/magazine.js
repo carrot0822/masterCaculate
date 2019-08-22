@@ -35,7 +35,9 @@ const reserveUrl = {
   getNumber: `${url}periodicalmodule/periodicalTbCollectionInfo/getcs`, // 获取索书号等
   getCity:`${url}periodicalmodule/periodicalTbCollectionInfo/getLB`, // 查询所有藏馆
   closeIndex:`${url}periodicalmodule/periodicalTbCollectionInfo/stopUs`, // 停用
-  openIndex:`${url}periodicalmodule/periodicalTbCollectionInfo/startUs` // 启用
+  openIndex:`${url}periodicalmodule/periodicalTbCollectionInfo/startUs`, // 启用
+  translate:`${url}periodicalmodule/periodicalTbCollectionInfo/transferLibrary`, // 调馆
+  damage:`${url}periodicalmodule/periodicalTbCollectionInfo/breakage`  // 典藏期刊报损
 }
 export const reserveInt = {
   search,
@@ -49,7 +51,9 @@ export const reserveInt = {
   getCity,
   getFront,
   closeIndex,
-  openIndex
+  openIndex,
+  translate,
+  damage
 }
 
 function search(obj) {
@@ -130,6 +134,16 @@ function openIndex(data) {
 }
 function closeIndex(data) {
   return axios.put(reserveUrl.closeIndex, data).then((res) => {
+    return Promise.resolve(res)
+  })
+}
+function translate(data) {
+  return axios.put(reserveUrl.translate, data).then((res) => {
+    return Promise.resolve(res)
+  })
+}
+function damage(data) {
+  return axios.put(reserveUrl.damage, data).then((res) => {
     return Promise.resolve(res)
   })
 }

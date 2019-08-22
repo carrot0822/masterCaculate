@@ -13,7 +13,7 @@ const mergeUrl = {
   add: `${url}periodicalmodule/itemHad/add`,
   revise: `${url}periodicalmodule/itemHad/edit`,
   remove: `${url}periodicalmodule/itemHad/delete`,
-  getFront:`${url}periodicalmodule/periodicalTbCollectionInfo/selectOne`, // 获取编辑回显信息其一 子刊
+  getFront:`${url}periodicalmodule/itemHad/selectOne`, // 获取编辑回显信息其一 子刊
   getMore:`${url}periodicalmodule/itemHad/getDCQK`, // 获取典藏期刊信息（添加修改合刊）
   // other接口
   reject: `${url}periodicalmodule/itemHad/ridOf`, // 剔除
