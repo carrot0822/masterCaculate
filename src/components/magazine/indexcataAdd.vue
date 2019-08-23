@@ -18,9 +18,9 @@
         <button class="rejectBtn" @click="rejectBtn">
           <i class="deleteIcon el-icon-delete"></i>剔除
         </button>
-        <button class="outputBtn" @click="outputBtn">
+        <!-- <button class="outputBtn" @click="outputBtn">
           <i class="outputIcon el-icon-share"></i>导出
-        </button>
+        </button> -->
       </div>
       <div class="searchBtn">
         <el-form :inline="true" :model="searchInput">
@@ -104,13 +104,7 @@
             label="馆藏地"
             :show-overflow-tooltip="true"
           ></el-table-column>
-          <el-table-column
-            width="100"
-            align="center"
-            prop="issn"
-            label="在馆状态"
-            :show-overflow-tooltip="true"
-          ></el-table-column>
+
           <el-table-column align="center" prop="anumber" label="刊期号" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column
             width="100"
@@ -608,53 +602,81 @@
         <div class="dialogBody">
           <div class="showMessage">
             <div class="backShow">
-              <span class="label">编号:</span>
-              <p class="showContent">回显数据</p>
-            </div>
-            <div class="backShow">
               <span class="label">索取号:</span>
-              <p class="showContent"></p>
+              <p class="showContent">{{damageDialog.showData.callNumber}}</p>
             </div>
             <div class="backShow">
-              <span class="label">馆藏地:</span>
-              <p class="showContent"></p>
+              <span class="label">馆藏码:</span>
+              <p class="showContent">{{damageDialog.showData.code}}</p>
             </div>
+
             <div class="backShow">
-              <span class="label">ISBN:</span>
-              <p class="showContent"></p>
+              <span class="label">ISSN:</span>
+              <p class="showContent">{{damageDialog.showData.issn}}</p>
             </div>
             <div class="backShow">
               <span class="label">期刊名称:</span>
-              <p class="hidden showContent"></p>
+              <p class="hidden showContent">{{damageDialog.showData.name}}</p>
             </div>
             <div class="backShow">
-              <span class="label">期刊类型:</span>
-              <p class="showContent"></p>
+              <span class="label">馆藏地:</span>
+              <p class="showContent">{{damageDialog.showData.place}}</p>
+            </div>
+            <div class="backShow">
+              <span class="label">刊期号:</span>
+              <p class="showContent">{{damageDialog.showData.anumber}}</p>
             </div>
             <div class="backShow">
               <span class="label">价格:</span>
-              <p class="showContent"></p>
+              <p class="showContent">{{damageDialog.showData.price}}</p>
             </div>
             <div class="backShow">
-              <span class="label">编号</span>
-              <p class="showContent"></p>
+              <span class="label">出版日期</span>
+              <p class="showContent">{{damageDialog.showData.publicationDate}}</p>
             </div>
             <div class="backShow">
-              <span class="label">编号</span>
-              <p class="showContent"></p>
+              <span class="label">分类号</span>
+              <p class="showContent">{{damageDialog.showData.fkTypeCode}}</p>
             </div>
           </div>
           <div class="showBody">
-            <div class="showBodyBox">
-              <el-form :model="damageDialog.form">
-                <div class="left">
-
-                </div>
-                <div class="right">
-                  
-                </div>
-              </el-form>
-            </div>
+            <el-form ref="damageForm" class="showBodyBox" :model="damageDialog.form">
+              <div class="left">
+                <el-form-item label=" 卡　　号 :" label-width="100px" id="cardErr">
+                  <el-input v-model="damageDialog.form.cardNumber "></el-input>
+                </el-form-item>
+                <el-form-item label=" 损坏原因 :" prop="price" class="errTitle" label-width="100px">
+                  <el-select
+                    @change="dagameTest"
+                    value-key="id"
+                    style="width: 330px"
+                    v-model="damageDialog.damageItem"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      v-for="item in damageDialog.damageOptions"
+                      :key="item.id"
+                      :label="item.damageName"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label=" 赔偿金额 :" prop="amountCompensation" label-width="100px">
+                  <p class="backText">{{damageValue}}</p>
+                </el-form-item>
+              </div>
+              <div class="right">
+                <el-form-item label=" 备　　注 :" style="width: 400px" class="errTitle">
+                  <el-input
+                    type="textarea"
+                    v-model="damageDialog.form.remarks"
+                    style="width: 300px"
+                    :autosize="{ minRows:8, maxRows: 8}"
+                    resize="none"
+                  ></el-input>
+                </el-form-item>
+              </div>
+            </el-form>
           </div>
         </div>
         <div style="margin-bottom: 20px">
@@ -900,12 +922,36 @@ export default {
         titleData: ["报损"],
         form: {
           cardNumber: "",
-          damage: "",
-          price: "",
-          remark: ""
+          damageId: "",
+          price: null,
+          remarks: "",
+          fkBookLibCode: ""
         },
-        rules: {},
-        showData: {},
+        damageItem: {
+          compensationNum: 0,
+          compensationType: 0,
+          
+          id: "",
+          remarks: "阿斯顿",
+          
+        }, // 报损原因对象
+        rules: {
+          price: [
+            { required: true, message: "赔偿原因不得为空", trigger: "change" }
+          ]
+        },
+        showData: {
+          callNumber: "",
+          code: "",
+          issn: "",
+          name: "",
+          place: "",
+          anumber: "",
+          openBook: "",
+          publicationDate: "",
+          fkTypeCode: "",
+          price: 0
+        },
         damageOptions: []
       }
     };
@@ -913,6 +959,7 @@ export default {
   computed: {
     pageCount() {
       let pageSize = 10;
+
       let all = parseInt(this.pagationObj.total);
       return Math.ceil(all / pageSize);
     },
@@ -931,6 +978,18 @@ export default {
           return this.otherDialog.translateForm;
           break;
       }
+    },
+    // 报损价格
+    damageValue() {
+      let juge = this.damageDialog.damageItem.compensationType;
+      let times = this.damageDialog.damageItem.compensationNum;
+      let price = this.damageDialog.showData.price;
+      if (juge == 0) {
+        return times;
+      } else {
+        return times * price;
+      }
+      console.log(this.damageDialog.damageItem, "先看看值和字段");
     }
   },
   methods: {
@@ -1097,10 +1156,31 @@ export default {
     pagationBtn() {},
     // 报损
     damageBtn(index, row) {
+      this.clearValue(this.damageDialog.form);
+      this.clearValue(this.damageDialog.damageItem);
+      this.damageDialog.form.fkBookLibCode = row.code;
       console.log("报损回显", row);
+      this.damageDialog.showData = Object.assign(
+        this.damageDialog.showData,
+        row
+      );
       this.damageDialog.display = true;
     },
-    damageDlgBtn() {},
+    damageDlgBtn() {
+      // 要开校检 而且是分开校检
+      this.damageDialog.form.damageId = this.damageDialog.damageItem.id;
+      this.$refs.damageForm.validate(valid => {
+        if (valid) {
+          this.damageDialog.form.price = this.damageValue;
+          this._damage(this.damageDialog.form);
+        } else {
+          console.log("where happen");
+        }
+      });
+    },
+    dagameTest(val) {
+      console.log(val, this.damageDialog.damageItem, "选取测试");
+    },
     /*------ 弹框按钮 ------*/
     aeConfirmBtn() {
       console.log(this.aeDialog.aeForm, "检测");
@@ -1215,6 +1295,7 @@ export default {
       obj.issn = this.aeDialog.aeForm.issn;
       obj.cataPeriodicalId = row.id;
       this._getNumber(obj);
+      this._getSearchNum(obj)
       console.log(row, "获取的数据");
     },
     // 期刊号弹框
@@ -1461,6 +1542,7 @@ export default {
         }
       });
     },
+
     // 启用
     _openIndex(obj) {
       let data = obj;
@@ -1513,6 +1595,30 @@ export default {
         }
       });
     },
+    // 报损下拉框
+    _getDamegeOp(obj) {
+      let data = obj;
+      reserveInt.getDamegeOp(data).then(res => {
+        console.log();
+        if (res.data.state == true) {
+          this.damageDialog.damageOptions = res.data.row;
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    // 新型索引号 还要存在本地
+    _getSearchNum(obj) {
+      let data = obj;
+      reserveInt.getSearchNum(data).then(res => {
+        if (res.data.state == true) {
+          
+          console.log(dataMe, "索取号");
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
     watchValue(val) {
       //this.aeDialog.libIndex = Object.assign(this.aeDialog.libIndex,val)
       console.log(val, this.aeDialog.libIndex);
@@ -1521,6 +1627,7 @@ export default {
   created() {
     this._getCity();
     this._search();
+    this._getDamegeOp();
   }
 };
 </script>
@@ -1724,16 +1831,10 @@ export default {
 #issnTable {
   .issnTableBox {
     margin-bottom: 30px;
-    .getBtn {
-      display: inline-block;
-      padding: 0 20px;
-      color: #fff;
-      cursor: pointer;
-      height: 36px;
-      line-height: 36px;
-      text-align: center;
-      background-color: #0096ff;
-    }
+    .getBtn{
+        color: rgb(0, 150, 255);
+        cursor: pointer;
+      }
     .el-table__fixed-right-patch {
       background: rgb(0, 150, 255);
     }
@@ -1745,12 +1846,12 @@ export default {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      padding: 20px 0;
+      padding: 20px 10px;
       padding-bottom: 25px;
       border: 1px solid #ccc;
       margin-bottom: 20px;
       .backShow {
-        width: 280px;
+        
         line-height: 30px;
 
         display: flex;
@@ -1768,12 +1869,22 @@ export default {
           display: inline-block;
           width: 180px;
           border-bottom: 1px solid #ccc;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
         }
       }
     }
     .showBody {
       margin-bottom: 20px;
       .showBodyBox {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        .left {
+          width: 450px;
+          margin-right: 30px;
+        }
       }
     }
   }

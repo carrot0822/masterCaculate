@@ -18,9 +18,9 @@
         <button class="rejectBtn" @click="rejectBtn">
           <i class="deleteIcon el-icon-delete"></i>剔除
         </button>
-        <button class="outputBtn" @click="outputBtn">
+        <!-- <button class="outputBtn" @click="outputBtn">
           <i class="outputIcon el-icon-share"></i>导出
-        </button>
+        </button> -->
       </div>
       <div class="searchBtn">
         <el-form :inline="true" :model="searchInput">
@@ -184,7 +184,7 @@
               >{{scope.row.available?"停用":"启用"}}</span>
               <span class="revise" @click="reviseBtn(scope.$index, scope.row)">修改</span>
 
-              <span class="damage" @click="reviseBtn(scope.$index, scope.row)">报损</span>
+              <span class="damage" @click="damageBtn(scope.$index, scope.row)">报损</span>
             </template>
           </el-table-column>
         </el-table>
@@ -584,20 +584,28 @@
         center
       >
         <div class="dialogBody">
-          <el-form
-            ref="otherForm"
-            :rules="otherDialog.otherRules"
-            label-width="90px"
-            :model="otherDialog.otherForm"
-          >
-            <div class="diagOneInput">
-              <el-form-item prop="state" style="width:100%" label="剔除原因:">
-                <el-select v-model="otherDialog.otherForm.state" placeholder="选择剔除原因">
+          <el-form ref="otherForm" label-width="90px">
+            <div v-if="otherDialog.otherIndex == 0" class="diagOneInput">
+              <el-form-item style="width:100%" label="剔除原因:">
+                <el-select v-model="otherDialog.otherInput" placeholder="选择剔除原因">
                   <el-option
-                    v-for="(item,index) of otherDialog.otherOptions"
+                    v-for="(item,index) of otherDialog.rejectOptions"
                     :key="index"
                     :label="item.label"
                     :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
+            <!-- 馆藏地 -->
+            <div v-if="otherDialog.otherIndex == 1" class="diagOneInput">
+              <el-form-item style="width:100%" label="馆藏地:">
+                <el-select v-model="otherDialog.otherInput" placeholder="选择馆藏地">
+                  <el-option
+                    v-for="(item,index) of otherDialog.translateOptions"
+                    :key="index"
+                    :label="item.name"
+                    :value="item.code"
                   ></el-option>
                 </el-select>
               </el-form-item>
@@ -608,6 +616,100 @@
         <div style="margin-bottom: 20px">
           <span class="dialogButton true mr_40" @click="otherDialogBtn">确 定</span>
           <span class="dialogButton cancel" @click="otherDialog.display=false">取 消</span>
+        </div>
+      </el-dialog>
+    </section>
+    <!-- 报损弹框 -->
+    <section id="damageDialog">
+      <el-dialog
+        :title="damageDialog.title"
+        :visible.sync="damageDialog.display"
+        width="900px"
+        center
+      >
+        <div class="dialogBody">
+          <div class="showMessage">
+            <div class="backShow">
+              <span class="label">索取号:</span>
+              <p class="showContent">{{damageDialog.showData.callNumber}}</p>
+            </div>
+            <div class="backShow">
+              <span class="label">馆藏码:</span>
+              <p class="showContent">{{damageDialog.showData.code}}</p>
+            </div>
+
+            <div class="backShow">
+              <span class="label">ISSN:</span>
+              <p class="showContent">{{damageDialog.showData.issn}}</p>
+            </div>
+            <div class="backShow">
+              <span class="label">期刊名称:</span>
+              <p class="hidden showContent">{{damageDialog.showData.name}}</p>
+            </div>
+            <div class="backShow">
+              <span class="label">馆藏地:</span>
+              <p class="showContent">{{damageDialog.showData.place}}</p>
+            </div>
+            <div class="backShow">
+              <span class="label">刊期号:</span>
+              <p class="showContent">{{damageDialog.showData.anumber}}</p>
+            </div>
+            <div class="backShow">
+              <span class="label">价格:</span>
+              <p class="showContent">{{damageDialog.showData.price}}</p>
+            </div>
+            <div class="backShow">
+              <span class="label">出版日期</span>
+              <p class="showContent">{{damageDialog.showData.publicationDate}}</p>
+            </div>
+            <div class="backShow">
+              <span class="label">分类号</span>
+              <p class="showContent">{{damageDialog.showData.fkTypeCode}}</p>
+            </div>
+          </div>
+          <div class="showBody">
+            <el-form ref="damageForm" class="showBodyBox" :model="damageDialog.form">
+              <div class="left">
+                <el-form-item label=" 卡　　号 :" label-width="100px" id="cardErr">
+                  <el-input v-model="damageDialog.form.cardNumber "></el-input>
+                </el-form-item>
+                <el-form-item label=" 损坏原因 :" prop="price" class="errTitle" label-width="100px">
+                  <el-select
+                    @change="dagameTest"
+                    value-key="id"
+                    style="width: 330px"
+                    v-model="damageDialog.damageItem"
+                    placeholder="请选择"
+                  >
+                    <el-option
+                      v-for="item in damageDialog.damageOptions"
+                      :key="item.id"
+                      :label="item.damageName"
+                      :value="item"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label=" 赔偿金额 :" prop="amountCompensation" label-width="100px">
+                  <p class="backText">{{damageValue}}</p>
+                </el-form-item>
+              </div>
+              <div class="right">
+                <el-form-item label=" 备　　注 :" style="width: 400px" class="errTitle">
+                  <el-input
+                    type="textarea"
+                    v-model="damageDialog.form.remarks"
+                    style="width: 300px"
+                    :autosize="{ minRows:8, maxRows: 8}"
+                    resize="none"
+                  ></el-input>
+                </el-form-item>
+              </div>
+            </el-form>
+          </div>
+        </div>
+        <div style="margin-bottom: 20px">
+          <span class="dialogButton true mr_40" @click="damageDlgBtn">确 定</span>
+          <span class="dialogButton cancel" @click="damageDialog.display=false">取 消</span>
         </div>
       </el-dialog>
     </section>
@@ -812,8 +914,13 @@ export default {
       otherDialog: {
         display: false,
         otherIndex: 0,
-        otherInupt: "",
-        otherOptions: [
+        otherInput: "",
+        otherOptions: [],
+        title: "剔除",
+        otherForm: {},
+        titleData: ["剔除", "调馆"],
+        // 剔除下拉
+        rejectOptions: [
           {
             label: "未还",
             value: "4"
@@ -835,17 +942,59 @@ export default {
             value: "8"
           }
         ],
-        title: "剔除",
-        otherForm: {
+        rejectForm: {
           codes: [],
           state: ""
         },
-        otherRules: {
-          state: [
-            { required: true, message: "剔除原因不得为空", trigger: "change" }
-          ]
+        // 调馆下拉
+        translateOptions: [],
+        translateForm: {
+          code: "", // 藏馆code
+          ids: [] // 数组
         }
-      }
+      },
+      // 报损弹框
+      damageDialog: {
+        display: false,
+        title: "报损",
+        index: 0,
+        titleData: ["报损"],
+        form: {
+          cardNumber: "",
+          damageId: "",
+          price: null,
+          remarks: "",
+          fkBookLibCode: ""
+        },
+        damageItem: {
+          compensationNum: 0,
+          compensationType: 1,
+          createTime: "2019-06-27 15:46:01",
+          damageName: "损坏",
+          distinction: 0,
+          id: "",
+          remarks: "阿斯顿",
+          updateTime: "2019-08-19 15:41:22"
+        }, // 报损原因对象
+        rules: {
+          price: [
+            { required: true, message: "赔偿原因不得为空", trigger: "change" }
+          ]
+        },
+        showData: {
+          callNumber: "",
+          code: "",
+          issn: "",
+          name: "",
+          place: "",
+          anumber: "",
+          openBook: "",
+          publicationDate: "",
+          fkTypeCode: "",
+          price: 0
+        },
+        damageOptions: []
+      } 
     };
   },
   components:{
@@ -862,6 +1011,18 @@ export default {
       obj.id = this.aeDialog.rowId;
       obj = Object.assign(obj, this.aeDialog.aeForm);
       return obj;
+    },
+     // 报损价格
+    damageValue() {
+      let juge = this.damageDialog.damageItem.compensationType;
+      let times = this.damageDialog.damageItem.compensationNum;
+      let price = this.damageDialog.showData.price;
+      if (juge == 0) {
+        return times;
+      } else {
+        return times * price;
+      }
+      console.log(this.damageDialog.damageItem, "先看看值和字段");
     }
   },
   methods: {
@@ -986,14 +1147,28 @@ export default {
     rejectBtn() {
       let length = this.tableObj.selectAll.length;
       if (length) {
+        this.otherDialog.otherIndex = 0;
+        this.otherDialog.title = this.otherDialog.titleData[0];
+
         this.otherDialog.display = true;
-        this.otherDialog.otherForm.state = "";
+        this.otherDialog.otherInput = "";
       } else {
         this.$message.error("请先选择需要剔除的对象");
       }
     },
     // 批量调馆
-    transferBtn() {},
+    transferBtn() {
+      let length = this.tableObj.selectAll.length;
+      if (length) {
+        this.otherDialog.otherIndex = 1;
+        this.otherDialog.title = this.otherDialog.titleData[1];
+
+        this.otherDialog.display = true;
+        this.otherDialog.otherInput = "";
+      } else {
+        this.$message.error("请先选择需要调馆的对象");
+      }
+    },
     // 导出
     outputBtn() {},
 
@@ -1012,6 +1187,34 @@ export default {
       this.warDialog.display = true;
     },
     pagationBtn() {},
+    // 报损
+    damageBtn(index, row) {
+      this.clearValue(this.damageDialog.form);
+      this.clearValue(this.damageDialog.damageItem);
+      this.damageDialog.form.fkBookLibCode = row.code;
+      this.damageDialog.damageItem.id="";
+      console.log("报损回显",this.damageDialog.damageItem);
+      this.damageDialog.showData = Object.assign(
+        this.damageDialog.showData,
+        row
+      );
+      this.damageDialog.display = true;
+    },
+    damageDlgBtn() {
+      // 要开校检 而且是分开校检
+      this.damageDialog.form.damageId = this.damageDialog.damageItem.id;
+      this.$refs.damageForm.validate(valid => {
+        if (valid) {
+          this.damageDialog.form.price = this.damageValue;
+          this._damage(this.damageDialog.form);
+        } else {
+          console.log("where happen");
+        }
+      });
+    },
+    dagameTest(val) {
+      console.log(val, this.damageDialog.damageItem, "选取测试");
+    },
     /*------ 弹框按钮 ------*/
     aeConfirmBtn() {
       console.log(this.aeDialog.aeForm, "检测");
@@ -1068,12 +1271,24 @@ export default {
     otherDialogBtn() {
       let obj = {};
       let arr = [];
-      for (let item of this.tableObj.selectAll) {
-        arr.push(item.code);
+      switch (this.otherDialog.otherIndex) {
+        case 0:
+          for (let item of this.tableObj.selectAll) {
+            arr.push(item.code);
+          }
+          obj.codes = arr;
+          obj.state = this.otherDialog.otherInput;
+          this._reject(obj);
+          break;
+        case 1:
+          for (let item of this.tableObj.selectAll) {
+            arr.push(item.id);
+          }
+          obj.ids = arr;
+          obj.code = this.otherDialog.otherInput;
+          this._translate(obj);
+          break;
       }
-      obj.codes = arr;
-      obj.state = this.otherDialog.otherForm.state;
-      this._reject(obj);
     },
     // 功能弹框 s: search 外层表单弹框
     sIssnBtn() {
@@ -1282,6 +1497,7 @@ export default {
       mergeInt.getCity(data).then(res => {
         if (res.data.state == true) {
           this.aeDialog.libSelect = res.data.row;
+          this.otherDialog.translateOptions = res.data.row;
           console.log(res, "馆藏地");
         } else {
           this.$message.error(res.data.msg);
@@ -1448,12 +1664,52 @@ export default {
         let index = deleteIndex[l];
         delArr.splice(index, 1);
       }
-    }
+    },
     // 批量删除数组元素
+    // 调馆
+    _translate(obj) {
+      let data = obj;
+      mergeInt.translate(data).then(res => {
+        if (res.data.state == true) {
+          this.$message.success(res.data.msg);
+          this._search();
+          this.otherDialog.display = false;
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    // 报损
+    _damage(obj) {
+      let data = obj;
+      mergeInt.damage(data).then(res => {
+        if (res.data.state == true) {
+          this.$message.success(res.data.msg);
+          this._search();
+          this.damageDialog.display = false;
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    // 报损下拉框
+    _getDamegeOp(obj) {
+      let data = obj;
+      mergeInt.getDamegeOp(data).then(res => {
+        console.log();
+        if (res.data.state == true) {
+          this.damageDialog.damageOptions = res.data.row;
+          console.log('报损',res)
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
   },
   created() {
     this._getCity();
     this._search();
+    this._getDamegeOp();
   }
 };
 </script>
@@ -1710,4 +1966,53 @@ export default {
       }
     }
   }
+#damageDialog {
+  .dialogBody {
+    .showMessage {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 20px 10px;
+      padding-bottom: 25px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+      .backShow {
+        
+        line-height: 30px;
+
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+
+        .label {
+          width: 80px;
+          padding-right: 20px;
+          box-sizing: border-box;
+          display: inline-block;
+          text-align: right;
+        }
+        .showContent {
+          display: inline-block;
+          width: 180px;
+          border-bottom: 1px solid #ccc;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+      }
+    }
+    .showBody {
+      margin-bottom: 20px;
+      .showBodyBox {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        .left {
+          width: 450px;
+          margin-right: 30px;
+        }
+      }
+    }
+  }
+}
 </style>

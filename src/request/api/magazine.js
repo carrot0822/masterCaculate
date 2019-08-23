@@ -33,11 +33,13 @@ const reserveUrl = {
   getLocal: `${url}periodicalmodule/periodicalTbCollectionInfo/selectLocal`, // 获取本地issn
   getIndex: `${url}periodicalmodule/periodicalTbCollectionInfo/getPN`, // 获取所有期刊号
   getNumber: `${url}periodicalmodule/periodicalTbCollectionInfo/getcs`, // 获取索书号等
+  getSearchNum:`${url}/bookcollectionmodule/collection/currency/getBopSearchNumber`, // 通用接口 获取索取号*2
   getCity:`${url}periodicalmodule/periodicalTbCollectionInfo/getLB`, // 查询所有藏馆
   closeIndex:`${url}periodicalmodule/periodicalTbCollectionInfo/stopUs`, // 停用
   openIndex:`${url}periodicalmodule/periodicalTbCollectionInfo/startUs`, // 启用
   translate:`${url}periodicalmodule/periodicalTbCollectionInfo/transferLibrary`, // 调馆
-  damage:`${url}periodicalmodule/periodicalTbCollectionInfo/breakage`  // 典藏期刊报损
+  damage:`${url}periodicalmodule/periodicalTbCollectionInfo/breakage`,  // 典藏期刊报损
+  getDamegeOp:`${url}periodicalmodule/periodicalTbCollectionInfo/getDamageBox` // 查询损坏列表下拉框
 }
 export const reserveInt = {
   search,
@@ -53,7 +55,9 @@ export const reserveInt = {
   closeIndex,
   openIndex,
   translate,
-  damage
+  damage,
+  getDamegeOp,
+  getSearchNum
 }
 
 function search(obj) {
@@ -144,6 +148,22 @@ function translate(data) {
 }
 function damage(data) {
   return axios.put(reserveUrl.damage, data).then((res) => {
+    return Promise.resolve(res)
+  })
+}
+function getDamegeOp(obj) {
+  return axios.get(reserveUrl.getDamegeOp, {
+    params: obj
+  }).then((res) => {
+    return Promise.resolve(res)
+  })
+}
+
+
+function getSearchNum(obj) {
+  return axios.get(reserveUrl.getSearchNum, {
+    params: obj
+  }).then((res) => {
     return Promise.resolve(res)
   })
 }

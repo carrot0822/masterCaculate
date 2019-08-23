@@ -22,7 +22,10 @@ const mergeUrl = {
   getNumber: `${url}periodicalmodule/itemHad/getcs`, // 获取索书号等
   getCity:`${url}periodicalmodule/itemHad/getLB`, // 查询所有藏馆
   closeIndex:`${url}periodicalmodule/itemHad/stopUs`, // 停用
-  openIndex:`${url}periodicalmodule/itemHad/startUs` // 启用
+  openIndex:`${url}periodicalmodule/itemHad/startUs`, // 启用
+  translate:`${url}periodicalmodule/itemHad/transferLibrary`, // 调馆
+  damage:`${url}periodicalmodule/itemHad/breakage`,  // 典藏期刊报损
+  getDamegeOp:`${url}periodicalmodule/itemHad/getDamageBox` // 查询损坏列表下拉框
 }
 export const mergeInt = {
   search,
@@ -37,7 +40,10 @@ export const mergeInt = {
   getCity,
   getFront,
   closeIndex,
-  openIndex
+  openIndex,
+  translate,
+  damage,
+  getDamegeOp
 }
 
 function search(obj) {
@@ -118,6 +124,23 @@ function openIndex(data) {
 }
 function closeIndex(data) {
   return axios.put(mergeUrl.closeIndex, data).then((res) => {
+    return Promise.resolve(res)
+  })
+}
+function translate(data) {
+  return axios.put(mergeUrl.translate, data).then((res) => {
+    return Promise.resolve(res)
+  })
+}
+function damage(data) {
+  return axios.put(mergeUrl.damage, data).then((res) => {
+    return Promise.resolve(res)
+  })
+}
+function getDamegeOp(obj) {
+  return axios.get(mergeUrl.getDamegeOp, {
+    params: obj
+  }).then((res) => {
     return Promise.resolve(res)
   })
 }
