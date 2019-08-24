@@ -1294,8 +1294,10 @@ export default {
       let obj = {};
       obj.issn = this.aeDialog.aeForm.issn;
       obj.cataPeriodicalId = row.id;
+      let pbj ={};
+      pbj.id = row.id
       this._getNumber(obj);
-      this._getSearchNum(obj)
+      this._getSearchNum(pbj)
       console.log(row, "获取的数据");
     },
     // 期刊号弹框

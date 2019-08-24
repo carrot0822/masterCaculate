@@ -1,9 +1,11 @@
 <template>
-  <a :class="className" class="link--mallki" href="#">
-    {{text}}
-    <span :data-letters="text"></span>
-    <span :data-letters="text"/>
-  </a>
+  <div class="test">
+    <a :class="className" class="link--mallki" href="#">
+      {{text}}
+      <span :data-letters="text"></span>
+      <span :data-letters="text" />
+    </a>
+  </div>
 </template>
 <script>
 export default {
@@ -70,7 +72,7 @@ export default {
   overflow: hidden;
 }
 .link--mallki span::before {
-  content: attr(data-letters);/*???*/
+  content: attr(data-letters); /*???*/
   color: red;
   position: absolute;
   left: 0;
@@ -94,7 +96,6 @@ export default {
   transform: translate3d(0, -100%, 0);
 }
 
-
 .link--mallki:hover span::before {
   -webkit-transition-delay: 0.3s;
   transition-delay: 0.3s;
@@ -103,7 +104,6 @@ export default {
   -webkit-transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
   transition-timing-function: cubic-bezier(0.2, 1, 0.3, 1);
 }
-
 </style>
 
 

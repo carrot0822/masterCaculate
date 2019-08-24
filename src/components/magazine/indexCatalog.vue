@@ -1038,7 +1038,7 @@ export default {
     },
     //导入按钮
     tunnellingBtn() {
-      this.$router.push({ path: "/uploadBook" });
+      this.$router.push({ path: "/uploadCataLog" });
     },
     submitDialog() {
       let idData = [];
@@ -1090,7 +1090,7 @@ export default {
     diriveApi(val) {
       this.downloadLoading = true;
       axios
-        .get(deriveInt.derive, {
+        .get(logUrl.outPut, {
           params: val
         })
         .then(res => {

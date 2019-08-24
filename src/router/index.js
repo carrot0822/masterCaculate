@@ -114,7 +114,7 @@ export default new Router({
         {
           path: '/uploadBook',
           meta: {
-            title: '编目批量导入',
+            title: '书籍编目导入',
             Mode: '1'
           },
           component: resolve => require(['../common/upload/uploadBook.vue'], resolve)
@@ -130,12 +130,28 @@ export default new Router({
         },
         // 期刊模块
         {
+          path:'/library',
+          meta:{
+            title:'藏馆地',
+            Mode: '1',
+          },
+          component:() => import('../components/magazine/library.vue')
+        },
+        {
           path: '/magazineLog',
           meta: {
             title: '期刊编目',
             Mode: '1'
           },
           component: () => import('@/components/magazine/indexCatalog.vue')
+        },
+        {
+          path: '/uploadCataLog',
+          meta: {
+            title: '期刊编目导入',
+            Mode: '1'
+          },
+          component: () => import("@/components/magazine/uploadCataLog.vue")
         },
         {
           path:'/magazineReserve',
@@ -161,7 +177,22 @@ export default new Router({
           },
           component:() => import('../components/magazine/indexNum.vue')
         },
-
+        {
+          path: '/indexDamageCount',
+          meta: {
+            title: '期刊损坏清点',
+            Mode: '2'
+          },
+          component: () => import('@/components/magazine/indexDamege.vue')
+        },
+        {
+          path: '/indexCheckDetails/:id',
+          meta: {
+            title: '期刊损坏清点详情',
+            Mode: '2'
+          },
+          component: () => import("@/components/magazine/damageDatail.vue")
+        },
         // 2.0 典藏管理
         {
           path: '/libInfo',
@@ -500,7 +531,7 @@ export default new Router({
         {
           path: '/damageCount',
           meta: {
-            title: '损坏清点',
+            title: '书籍损坏清点',
             Mode: '2'
           },
           component: resolve => require(['../components/Book/damageCount.vue'], resolve)
@@ -508,7 +539,7 @@ export default new Router({
         {
           path: '/checkDetails/:id',
           meta: {
-            title: '损坏清点详情',
+            title: '书籍损坏清点详情',
             Mode: '2'
           },
           component: resolve => require(['../components/Book/DamageIinventoryDetails.vue'], resolve)
@@ -615,14 +646,7 @@ export default new Router({
           },
           component: resolve => require(['../components/System/wordbook.vue'], resolve)
         },
-        {
-          path:'/library',
-          meta:{
-            title:'藏馆地',
-            meta:2,
-          },
-          component:() => import('../components/magazine/library.vue')
-        }
+        
       ]
     },
     {

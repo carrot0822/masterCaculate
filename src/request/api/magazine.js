@@ -18,7 +18,7 @@ export const logUrl = {
   sPublisher: `${url}periodicalmodule/marcPeriodical/selectPressTree`, // 查询出版社树
   sLanguage: `${url}periodicalmodule/marcPeriodical/getLanguage`, // 查询语言
   sMagazineType: `${url}periodicalmodule/marcPeriodical/periodicalType`, //  查询期刊类型
-
+  outPut:`${url}/periodicalmodule/marcPeriodical/getFileUrlByConditon`, // 期刊编目导出
 }
 
 // 期刊典藏

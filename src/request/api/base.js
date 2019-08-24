@@ -57,6 +57,11 @@ export const bookUploadInt ={
   getFields:`${url}catamodule/editing/cataTbBookInfo/getFields`,
   add:`${url}catamodule/editing/cataTbBookInfo/start`
 };
+/*--- 批量导入期刊编目 ---*/
+export const indexloadInt ={
+  getFields:`${url}periodicalmodule/marcPeriodical/getFields`, // 期刊编目上传映射
+  add:`${url}periodicalmodule/marcPeriodical/start` // 期刊编目开始上传
+};
 /*--- 损坏清点 ---*/
 export const damageInt = {
   outline:`${url}bookcollectionmodule/countDamage/getFristPage`,
