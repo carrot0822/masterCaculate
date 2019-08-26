@@ -139,7 +139,7 @@
                   </el-form-item>
                 </div>
                 <div class="diagOneInput">
-                  <el-form-item label="价格:">
+                  <el-form-item label="价格:" prop="price">
                     <el-input v-model="aeDialog.aeForm.price" placeholder="请输入价格"></el-input>
                   </el-form-item>
                 </div>
@@ -171,9 +171,9 @@
                     ></el-input>
                   </el-form-item>
                 </div>
-                <div class="diagOneInput">
+                <!-- <div class="diagOneInput">
                   <p class="copyTime" style=" "><span @click="copyBtn">复制上一次录入信息</span></p>
-                </div>
+                </div> -->
               </div>
             </section>
             <div class="dialogBoxBtn">
@@ -278,9 +278,11 @@ export default {
         // 弹框验证
         aeRules: {
           aNumber: [
-            { required: true, message: "请输入期刊号", trigger: "blur" }
+            { required: true, message: "期刊号不得为空", trigger: "blur" }
           ],
-          
+          price:[
+            {required: true, message: "价格不得为空", trigger: "blur"}
+            ]
         }
       },
       // war:waring
@@ -593,7 +595,7 @@ export default {
   }
   #changeDialog{
       .el-date-editor.el-input, .el-date-editor.el-input__inner{
-          width: 320px;
+          width: 340px;
       }
   }
 }

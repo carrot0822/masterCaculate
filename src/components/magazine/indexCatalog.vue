@@ -363,9 +363,9 @@
                       </el-form-item>
                     </div>
                     <div class="flexLayout twoInput">
-                      <el-form-item label="参考单价:" prop="issnPrice" style>
+                      <!-- <el-form-item label="参考单价:" prop="issnPrice" style>
                         <el-input v-model="addForm.issnPrice"></el-input>
-                      </el-form-item>
+                      </el-form-item> -->
                       <el-form-item label="主题词:" prop="themeWord" style>
                         <el-input v-model="addForm.themeWord "></el-input>
                       </el-form-item>

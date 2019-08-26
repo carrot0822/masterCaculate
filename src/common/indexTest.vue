@@ -482,7 +482,7 @@ body,
   top: 60px;
   right: 0px;
   display: none;
-  z-index: 5;
+  z-index: 6666;
 }
 .headBox .username:hover .userDrop {
   display: block;

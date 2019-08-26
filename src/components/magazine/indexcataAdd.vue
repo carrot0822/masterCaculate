@@ -20,7 +20,7 @@
         </button>
         <!-- <button class="outputBtn" @click="outputBtn">
           <i class="outputIcon el-icon-share"></i>导出
-        </button> -->
+        </button>-->
       </div>
       <div class="searchBtn">
         <el-form :inline="true" :model="searchInput">
@@ -361,7 +361,7 @@
                 <el-input
                   style="width:350px;"
                   v-model="aeDialog.showIndexForm.aNumber"
-                  :disabled="aeDialog.issnDiabled"
+                  :disabled="aeDialog.inputDisabled"
                   placeholder="请点击搜索按钮选取期刊号"
                 >
                   <el-button slot="append" type="primary" @click="sIndexBtn" icon="el-icon-search"></el-button>
@@ -375,7 +375,7 @@
                   <el-input
                     style="width:250px;"
                     v-model="aeDialog.showIndexForm.sNumber"
-                    :disabled="aeDialog.issnDiabled"
+                    :disabled="aeDialog.inputDisabled"
                     placeholder="请输入总期号"
                   ></el-input>
                 </el-form-item>
@@ -383,7 +383,7 @@
                   <el-input
                     style="width:320px;"
                     v-model="aeDialog.showIndexForm.publicationDateStr"
-                    :disabled="aeDialog.issnDiabled"
+                    :disabled="aeDialog.inputDisabled"
                     placeholder="请输入出版日期"
                   ></el-input>
                 </el-form-item>
@@ -393,7 +393,7 @@
                   <el-input
                     style="width:250px;"
                     v-model="aeDialog.showIndexForm.price"
-                    :disabled="aeDialog.issnDiabled"
+                    :disabled="aeDialog.inputDisabled"
                     placeholder="请输入定价"
                   ></el-input>
                 </el-form-item>
@@ -401,7 +401,7 @@
                   <el-input
                     style="width:320px;"
                     v-model="aeDialog.showIndexForm.page"
-                    :disabled="aeDialog.issnDiabled"
+                    :disabled="aeDialog.inputDisabled"
                     placeholder="请输入页数"
                   ></el-input>
                 </el-form-item>
@@ -411,7 +411,7 @@
                   <el-input
                     style="width:720px;"
                     v-model="aeDialog.showIndexForm.remark"
-                    :disabled="aeDialog.issnDiabled"
+                    :disabled="aeDialog.inputDisabled"
                     placeholder="请输入备注"
                   ></el-input>
                 </el-form-item>
@@ -424,17 +424,32 @@
               <div class="diagThreeInput flexRow">
                 <el-form-item prop="code" label="条码号:">
                   <el-input
-                    style="width:180px;"
+                    style="width:140px;"
                     v-model="aeDialog.aeForm.code"
                     placeholder="请输入条码号"
                   ></el-input>
                 </el-form-item>
-                <el-form-item prop="callNumber" label="索书号:">
+                <el-form-item label="索取号:">
                   <el-input
-                    style="width:180px;"
-                    v-model="aeDialog.aeForm.callNumber"
-                    placeholder="请输入索书号"
-                  ></el-input>
+                    placeholder="请输入内容"
+                    v-model="aeDialog.cNbSelect.input"
+                    class="input-with-select"
+                  >
+                    <el-select
+                      style="width:100px;"
+                      v-model="aeDialog.cNbSelect.select"
+                      slot="append"
+                      placeholder="请选择"
+                      @change="NumberSelect"
+                    >
+                      <el-option
+                        v-for="(item,index) of aeDialog.cNbSelect.options"
+                        :key="index"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-input>
                 </el-form-item>
                 <el-form-item label="馆藏地:">
                   <el-select
@@ -837,6 +852,16 @@ export default {
           publicationDateStr: "", // 发布日期
           remark: "", // 备注
           fkCataPeriodicalId: ""
+        },
+        cNbSelect: {
+          select: "0",
+          options: [
+            { label: "种次号", value: "0" },
+            { label: "著作号", value: "1" }
+          ],
+          input: "",
+          backSelect: [],
+          fix: false
         }
       },
       aeindex: 0, //控制添加和编辑弹框的切换
@@ -930,10 +955,9 @@ export default {
         damageItem: {
           compensationNum: 0,
           compensationType: 0,
-          
+
           id: "",
-          remarks: "阿斯顿",
-          
+          remarks: "阿斯顿"
         }, // 报损原因对象
         rules: {
           price: [
@@ -1035,6 +1059,8 @@ export default {
       this.clearValue(this.aeDialog.aeForm);
       this.clearValue(this.aeDialog.showLocalForm);
       this.clearValue(this.aeDialog.showIndexForm);
+      this.aeDialog.cNbSelect.input = "";
+      this.aeDialog.cNbSelect.backSelect = [];
       this.aeDialog.checkObj.checkControl = false;
       this.aeDialog.searchDisabled = false;
       this.aeDialog.checkObj.control = false;
@@ -1096,9 +1122,12 @@ export default {
       this.aeDialog.searchDisabled = true;
       this.aeDialog.issnDiabled = true;
       let obj = {};
+      let pbj = {};
       this.aeDialog.rowId = row.id;
       obj.id = row.id;
+      pbj.id = row.fkCataPeriodicalId;
       this._getFront(obj);
+      this._getSearchNum(pbj);
       this.aeDialog.flag = true;
       this.aeDialog.aeForm.available = this.aeDialog.aeForm.available
         ? true
@@ -1192,11 +1221,11 @@ export default {
           } else {
           }
           // 索取号判定
-          if (this.callNumberCopy == this.callNumber) {
+          /* if (this.callNumberCopy == this.callNumber) {
             this.aeDialog.aeForm.alteration = 0;
           } else {
             this.aeDialog.aeForm.alteration = 1;
-          }
+          } */
           // true和false
           this.aeDialog.aeForm.available = this.aeDialog.aeForm.available
             ? 1
@@ -1206,6 +1235,9 @@ export default {
             ? 1
             : 0;
           this.aeDialog.aeForm.placeCode = this.aeDialog.libIndex.code;
+          this.aeDialog.aeForm.callNumber = this.aeDialog.cNbSelect.input;
+          let cNbValue = this.aeDialog.cNbSelect.select;
+          localStorage.setItem('selectValue', cNbValue);
           console.log(this.aeDialog.aeForm, "检测");
           if (this.aeIndex == 0) {
             this._add(this.aeDialog.aeForm);
@@ -1294,10 +1326,10 @@ export default {
       let obj = {};
       obj.issn = this.aeDialog.aeForm.issn;
       obj.cataPeriodicalId = row.id;
-      let pbj ={};
-      pbj.id = row.id
+      let pbj = {};
+      pbj.id = row.id;
       this._getNumber(obj);
-      this._getSearchNum(pbj)
+      this._getSearchNum(pbj);
       console.log(row, "获取的数据");
     },
     // 期刊号弹框
@@ -1484,8 +1516,8 @@ export default {
         if (res.data.state == true) {
           let dataMe = JSON.parse(res.data.row);
           this.aeDialog.aeForm.code = dataMe.code;
-          this.aeDialog.aeForm.callNumber = dataMe.callNumber;
-          this.aeDialog.callNumberCopy = dataMe.callNumber;
+          //this.aeDialog.aeForm.callNumber = dataMe.callNumber;
+          //this.aeDialog.callNumberCopy = dataMe.callNumber;
           console.log(dataMe, "索取号", this.aeDialog.aeForm);
         } else {
           this.$message.error(res.data.msg);
@@ -1538,6 +1570,7 @@ export default {
             : false;
           this.aeDialog.aeForm.duplicate = 0;
           this.aeDialog.display = true;
+          this.aeDialog.cNbSelect.input = dataNom.callNumber;
           console.log(this.aeDialog, "赋值失败？");
         } else {
           this.$message.error(res.data.msg);
@@ -1614,12 +1647,36 @@ export default {
       let data = obj;
       reserveInt.getSearchNum(data).then(res => {
         if (res.data.state == true) {
+          let dataMe = res.data.row;
+          let arr = [];
+          if (dataMe) {
+            arr.push(dataMe.searchNumberAuthorNum);
+            arr.push(dataMe.searchNumberOrderNum);
+            this.aeDialog.cNbSelect.backSelect = arr;
+            // 修改就不赋值了
+            if(this.aeindex){
+              let value = parseInt(this.aeDialog.cNbSelect.select);
+              this.aeDialog.cNbSelect.input = this.aeDialog.cNbSelect.backSelect[value];
+              console.log(this.aeindex);
+            }
+          } else {
+            this.aeDialog.cNbSelect.backSelect = arr;
+          }
           
-          console.log(dataMe, "索取号");
+          console.log(this.aeDialog.cNbSelect, "索取号下拉");
         } else {
           this.$message.error(res.data.msg);
         }
       });
+    },
+    // 索引号下拉
+    NumberSelect(){
+      if(this.aeDialog.cNbSelect.backSelect.length){
+        let value = parseInt(this.aeDialog.cNbSelect.select);
+        this.aeDialog.cNbSelect.input = this.aeDialog.cNbSelect.backSelect[value];
+        console.log("？？？")
+      }
+      
     },
     watchValue(val) {
       //this.aeDialog.libIndex = Object.assign(this.aeDialog.libIndex,val)
@@ -1627,6 +1684,10 @@ export default {
     }
   },
   created() {
+    // 获取存在本地的local值来付给select 记录用户的习惯
+    let value = localStorage.getItem('selectValue');
+    this.aeDialog.cNbSelect.select = value?"1":"0";
+    console.log(value,'如果为空的话')
     this._getCity();
     this._search();
     this._getDamegeOp();
@@ -1833,10 +1894,10 @@ export default {
 #issnTable {
   .issnTableBox {
     margin-bottom: 30px;
-    .getBtn{
-        color: rgb(0, 150, 255);
-        cursor: pointer;
-      }
+    .getBtn {
+      color: rgb(0, 150, 255);
+      cursor: pointer;
+    }
     .el-table__fixed-right-patch {
       background: rgb(0, 150, 255);
     }
@@ -1853,7 +1914,6 @@ export default {
       border: 1px solid #ccc;
       margin-bottom: 20px;
       .backShow {
-        
         line-height: 30px;
 
         display: flex;

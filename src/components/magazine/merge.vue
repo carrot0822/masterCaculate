@@ -398,12 +398,27 @@
                     placeholder="请输入条码号"
                   ></el-input>
                 </el-form-item>
-                <el-form-item prop="callNumber" label="索书号:">
+                <el-form-item label="索取号:">
                   <el-input
-                    style="width:180px;"
-                    v-model="aeDialog.aeForm.callNumber"
-                    placeholder="请输入索书号"
-                  ></el-input>
+                    placeholder="请输入内容"
+                    v-model="aeDialog.cNbSelect.input"
+                    class="input-with-select"
+                  >
+                    <el-select
+                      style="width:100px;"
+                      v-model="aeDialog.cNbSelect.select"
+                      slot="append"
+                      placeholder="请选择"
+                      @change="NumberSelect"
+                    >
+                      <el-option
+                        v-for="(item,index) of aeDialog.cNbSelect.options"
+                        :key="index"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-input>
                 </el-form-item>
                 <el-form-item label="馆藏地:">
                   <el-select
@@ -718,6 +733,7 @@
 
 <script>
 import { mergeInt } from "@request/api/magazine/merge";
+import { reserveInt } from "@/request/api/magazine";
 import pagationOwn from "@/common/pagation/pagation"
 export default {
   data() {
@@ -861,6 +877,16 @@ export default {
         },
         showIndexForm: {
           tableData: []
+        },
+        cNbSelect: {
+          select: "0",
+          options: [
+            { label: "种次号", value: "0" },
+            { label: "著作号", value: "1" }
+          ],
+          input: "",
+          backSelect: [],
+          fix: false
         }
       },
 
@@ -1067,6 +1093,8 @@ export default {
       // 清空数据回显问题
       this.clearValue(this.aeDialog.aeForm);
       this.clearValue(this.aeDialog.showLocalForm);
+      this.aeDialog.cNbSelect.input = "";
+      this.aeDialog.cNbSelect.backSelect = [];
       this.aeDialog.showIndexForm.tableData = [];
       this.aeDialog.checkObj.checkControl = false;
       this.aeDialog.searchDisabled = false;
@@ -1128,9 +1156,12 @@ export default {
       this.aeDialog.searchDisabled = true;
       this.aeDialog.issnDiabled = true
       let obj = {};
+      let pbj = {};
       this.aeDialog.rowId = row.id;
       obj.id = row.id;
+      pbj.id = row.fkCataPeriodicalId;
       this._getFront(obj);
+      this._getSearchNum(pbj);
       this.aeDialog.flag = true;
       this.aeDialog.aeForm.available = this.aeDialog.aeForm.available
         ? true
@@ -1236,6 +1267,8 @@ export default {
             ? 1
             : 0;
           this.aeDialog.aeForm.placeCode = this.aeDialog.libIndex.code;
+          let cNbValue = this.aeDialog.cNbSelect.select;
+          localStorage.setItem('selectValue', cNbValue);
           console.log(this.aeDialog.aeForm, "检测");
           if (this.aeIndex == 0) {
             this._add(this.aeDialog.aeForm);
@@ -1328,7 +1361,10 @@ export default {
       let obj = {};
       obj.issn = this.aeDialog.aeForm.issn;
       obj.cataPeriodicalId = row.id;
+      let pbj = {};
+      pbj.id = row.id;
       this._getNumber(obj);
+      this._getSearchNum(pbj);
       console.log(row, "获取的数据");
     },
     /*------ api ------*/
@@ -1541,6 +1577,7 @@ export default {
             : false;
           
           this.aeDialog.display = true;
+          this.aeDialog.cNbSelect.input = dataNom.callNumber;
           console.log(this.aeDialog, "赋值失败？");
         } else {
           this.$message.error(res.data.msg);
@@ -1704,6 +1741,41 @@ export default {
           this.$message.error(res.data.msg);
         }
       });
+    },
+    // 新型索引号 还要存在本地
+    _getSearchNum(obj) {
+      let data = obj;
+      reserveInt.getSearchNum(data).then(res => {
+        if (res.data.state == true) {
+          let dataMe = res.data.row;
+          let arr = [];
+          if (dataMe) {
+            arr.push(dataMe.searchNumberAuthorNum);
+            arr.push(dataMe.searchNumberOrderNum);
+            this.aeDialog.cNbSelect.backSelect = arr;
+            // 修改就不赋值了
+            if(this.aeindex){
+              let value = parseInt(this.aeDialog.cNbSelect.select);
+              this.aeDialog.cNbSelect.input = this.aeDialog.cNbSelect.backSelect[value];
+            }
+          } else {
+            this.aeDialog.cNbSelect.backSelect = arr;
+          }
+          
+          console.log(this.aeDialog.cNbSelect, "索取号下拉");
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    // 索引号下拉
+    NumberSelect(){
+      if(this.aeDialog.cNbSelect.backSelect.length){
+        let value = parseInt(this.aeDialog.cNbSelect.select);
+        this.aeDialog.cNbSelect.input = this.aeDialog.cNbSelect.backSelect[value];
+        console.log("？？？")
+      }
+      
     },
   },
   created() {
