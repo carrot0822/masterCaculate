@@ -19,7 +19,7 @@ const mergeUrl = {
   reject: `${url}periodicalmodule/itemHad/ridOf`, // 剔除
   getLocal: `${url}periodicalmodule/itemHad/selectLocal`, // 获取本地issn
   getIndex: `${url}periodicalmodule/itemHad/getPN`, // 获取所有期刊号
-  getNumber: `${url}periodicalmodule/itemHad/getcs`, // 获取索书号等
+  getNumber: `${url}bookcollectionmodule/collection/currency/getCode`, // 获取索书号等
   getCity:`${url}periodicalmodule/itemHad/getLB`, // 查询所有藏馆
   closeIndex:`${url}periodicalmodule/itemHad/stopUs`, // 停用
   openIndex:`${url}periodicalmodule/itemHad/startUs`, // 启用

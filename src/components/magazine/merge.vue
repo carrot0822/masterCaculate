@@ -1518,9 +1518,8 @@ export default {
       mergeInt.getNumber(data).then(res => {
         if (res.data.state == true) {
           let dataMe = JSON.parse(res.data.row);
-          this.aeDialog.aeForm.code = dataMe.code;
-          this.aeDialog.aeForm.callNumber = dataMe.callNumber;
-          this.aeDialog.callNumberCopy = dataMe.callNumber;
+          this.aeDialog.aeForm.code = dataMe;
+          
           console.log(dataMe, "索取号", this.aeDialog.aeForm);
         } else {
           this.$message.error(res.data.msg);

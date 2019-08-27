@@ -1622,3 +1622,10 @@ a {
   text-decoration: underline;
 }
 </style>
+<style lang="scss">
+#Notice{
+  .el-input-number__decrease, .el-input-number__increase{
+    top: 7px;
+  }
+}
+</style>

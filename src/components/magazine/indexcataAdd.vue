@@ -1515,7 +1515,7 @@ export default {
       reserveInt.getNumber(data).then(res => {
         if (res.data.state == true) {
           let dataMe = JSON.parse(res.data.row);
-          this.aeDialog.aeForm.code = dataMe.code;
+          this.aeDialog.aeForm.code = dataMe;
           //this.aeDialog.aeForm.callNumber = dataMe.callNumber;
           //this.aeDialog.callNumberCopy = dataMe.callNumber;
           console.log(dataMe, "索取号", this.aeDialog.aeForm);
