@@ -6,21 +6,21 @@ var fileUrl = window.glob.fileUrl;
 
 // 期刊典藏
 const reserveUrl = {
-  search: `${url}periodicalmodule/periodicalTbCollectionInfo/select`,
-  add: `${url}periodicalmodule/periodicalTbCollectionInfo/add`,
-  revise: `${url}periodicalmodule/periodicalTbCollectionInfo/edit`,
-  delete: `${url}periodicalmodule/periodicalTbCollectionInfo/delete`,
-  getFront:`${url}periodicalmodule/periodicalTbCollectionInfo/selectOne`, // 获取修改回显信息
+  search: `${url}bookcollectionmodule/collection/select`,
+  add: `${url}bookcollectionmodule/collection/add`,
+  revise: `${url}bookcollectionmodule/collection/edit`,
+  post: `${url}bookcollectionmodule/collection/post`,
+  getFront:`${url}bookcollectionmodule/collection/currency/selectOne`, // 获取修改回显信息
   // other接口
-  reject: `${url}bookcollectionmodule/collection/letLeave`, // 剔除
+  reject: `${url}bookcollectionmodule/collection/letRemove`, // 剔除
   getLocal: `${url}catamodule/editing/cataTbBookInfo/selectFromCata`, // 获取本地issn
-  getIndex: `${url}periodicalmodule/periodicalTbCollectionInfo/getPN`, // 获取所有期刊号
+  getbackTab:`${url}bookcollectionmodule/collection/selectFromCataID`, // issn搜剔除
   getNumber: `${url}bookcollectionmodule/collection/currency/getCode`, // 获馆内码
   getSearchNum:`${url}/bookcollectionmodule/collection/currency/getBopSearchNumber`, // 通用接口 获取索取号*2
 	
   getCity:`${url}bookcollectionmodule/collection/currency/getLibName`, // 查询所有藏馆
-  closeIndex:`${url}periodicalmodule/periodicalTbCollectionInfo/stopUs`, // 停用
-  openIndex:`${url}periodicalmodule/periodicalTbCollectionInfo/startUs`, // 启用
+  closeIndex:`${url}bookcollectionmodule/collection/stopUs`, // 停用
+  openIndex:`${url}bookcollectionmodule/collection/startUs`, // 启用
   translate:`${url}bookcollectionmodule/collection/letLeave`, // 调馆
   damage:`${url}bookcollectionmodule/collection/bookDamage`,  // 典藏期刊报损
   getDamegeOp:`${url}bookcollectionmodule/collection/getDamage` // 查询损坏列表下拉框
@@ -31,7 +31,7 @@ export const reserveInt = {
   revise,
   remove,
   reject,
-  getIndex,
+  getbackTab,
   getLocal,
   getNumber,
   getCity,
@@ -59,19 +59,19 @@ function add(data) {
 }
 
 function revise(data) {
-  return axios.put(reserveUrl.revise, data).then((res) => {
+  return axios.post(reserveUrl.revise, data).then((res) => {
     return Promise.resolve(res)
   })
 }
 
 function remove(data) {
-  return axios.delete(reserveUrl.delete, {data}).then((res) => {
+  return axios.post(reserveUrl.post, {data}).then((res) => {
     return Promise.resolve(res)
   })
 }
 
 function reject(data) {
-  return axios.put(reserveUrl.reject, data).then((res) => {
+  return axios.post(reserveUrl.reject, data).then((res) => {
     return Promise.resolve(res)
   })
 }
@@ -84,8 +84,8 @@ function getLocal(obj) {
   })
 }
 
-function getIndex(obj) {
-  return axios.get(reserveUrl.getIndex, {
+function getbackTab(obj) {
+  return axios.get(reserveUrl.getbackTab, {
     params: obj
   }).then((res) => {
     return Promise.resolve(res)
@@ -116,22 +116,22 @@ function getFront(obj) {
   })
 }
 function openIndex(data) {
-  return axios.put(reserveUrl.openIndex, data).then((res) => {
+  return axios.post(reserveUrl.openIndex, data).then((res) => {
     return Promise.resolve(res)
   })
 }
 function closeIndex(data) {
-  return axios.put(reserveUrl.closeIndex, data).then((res) => {
+  return axios.post(reserveUrl.closeIndex, data).then((res) => {
     return Promise.resolve(res)
   })
 }
 function translate(data) {
-  return axios.put(reserveUrl.translate, data).then((res) => {
+  return axios.post(reserveUrl.translate, data).then((res) => {
     return Promise.resolve(res)
   })
 }
 function damage(data) {
-  return axios.put(reserveUrl.damage, data).then((res) => {
+  return axios.post(reserveUrl.damage, data).then((res) => {
     return Promise.resolve(res)
   })
 }
