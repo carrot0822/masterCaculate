@@ -110,6 +110,23 @@ export default new Router({
           },
           component:() => import('../components/System/noticeSetting.vue')
         },
+        // opac模块
+        {
+          path: '/appoinment',
+          meta: {
+            title: '图书预约记录',
+            Mode:'1'
+          },
+          component: ()=>import('@/components/Opac/appoinment.vue')
+        },
+        {
+          path: '/appoinmentHis',
+          meta: {
+            title: '图书预约历史记录',
+            Mode:'1'
+          },
+          component: ()=>import('@/components/Opac/appointedHis.vue')
+        },
         // 1.0 采编管理
         {
           path: '/uploadBook',

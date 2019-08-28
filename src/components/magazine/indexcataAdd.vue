@@ -1064,7 +1064,7 @@ export default {
       this.aeDialog.checkObj.checkControl = false;
       this.aeDialog.searchDisabled = false;
       this.aeDialog.checkObj.control = false;
-      this.aeDialog.issnDiabled;
+      this.aeDialog.issnDiabled = false ;
 
       this.aeDialog.checkObj.value = 0;
       this.aeDialog.aeForm.available = true;
@@ -1654,7 +1654,7 @@ export default {
             arr.push(dataMe.searchNumberOrderNum);
             this.aeDialog.cNbSelect.backSelect = arr;
             // 修改就不赋值了
-            if(this.aeindex){
+            if(!this.aeindex){
               let value = parseInt(this.aeDialog.cNbSelect.select);
               this.aeDialog.cNbSelect.input = this.aeDialog.cNbSelect.backSelect[value];
               console.log(this.aeindex);

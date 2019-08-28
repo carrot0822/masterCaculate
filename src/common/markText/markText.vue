@@ -5,7 +5,7 @@
       <span :data-letters="text"></span>
       <span :data-letters="text" />
     </a>
-    <div class="">
+    <div class>
       <input type="text" v-model="input" />
       <button @click="open(input)">开启</button>
       <p>结果:{{output}}</p>
@@ -24,79 +24,62 @@ export default {
       default: "就是测试一下"
     }
   },
-  data(){
-    return{
-      input:"",
-      output:'',
-    }
+  data() {
+    return {
+      input: "",
+      output: "",
+      count:0,
+    };
   },
-  methods:{
-    open(str){
-      let data = str
-      data = this.replaceEmpty2(data);
+  methods: {
+    open(str) {
+      let data = str;
       this.output = data;
-
     },
-    // 字符串替换
-    replaceEmpty1(str){
-      const re = / /g
-      return str.replace(re,"%20");
-    },
-    replaceEmpty2(str){
-      str = str.split("") // 分割为数组
-      let count = 0,i=0,j=0;
-      // 计算出字符串中的空格数
-      for(let i =0; i<str.length; i++){
-        str[i] === " " && ++count; // &&只有前面为真才执行后面的 前面为真返回true
-        
-      }
-
-      // 创建一个空数组 重新分配内存 存储新元素
-      let length = str.length + count * 2;
-      let result = new Array(length);
-      
-      // 循环复制数组 while的好处是 增长条件和跳出可以跟随循环逻辑改变
-      // i j是双循环判定条件 一个循环原数组 一个循环新数组 j为主 i递增
-     while( i < result.length){
-        if(str[j] === " "){
-          result[i++] = "%"; // i在运算完后增加了
-          result[i++] = "2";
-          result[i++] = "0";
-          j++;
-        } else {
-          result[i++] = str[j++]; // 无空格正常进行
-        }
-      }
-      
-      return result.join("") // 转为数组;
-    },
-    // 字符串全排列 
+    
+    // 字符串全排列
 
     // 1. 交换置顶索引的两个值
-    swap(arr, i, j,) {
+    swap(arr, i, j) {
       [arr[i], arr[j]] = [arr[j], arr[i]];
     },
     // 2. 检测 arr[start, end] 是否有和arr[end]相等的元素
-    check(arr, start, end){
-      for( let i=start; i<end; ++i){
-        if(arr[end] === arr[i] ){
+    check(arr, start, end) {
+      for (let i = start; i < end; ++i) {
+        if (arr[end] === arr[i]) {
           return false;
         }
       }
-      return true; // f返回值为相反怎么回事
+      return true; // 
     },
     // 开始全排列
-    perm(arr=[], n=0){
+    perm(arr = [], n = 0) {
+      
       const length = arr.length;
       // 递归出口条件
-      if(length === n ){
+      if (length === n) {
         console.log(arr.join(" "));
-        return
+        this.count++;
+        return;
       }
+
+      for (let i = n; i < length; ++i) {
+        console.log('递归',i,'结尾',n,'此时的arr',arr);
+        if (this.check(arr, n, i)) {
+          
+          this.swap(arr, n, i);
+          this.perm(arr, n + 1);
+          this.swap(arr, n, i);
+        }
+      }
+      
     }
   },
-  created(){
-    console.log(this.replaceEmpty2("we are "))
+  created() {
+    //this.perm(["a", "b", "c"], 0);
+    console.log("*".repeat(10));
+    this.perm(["1", "2", "3","4"], 0);
+    console.log(this.count)
   }
 };
 /*
