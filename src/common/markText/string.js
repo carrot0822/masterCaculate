@@ -2,6 +2,8 @@
 export const str= {
     replaceEmpty1,
     replaceEmpty2,
+    reverseWord,
+    reverseStr
 }
 // 字符串替换
 function replaceEmpty1(str) {
@@ -39,3 +41,42 @@ function replaceEmpty2(str) {
   return result.join(""); // 转为数组;
 }
 
+// 单词翻转 先全体逆转 再依次遍历并存储到一个数组内 遇到空格开始逆转 存入字符串
+// （X1Y1) = (Y1X1) 逆转组合
+function reverseWord(str){
+  const chars = str.split("").reverse();
+  let result = "",
+    last = [];
+  // 
+  chars.forEach(ch => {
+    if(ch === " "){
+      result += last.reverse().join();
+      last.length = 0; // 清空单词
+    }
+
+    last.push(ch); // 存储序列 子串
+  });
+  result += last.reverse().join; // 最后一个单词是没有空格的
+  return result;
+}
+
+// 变种其一字符翻转 把 abcdefgh -》 cdefghab  前n
+function reverseStr(str,n){
+  const chars = str.split("").reverse();
+  const len = chars.length;
+  let result = "",
+    last = [];
+    for(let i = 0; i>len; i++){
+      if( n-1 == i){
+        result += last.reverse().join();
+        last.length = 0;
+      }
+      last.push(chars[i])
+    }
+    result += last.reverse().join();
+    return result;
+}
+
+// 变种
+
+// atoi

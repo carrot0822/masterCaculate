@@ -518,10 +518,13 @@
       },
       //选中某条数据的选中按钮
       decideOn(index,row){
-
+        let value = this.addForm.isbn
+        
         this.decideOnData=true
         this.addForm=row
-        this.centerDialogVisible=false
+        this.addForm.isbn = value;
+        console.log(value,this.addForm.isbn,'值应该是不覆盖的')
+        this.centerDialogVisible=false;
       },
       //取消本地获取，获取远程数据
       decideOut(){
@@ -680,9 +683,9 @@
             }
           }else if(this.type.length===2){
             this.localCatalogData()
-            if(this.catalogingData.length==0){
+            /* if(this.catalogingData.length==0){
               this.remoteCatalogData()
-            }
+            } */
           }else{
             this.$message({
               message: '请先选择远程获取或本地获取',
@@ -701,10 +704,14 @@
               this.messageWidth='750px'
               this.centerDialogVisible=true
             }else if(res.data.row.length==1){
+              let value = this.addForm.isbn
               this.addForm = res.data.row[0]
+              this.addForm.isbn = value;
             }else if(res.data.row.length==0){
-              return
+              this.remoteCatalogData()
             }
+          }else{
+            this.$message.error(res.data.msg);
           }
         },(err)=>{
           this.$message({
@@ -716,6 +723,7 @@
       //远程数据
       remoteCatalogData(){
         this.axios.get(catalog.remoteCataloging,{params:{selectisbn:this.addForm.isbn}}).then((res)=>{
+          
           if(res.data.state==true){
             if(res.data.row.length>1){
               this.catalogingData = res.data.row
@@ -723,11 +731,16 @@
               this.messageWidth='750px'
               this.centerDialogVisible=true
             }else if(res.data.row.length==1){
+              
               this.addForm = res.data.row[0]
+              
             }else if(res.data.row==null){
               return
             }
+          } else{
+            this.$message.error(res.data.msg);
           }
+          this.addForm.isbn = value;
         },(err)=>{
           this.$message({
             message: '网络出错',

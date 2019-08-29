@@ -1,4 +1,4 @@
-var ip = 'http://192.168.2.29';
+var ip = 'http://192.168.2.166';
 window.glob = {
   url:ip + ':8088/',
   imgurl:ip +':8090/',

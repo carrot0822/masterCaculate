@@ -697,8 +697,10 @@ export default {
     BookInfoFun(value) {},
     //选中某条数据的选中按钮
     decideOn(index, row) {
+      let value = this.addForm.isbn
       this.decideOnData = true;
       this.addForm = Object.assign(this.addForm,row);
+      this.addForm.isbn = value;
       this.centerDialogVisible = false;
     },
     //取消本地获取，获取远程数据
@@ -899,7 +901,9 @@ export default {
                   this.messageWidth = "750px";
                   this.centerDialogVisible = true;
                 } else if (length == 1) {
-                  this.addForm = res.data.row[0];
+                  let value = this.addForm.isbn
+                this.addForm = res.data.row[0]
+                this.addForm.isbn = value;
                 }
               } else {
                 let judg = this.type.length;
@@ -926,6 +930,7 @@ export default {
         .then(
           res => {
             console.log("外地数据", res);
+            
             if (res.data.state == true) {
               let length = res.data.row.length;
               // 用switch吧
@@ -939,9 +944,12 @@ export default {
                 this.messageWidth = "750px";
                 this.centerDialogVisible = true;
               } else {
+                let value = this.addForm.isbn
                 this.addForm = res.data.row[0];
+                this.addForm.isbn = value;
               }
             }
+            
           },
           err => {
             this.$message({

@@ -13,6 +13,7 @@
   </div>
 </template>
 <script>
+import {str} from "./string"
 export default {
   props: {
     className: {
@@ -78,8 +79,7 @@ export default {
   created() {
     //this.perm(["a", "b", "c"], 0);
     console.log("*".repeat(10));
-    this.perm(["1", "2", "3","4"], 0);
-    console.log(this.count)
+    console.log(str.reverseWord("I am a student."))
   }
 };
 /*
