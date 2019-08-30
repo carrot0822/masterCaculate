@@ -80,3 +80,37 @@ function reverseStr(str,n){
 // 变种
 
 // atoi
+
+const MIN_INT_ABS = Math.pow(2, 31);
+/* 
+*判断char是否是符号 + -
+*@param {String} char
+*/
+function isSymbol(char){
+  return char === "-" || char === "+";
+}
+/* 
+*判断char是否是数字
+*@param {String} char
+*/
+function isNumber(char) {
+  return char >= "0" && char <= "9"
+}
+
+function myAtoi(str){
+  const length = str.length
+  // 找出第一个非空字符 判断是不是符号或数字
+  let firstNotEmptyIndex = 0;
+  /* for (
+    ;
+    firstNotEmptyIndex < length && str[firstNotEmptyIndex] === " ";
+    ++firstNotEmptyIndex
+  ) {} */
+  for(;firstNotEmptyIndex < length;++firstNotEmptyIndex){
+    if(str[firstNotEmptyIndex] === " "){
+      break
+    }
+  }
+  // 选出第一个字符串的索引
+  // 判定
+}

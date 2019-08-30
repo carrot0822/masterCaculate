@@ -145,6 +145,23 @@ export default new Router({
           },
           component: ()=>import('../components/System/ArticeList.vue')
         },
+        // 备份模块
+        {
+          path: '/backLog',
+          meta: {
+            title: '备份日志',
+            Mode:"6"
+          },
+          component: ()=>import('../components/Opac/backLog.vue')
+        },
+        {
+          path: '/backlogEdit',
+          meta: {
+            title: '备份管理',
+            Mode:"6"
+          },
+          component: ()=>import('../components/Opac/backlogEdit.vue')
+        },
         // 期刊模块
         {
           path:'/library',

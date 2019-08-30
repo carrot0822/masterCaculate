@@ -474,7 +474,8 @@ export const editimgFile='http://192.168.2.54:8090/filemodule/showFile/getShow';
 export const deriveInt = {
   select:`${url}catamodule/editing/cataTbBookInfo/getCountByConditon`,
   derive:`${url}catamodule/editing/cataTbBookInfo/getFileUrlByConditon`,
-  recommend:`${url}readermodule/recommend/recommendationHis/getFileFormTable` // 荐购导出
+  recommend:`${url}readermodule/recommend/recommendationHis/getFileFormTable`, // 荐购导出
+  backlog:`${url}authmodule/bakLog/getFileFormTable`
 };
 //馆内公告设置
 export const libNotice = {
