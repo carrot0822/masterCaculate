@@ -17,6 +17,7 @@ const backLog = {
   output: `${url}authmodule/bakLog/getFileFormTable` // 导出备份日志
 }
 export const backUrl = `${url}authmodule/bakLog/getFileFormTable`
+export const bakFile = `${fileUrl}filemodule/uploadBak/upload` // 上传文件
 export const backLogInt = {
   search,
   getLog,
@@ -58,10 +59,9 @@ function apply(data) {
   })
 }
 
-function upload(obj) {
-  return axios.get(backLog.upload, {
-    params: obj
-  }).then((res) => {
+function upload(data) {
+  return axios.post(backLog.upload,data
+  ).then((res) => {
     return Promise.resolve(res)
   })
 }

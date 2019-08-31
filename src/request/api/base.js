@@ -42,6 +42,7 @@ export const outputExcelInt = {
   overdue:`${url}financemodule/readetTbOverdueExpensesLog/export`
 };
 export const uploadInt = {
+  bakFile:`${fileUrl}filemodule/uploadBak/upload`,
   headImg:`${fileUrl}filemodule/uploadImg/addHead`,
   backImg:`${fileUrl}filemodule/uploadImg/addBackage`,
   menuImg:`${fileUrl}filemodule/uploadImg/addMenu`,

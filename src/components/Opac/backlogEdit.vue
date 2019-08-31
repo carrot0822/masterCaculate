@@ -9,7 +9,7 @@
         <div class="nomal-Box">
           <div class="upload-demo" style="width:360px;">
             <div class="inputBox">
-              <el-form :model="addForm" :rules="rules" ref="addForm" label-width="70px">
+              <el-form :model="addForm" :rules="rules" ref="addForm" label-width="90px">
                 <el-form-item label="备份信息" prop="title">
                   <el-input placeholder="标题不得超过10个字" v-model="addForm.title"></el-input>
                 </el-form-item>
@@ -34,7 +34,7 @@
                 <em>点击上传</em>
               </div>
               <div slot="tip" class="el-upload__tip" style="color: red">
-                <p>提示:只能上传("rmvb","wmv","avi","mp4","3gp")等格式的视频文件</p>
+                <p>提示:只能上传("bak","sql")等格式的视频文件</p>
                 <p>(大小限500M）</p>
               </div>
             </el-upload>
@@ -212,6 +212,8 @@
       <el-dialog
         :title="warDialog.title[warIndex]"
         :visible.sync="warDialog.display"
+        v-loading="applyLoading"
+        element-loading-text="恢复备份中"
         width="400px"
         center
       >
@@ -227,15 +229,9 @@
 </template>
 
 <script>
-import { backLogInt } from "@request/api/system/backLog";
+import { backLogInt, bakFile } from "@request/api/system/backLog";
 import { uploadInt } from "@request/api/base.js";
-import {
-  videoUpload,
-  dataSearch,
-  dataAdd,
-  dataDelete,
-  preFile
-} from "@request/api/video.js";
+import { videoUpload, dataAdd } from "@request/api/video.js";
 export default {
   data() {
     return {
@@ -314,17 +310,19 @@ export default {
       warIndex: 0, // 控制标题
       warDialog: {
         display: false,
-        title: ["删除备份"]
+        title: ["删除备份", "恢复备份"]
       },
       // loading
       createLoading: false,
-      downloadLoading:false, // 下等待
+      downloadLoading: false, // 下等待
+      applyLoading: false, // 恢复备份
+      rowId: "",
       /*----- -----*/
 
-      fileUrl: videoUpload,
+      fileUrl: bakFile,
       centerDialogVisible: false,
       fileList: [], // 文件列表
-      backUrl: "", // 返回的视频链接
+      backUrl: "", // 返回的链接
       videoArr: [], // video数组
       jude: false, // 判定是否禁用
       addForm: {
@@ -334,20 +332,14 @@ export default {
       rules: {
         title: [{ required: true, message: "标题不得为空", trigger: "blur" }]
       },
-      videoSrc: "",
-      videoSize: "",
-      videoTime: "",
-      timeFile: null, // 文件转换
       deleteObj: {}
     };
   },
   computed: {
     addTimeForm() {
       let obj = {
-        path: this.addForm.backUrl,
-        title: this.addForm.title,
-        videoTime: this.videoTime,
-        videoSize: this.videoSize
+        url: this.addForm.backUrl,
+        remark: this.addForm.title,
       };
       return obj;
     }
@@ -412,16 +404,18 @@ export default {
       this._search(this.searchForm);
       console.log(this.searchInput);
     },
-    downloadBtn(index,row) {
-        console.log()
-        let url = uploadInt.showFile + row.url
-        let name = row.fileName // 名字
-        const a = document.getElementById("excel");
-        a.setAttribute("href", url);
-        a.click();
+    downloadBtn(index, row) {
+      console.log();
+      let url = uploadInt.showFile + row.url + "?fileName=" + row.fileName;
+      const a = document.getElementById("excel");
+      a.setAttribute("download", row.fileName);
+      a.setAttribute("href", url);
+      a.click();
     },
-    recoverBtn(index,row) {
-        
+    recoverBtn(index, row) {
+      this.warIndex = 1;
+      this.rowId = row.id;
+      this.warDialog.display = true;
     },
     /*------ 弹框按钮 ------*/
     aeConfirmBtn() {
@@ -440,7 +434,20 @@ export default {
       let obj = {};
       obj.ids = this.tableObj.selectAll;
       console.log(obj);
-      this._remove(obj);
+      if (this.warIndex) {
+        let pbj = {};
+        this.applyLoading = true;
+        pbj.id = this.rowId;
+        this._reconver(pbj);
+      } else {
+        this._remove(obj);
+      }
+    },
+    loginOut() {
+      this.$store.commit("removeToken");
+      this.$store.commit("deleteUserInfo");
+      this.$store.commit("deleteMenu");
+      this.$router.push("/login");
     },
     /*------ api ------*/
     _add(obj) {
@@ -481,11 +488,17 @@ export default {
       });
     },
     // 返回链接  通过链接
-    _download(obj) {
+    _reconver(obj) {
       let data = obj;
-      backLogInt.download(data).then(res => {
+
+      backLogInt.apply(data).then(res => {
         if (res.data.state == true) {
-          console.log(res,'这是啥');
+          this.applyLoading = false;
+          this.loginOut();
+          console.log(res, "这是啥");
+        } else {
+          this.applyLoading = false;
+          this.$message.error(res.data.msg);
         }
       });
     },
@@ -507,7 +520,7 @@ export default {
     },
     /*--- API ---*/
     _upload() {
-      dataAdd(this.addTimeForm).then(res => {
+      backLogInt.upload(this.addTimeForm).then(res => {
         if (res.data.state == true) {
           this.clearObj(this.addForm);
           this.fileList = [];
@@ -534,17 +547,7 @@ export default {
         obj[key] = "";
       }
     },
-    _toFilter(arr) {
-      let length = arr.length;
 
-      for (let item of arr) {
-        let showFile = preFile + item.path;
-        item.showFile = showFile;
-        // item.createTime = item.createTime.slice(0,10)
-      }
-      return arr;
-      console.log("添加之后", this.videoArr);
-    },
     /*--- 功能函数 ---*/
     // 传入一个字符串和一个限制长度的数字 生成一个补0到指定长度的字符串
     toNumebr(value, num) {
@@ -561,36 +564,14 @@ export default {
       let that = this;
       const fileExe = file.name.replace(/.+\./, ""); // 正则匹配 有丶慌
 
-      const isExcel = file.type;
-      this.videoSize = (file.size / 1024 / 1000).toFixed(2); // 获取文件大小
-      console.log(this.videoSize, file.size);
+      const fileType = file.type;
       // 获取视频时长
-      var video = document.createElement("video");
-      video.preload = "metadata"; // 暗示加载元数据
-      video.onloadedmetadata = function() {
-        // 元数据加载完毕的生命周期函数
-        window.URL.revokeObjectURL(video.src); // 回收生成的url对象
-        var duration = video.duration;
-        var curhours = that.toNumebr(parseInt(duration / 3600), 2);
-        var curminutes = that.toNumebr(
-          parseInt((duration - curhours * 3600) / 60),
-          2
-        );
-        var curseconds = that.toNumebr(parseInt(duration % 60), 2);
-        that.videoTime = curhours + ":" + curminutes + ":" + curseconds;
-        console.log("看看之后的video对象", that.videoTime, curseconds);
-      };
 
-      video.src = URL.createObjectURL(file);
-
-      console.log("文件类型", isExcel);
-      if (
-        ["rmvb", "wmv", "avi", "mp4", "3gp"].indexOf(fileExe.toLowerCase()) ===
-        -1
-      ) {
+      console.log("文件类型", fileType);
+      if (["bak", "sql"].indexOf(fileExe.toLowerCase()) === -1) {
         this.$message({
           type: "warning",
-          message: "请上传后缀名rmvb,wmv,avi,mp4,3gp,的文件！"
+          message: "请上传后缀名bak,sql的文件！"
         });
         return false;
       }
@@ -602,8 +583,6 @@ export default {
     fileRemove(file, fileList) {
       this.fileList = fileList;
       this.addForm.backUrl = "";
-      this.videoSize = "";
-      this.videoTime = "";
       console.log("删除后的列表", this.fileList);
     },
     handleExceed(files, fileList) {
@@ -619,8 +598,6 @@ export default {
         console.log("正确回复的是", res, fileList);
         this.fileList = fileList;
         this.addForm.backUrl = res.row;
-        /*转换信息 */
-        this.timeFile = this.fileList[0].raw;
 
         console.log("绑定的数据列表", this.fileList);
       } else {
@@ -673,6 +650,9 @@ export default {
         .upload-demo {
           margin: 0 auto;
         }
+      }
+      .firstButton {
+        margin-top: 30px;
       }
     }
     .ListBox {

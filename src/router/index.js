@@ -115,7 +115,7 @@ export default new Router({
           path: '/appoinment',
           meta: {
             title: '图书预约记录',
-            Mode:'1'
+            Mode:'4'
           },
           component: ()=>import('@/components/Opac/appoinment.vue')
         },
@@ -123,7 +123,7 @@ export default new Router({
           path: '/appoinmentHis',
           meta: {
             title: '图书预约历史记录',
-            Mode:'1'
+            Mode:'4'
           },
           component: ()=>import('@/components/Opac/appointedHis.vue')
         },
@@ -166,7 +166,7 @@ export default new Router({
         {
           path:'/library',
           meta:{
-            title:'藏馆地',
+            title:'馆藏地',
             Mode: '1',
           },
           component:() => import('../components/magazine/library.vue')
@@ -215,7 +215,7 @@ export default new Router({
           path: '/indexDamageCount',
           meta: {
             title: '期刊损坏清点',
-            Mode: '2'
+            Mode: '1'
           },
           component: () => import('@/components/magazine/indexDamege.vue')
         },
@@ -223,7 +223,7 @@ export default new Router({
           path: '/indexCheckDetails/:id',
           meta: {
             title: '期刊损坏清点详情',
-            Mode: '2'
+            Mode: '1'
           },
           component: () => import("@/components/magazine/damageDatail.vue")
         },
