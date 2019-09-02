@@ -308,6 +308,7 @@ export default {
       axios.post(renewInt.renew, data).then(res => {
         if (res.data.state === true) {
           console.log("续借记录", res.data.row);
+          this.oweTable = [];
           this.endTable = res.data.row
           console.log('数据类型测试',typeof(this.endTable[0].state))
           if(this.endTable[0].state === true){

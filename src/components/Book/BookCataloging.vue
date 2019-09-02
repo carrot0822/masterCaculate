@@ -731,16 +731,16 @@
               this.messageWidth='750px'
               this.centerDialogVisible=true
             }else if(res.data.row.length==1){
-              
+              let value = this.addForm.isbn
               this.addForm = res.data.row[0]
-              
+              this.addForm.isbn = value;
             }else if(res.data.row==null){
               return
             }
           } else{
             this.$message.error(res.data.msg);
           }
-          this.addForm.isbn = value;
+          
         },(err)=>{
           this.$message({
             message: '网络出错',

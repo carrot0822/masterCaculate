@@ -94,9 +94,9 @@
                 </el-table-column>
               </el-table>
             </section>
-            <div class="buttonBox">
+            <!-- <div class="buttonBox">
               <el-button type="primary" size="120" @click="batchDamageBtn">批量报损</el-button>
-            </div>
+            </div> -->
           </div>
         </section>
       </div>
@@ -232,6 +232,7 @@ export default {
         remarks: "",
         deal: "",
         bookId: [],
+        id:"",
         bookCash: [] // 书籍价格
       },
       isBatch: false,
@@ -311,6 +312,7 @@ export default {
         remarks: this.damageForm.remarks,
         deals: this.damageForm.deal,
         bookId: this.damageForm.bookId,
+        id:this.damageForm.id,
         cardNum: this.lastCardNum
       };
       return obj;
@@ -390,7 +392,7 @@ export default {
       }
       this.damageForm.bookCash = [];
       this.damageForm.bookCash.push(row.price);
-      this.damageForm.bookId.push(row.bookId);
+      this.damageForm.id = row.bookId
       this.deleteIndex = index;
       this.damageDialog = true;
       this.isBatch = false;

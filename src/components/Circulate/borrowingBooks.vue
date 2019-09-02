@@ -70,7 +70,7 @@
                 :label-position="labelPosition"
                 label-width="80px"
                 :model="searchForm"
-                clearable
+                
                 ref="searchForm"
                 :rules="rules"
               >
@@ -80,11 +80,9 @@
                     v-model="searchForm.bookCode"
                     class="input-with-select"
                     @keyup.enter.native="selectBtn"
+                    clearable
                   >
-                    <el-select id="protect" v-model="searchForm.selectBook" slot="prepend" placeholder="请选择">
-                      <el-option label="书籍" value="1"></el-option>
-                      <el-option label="期刊" value="2"></el-option>
-                    </el-select>
+                    
                     <el-button
                       type="primary"
                       slot="append"
@@ -319,13 +317,9 @@ export default {
   methods: {
     // 搜索功能
     selectBtn() {
-      if (this.searchForm.selectBook == "1") {
         this.codeSearchApi(this.searchTimeForm);
         console.log('就是看看',this.searchForm.selectBook)
-      } else {
-        this.$message.info('现在还未决定怎么做')
-        console.log("现在调用的是期刊API");
-      }
+    
     },
     // 读卡按钮
     readCardBtn() {
@@ -486,6 +480,7 @@ export default {
         if (res.data.state === true) {
           console.log("借书记录", res.data.row);
           this.endTable = res.data.row.list;
+          this.borrowTableData = [];
           this.$message.success("操作完成,请查看下方借书结果");
           console.log("现在的借书机理", this.endTable);
         } else {
