@@ -308,7 +308,7 @@
                         </div>
                       </el-form-item>
                       <el-form-item label=" 分 类 名 :" prop="fkTypeName">
-                        <el-input v-model="addForm.fkTypeName "></el-input>
+                        <el-input :disabled="true" v-model="addForm.fkTypeName "></el-input>
                       </el-form-item>
                     </div>
                     <div id="catalogingInput4" class="flexLayout twoInput">

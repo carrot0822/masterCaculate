@@ -5,7 +5,9 @@
       style="display: flex;flex-direction: row;padding-left: 30px;padding-top: 30px"
     >
       <div style="width: 4px;height: 17px;background-color: #0096FF"></div>
-      <div style="font-size: 16px;color: #878787;margin-left:10px;">书籍借阅</div>
+      <div style="font-size: 16px;color: #878787;margin-left:10px;">书籍借阅
+        <span>{{tips}}</span>
+      </div>
     </div>
     <div class="borrowMode">
       <div class="borrowBox">
@@ -248,6 +250,7 @@ export default {
   name:'borrow',
   data() {
     return {
+      tips:'', // 提示信息
       message: "",
       labelPosition: "left",
       
@@ -349,12 +352,16 @@ export default {
     reset() {
       var now = +new Date();
       console.log("相差的时间", now - this.last);
-      if (now - this.last > 10000) {
+      console.log("函数节流");
+        this.wsValue.send("reset");
+        this.borrowTableData = [];
+        this.last = now;
+      /* if (now - this.last > 5000) {
         console.log("函数节流");
         this.wsValue.send("reset");
         this.borrowTableData = [];
         this.last = now;
-      }
+      } */
       //console.log(this.wsValue);
     },
     // tab切换功能
@@ -425,10 +432,10 @@ export default {
         .then(res => {
           console.log(res);
           if (res.data.state === true) {
-            let obj = res.data.row;
+            let obj = res.data.row[0];
             // 数组去重
             const isExist = this.borrowTableData.some(item => {
-              return item.libraryBookCode === obj.libraryBookCode;
+              return item.id === obj.id;
             });
             if (!isExist) {
               this.borrowTableData.push(obj);
@@ -454,7 +461,7 @@ export default {
             console.log(
               "搜索出来的数据",
               this.borrowTableData,
-              "接收的数据",
+              "接收的数据",                                    
               obj[0].code
             );
             // some不执行console.log
@@ -463,7 +470,7 @@ export default {
             });
             console.log(isExist);
             if (!isExist) {
-              this.borrowTableData.push(obj[0]);
+              this.borrowTableData.push(obj[0]);                  
               console.log("现在的数据", this.borrowTableData);
             } else {
               this.$message.error("已选中该书");
@@ -522,21 +529,31 @@ export default {
       ws.onopen = e => {
         ws.send("connect");
         console.log("连接成功");
+        this.tips = "连接成功"
       };
       ws.onmessage = e => {
         this.message = e.data;
         // IC卡匹配过滤
+        let damage = /damage/.test(e.data);
         let result = /^IC/.test(e.data);
-        let notice = /'error'/.test(e.data);
-
+        let notice = /error/.test(e.data);
+        console.log("接收的信息",e.data);
+        console.log(damage,"是否匹配")
         if (notice) {
           this.$message.error("连接串口已断开");
+          this.tips = "连接串口已断开"
+          return;
         }
         if (result) {
           let now = e.data.replace(/^IC/, "");
           console.log("IC卡", now);
           this.searchForm.cardNum = e.data.replace(/^IC/, "");
           console.log();
+        } else if(damage) {
+          this.$message.error("设备连接已断开，请刷新页面或联系相关人员")
+          this.tips = "设备连接已断开，请刷新页面或联系相关人员"
+          console.log("是否执行")
+          
         } else {
           let obj = {};
           obj.rfid = e.data.replace(/\s+/g, "");
@@ -547,8 +564,10 @@ export default {
       };
       ws.onclose = e => {
         console.log("连接关闭");
+        this.tips = "连接关闭"
       };
       ws.onerror = e => {
+        this.$message.error("RFID连接断开");
         console.log("出错情况");
       };
       return ws;
@@ -568,7 +587,7 @@ export default {
         clearTimeout(that.timeoutnum);
       }
       that.timeoutNum = setTimeout(() => {
-        that.wsValue = that.init("ws://127.0.0.0:7181");
+        that.wsValue = that.init("ws://192.168.2.141:7181");
         that.reconnectStatus = false;
       }, 5000);
       //that.timeoutnum && clearTimeout(that.timeoutnum);可读性极差
@@ -602,6 +621,7 @@ export default {
   },
   created() {
     this.wsValue = this.init("ws://127.0.0.1:7181");
+    //this.wsValue = this.init("ws://192.168.2.141:7181");
   },
   destroyed() {
     this.wsValue.close();

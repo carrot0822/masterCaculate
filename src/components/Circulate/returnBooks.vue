@@ -2,7 +2,10 @@
   <div class="borrowbook">
     <div style="display: flex;flex-direction: row;padding-left: 30px;padding-top: 30px">
       <div style="width: 4px;height: 17px;background-color: #0096FF"></div>
-      <div style="font-size: 16px;color: #878787;margin-left:10px;">书籍归还</div>
+      <div style="font-size: 16px;color: #878787;margin-left:10px;">
+        书籍归还
+        {{tips}}
+      </div>
     </div>
     <div style="width: 100%;margin-top: 75px">
       <section style="width:600px;height: 200px;margin:0 auto">
@@ -15,13 +18,7 @@
         >
           <el-form-item label="馆内码" prop="bookCode">
             <el-input clearable v-model="searchForm.bookCode" placeholder="请输入馆内码">
-              <el-button
-                slot="append"
-                icon="el-icon-search"
-                type="primary"
-               
-                @click="selectBtn"
-              >确定</el-button>
+              <el-button slot="append" icon="el-icon-search" type="primary" @click="selectBtn">确定</el-button>
             </el-input>
           </el-form-item>
         </el-form>
@@ -40,19 +37,15 @@
           <el-table-column align="center" prop="fkTypeName" width="200" label="书籍类型"></el-table-column>
           <el-table-column align="center" prop="author" label="作者"></el-table-column>
           <el-table-column align="center" fixed="right" width="200" label="操作">
-                  <template slot-scope="scope">
-                    <el-button
-                      size="mini"
-                      type="danger"
-                      @click="removeBtn(scope.$index, scope.row)"
-                    >移除</el-button>
-                    <!-- <el-button
+            <template slot-scope="scope">
+              <el-button size="mini" type="danger" @click="removeBtn(scope.$index, scope.row)">移除</el-button>
+              <!-- <el-button
                       size="mini"
                       type="primary"
                       @click="removeBtn(scope.$index, scope.row)"
-                    >报损</el-button> -->
-                  </template>
-                </el-table-column>
+              >报损</el-button>-->
+            </template>
+          </el-table-column>
         </el-table>
       </section>
       <div class="buttonBox">
@@ -67,9 +60,10 @@
 import axios from "axios";
 import { returnInt } from "@request/api/base.js";
 export default {
-  name:'return',
+  name: "return",
   data() {
     return {
+      tips: "",
       message: "",
       labelPosition: "right",
       searchForm: {
@@ -123,7 +117,7 @@ export default {
       console.log("被选择的数据", val);
     },
     // 移除按钮
-    removeBtn(index,row){
+    removeBtn(index, row) {
       this.tableData.splice(index, 1);
     },
     // 还书按钮
@@ -181,7 +175,7 @@ export default {
               return item.code === obj.code;
             });
             if (!isExist) {
-              this.tableData.push(obj);    
+              this.tableData.push(obj);
             }
             console.log("现在的数据", this.tableData);
           } else {
@@ -216,13 +210,31 @@ export default {
       ws.onopen = e => {
         ws.send("connect");
         console.log("连接成功");
+        this.tips = "连接成功";
       };
       ws.onmessage = e => {
         this.message = e.data;
         // IC卡匹配过滤
+        let damage = /damage/.test(e.data);
         let result = /^IC/.test(e.data);
+        let notice = /error/.test(e.data);
+        console.log("接收的信息",e.data);
+        console.log(damage,"是否匹配")
+        if (notice) {
+          this.$message.error("连接串口已断开");
+          this.tips = "连接串口已断开"
+          return;
+        }
         if (result) {
+          let now = e.data.replace(/^IC/, "");
+          console.log("IC卡", now);
           this.searchForm.cardNum = e.data.replace(/^IC/, "");
+          console.log();
+        } else if(damage) {
+          this.$message.error("设备连接已断开，请刷新页面或联系相关人员")
+          this.tips = "设备连接已断开，请刷新页面或联系相关人员"
+          console.log("是否执行")
+          
         } else {
           let obj = {};
           obj.rfid = e.data.replace(/\s+/g, "");
@@ -233,6 +245,7 @@ export default {
       };
       ws.onclose = e => {
         console.log("连接关闭");
+        this.tips = "连接关闭";
       };
       ws.onerror = e => {
         console.log("出错情况");

@@ -79,7 +79,7 @@
             width="100"
             align="center"
             prop="code"
-            label="馆藏码"
+            label="馆内码"
             :show-overflow-tooltip="true"
           ></el-table-column>
           <el-table-column
@@ -556,7 +556,7 @@
               <p class="showContent">{{damageDialog.showData.callNumber}}</p>
             </div>
             <div class="backShow">
-              <span class="label">馆藏码:</span>
+              <span class="label">馆内码:</span>
               <p class="showContent">{{damageDialog.showData.code}}</p>
             </div>
 
@@ -645,7 +645,8 @@ export default {
     return {
       /*------ 非弹框组 ------*/
       // 状态数据可以放在其他地方存储
-      //
+      // 禁用分类号
+      typeBan:true,
       rowId: "",
       // 查询表单
       searchInput: {
@@ -653,25 +654,25 @@ export default {
         search: "", // 输入框
         optionsArr: [
           {
-            label: "藏馆码",
+            label: "馆内码",
             value: 1
           },
           {
-            label: "期刊名",
+            label: "书籍名称",
             value: 2
           },
           {
-            label: "并列题名",
+            label: "丛编题名",
             value: 3
           },
           {
             label: "isbn",
             value: 4
           },
-          {
-            label: "备注",
+          /* {
+            label: "在馆状态",
             value: 5
-          }
+          } */
         ]
       },
       searchForm: {
@@ -710,7 +711,7 @@ export default {
         flag: false,
         display: false,
         title: "",
-        titleBox: ["添加期刊", "修改期刊"],
+        titleBox: ["添加书籍", "修改书籍"],
         searchDisabled: false, // 搜索禁用
         inputDisabled: true, // 回显框禁用
         issnDiabled: false, // 期刊号备用禁用
@@ -997,24 +998,24 @@ export default {
         switch (value) {
           case 1:
             this.clearValue(this.searchForm);
-            this.searchForm.libraryBookCode = this.searchInput.search;
+            this.searchForm.code = this.searchInput.search;
             break;
           case 2:
             this.clearValue(this.searchForm);
-            this.searchForm.name = this.searchInput.search;
+            this.searchForm.bookName = this.searchInput.search;
             break;
           case 3:
             this.clearValue(this.searchForm);
-            this.searchForm.parallelTitle = this.searchInput.search;
+            this.searchForm.clusterName = this.searchInput.search;
             break;
           case 4:
             this.clearValue(this.searchForm);
-            this.searchForm.queryIssn = this.searchInput.search;
+            this.searchForm.isbn = this.searchInput.search;
 
-          case 5:
+          /* case 5:
             this.clearValue(this.searchForm);
             this.searchForm.remark = this.searchInput.search;
-            break;
+            break; */
         }
       } else {
         this.clearValue(this.searchForm);

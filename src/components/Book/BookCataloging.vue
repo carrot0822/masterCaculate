@@ -175,7 +175,7 @@
                         </div>
                       </el-form-item>
                       <el-form-item label=" 分 类 名 :" prop="fkTypeName" style="width:450px;">
-                        <el-input v-model="addForm.fkTypeName "></el-input>
+                        <el-input :disabled="true" v-model="addForm.fkTypeName "></el-input>
                       </el-form-item>
                     </div>
                     <div id="catalogingInput4" class="flexLayout">
@@ -385,6 +385,7 @@
         }, //ztree树加载的配置
         zNodes: [], //ztree树的数据
         addForm: {
+          id:"",
           isbn: '',
           name: '', //正题名
           viceName: '', //副题名
@@ -519,9 +520,10 @@
       //选中某条数据的选中按钮
       decideOn(index,row){
         let value = this.addForm.isbn
-        
+        console.log(this.addForm,'本地获取')
         this.decideOnData=true
-        this.addForm=row
+        this.addForm=Object.assign(this.addForm,row);
+        console.log(this.addForm,'改变过后')
         this.addForm.isbn = value;
         console.log(value,this.addForm.isbn,'值应该是不覆盖的')
         this.centerDialogVisible=false;
@@ -705,7 +707,7 @@
               this.centerDialogVisible=true
             }else if(res.data.row.length==1){
               let value = this.addForm.isbn
-              this.addForm = res.data.row[0]
+              this.addForm = Object.assign(this.addForm,res.data.row[0]) 
               this.addForm.isbn = value;
             }else if(res.data.row.length==0){
               this.remoteCatalogData()
@@ -732,7 +734,7 @@
               this.centerDialogVisible=true
             }else if(res.data.row.length==1){
               let value = this.addForm.isbn
-              this.addForm = res.data.row[0]
+              this.addForm = Object.assign(this.addForm,res.data.row[0])
               this.addForm.isbn = value;
             }else if(res.data.row==null){
               return
@@ -751,7 +753,8 @@
       //修改弹框
       EditBtn(index,row){
         this.i=0
-        this.addForm=row
+        this.addForm=Object.assign(this.addForm,row);
+        console.log('修改',this.addForm);
         if(row.languageCode==='CN'){
           this.addForm.languageCode='汉语'
         }else if(row.languageCode==='EN'){

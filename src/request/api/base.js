@@ -82,12 +82,12 @@ export const damageCotInt = {
 var borrow = url + 'tibetmuseummodule/bookRFID/';
 export const borrowInt = {
   selectCode: `${url}borrowmodule/lend/borrow/selectByCode`,
-  selectRfid: `${borrow}borrowmodule/lend/borrow/selectByrfid`
+  selectRfid: `${url}borrowmodule/lend/borrow/selectByrfid`
 };
 // 还书页面
 export const returnInt = {
   selectCode: `${url}borrowmodule/lend/return/selectByCode`,
-  selectRfid: `${borrow}borrowmodule/lend/return/selectByrfid`,
+  selectRfid: `${url}borrowmodule/lend/return/selectByrfid`,
   sell:`${url}borrowmodule/lend/return/in`
 };
 // 借书

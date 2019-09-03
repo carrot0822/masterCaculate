@@ -23,7 +23,7 @@
               clearable
             >
               <el-option label="馆藏名" value="0"></el-option>
-              <el-option label="馆藏码" value="1"></el-option>
+              <el-option label="馆内码" value="1"></el-option>
             </el-select>
             <el-input
               v-model="searchInput.search"
@@ -186,7 +186,7 @@ export default {
             callback(new Error('请输入数字值'));
           } else {
             if (value > 100) {
-              callback(new Error('馆藏码小于100'));
+              callback(new Error('馆内码小于100'));
             } else {
               callback();
             }

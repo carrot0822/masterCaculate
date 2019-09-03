@@ -79,7 +79,7 @@
             width="100"
             align="center"
             prop="code"
-            label="馆藏码"
+            label="馆内码"
             :show-overflow-tooltip="true"
           ></el-table-column>
           <el-table-column
@@ -621,7 +621,7 @@
               <p class="showContent">{{damageDialog.showData.callNumber}}</p>
             </div>
             <div class="backShow">
-              <span class="label">馆藏码:</span>
+              <span class="label">馆内码:</span>
               <p class="showContent">{{damageDialog.showData.code}}</p>
             </div>
 
