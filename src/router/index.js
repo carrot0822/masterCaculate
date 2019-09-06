@@ -593,7 +593,23 @@ export default new Router({
             title: '充值管理',
             Mode: '5'
           },
-          component: resolve => require(['../components/System/recharge.vue'], resolve)
+          component: resolve => require(['../components/Finance/recharge.vue'], resolve)
+        },
+        {
+          path:'/orderNum',
+          meta:{
+            title:"未处理订单",
+            Mode:"5"
+          },
+          component:() =>import("../components/Finance/orderNum.vue")
+        },
+        {
+          path:'/orderNumHis',
+          meta:{
+            title:"历史订单记录",
+            Mode:"5"
+          },
+          component:() =>import("../components/Finance/orderNumHis.vue")
         },
         {
           path: '/OverdueCostCirculation',

@@ -56,7 +56,7 @@
           <el-table-column align="center" prop="sum" label="在馆" :show-overflow-tooltip="true" width="150"></el-table-column>
           <el-table-column align="center" prop="lend" label="已借" :show-overflow-tooltip="true" width="150"></el-table-column>
           <el-table-column align="center" prop="damage" label="损坏" :show-overflow-tooltip="true" width="150"></el-table-column>
-          <el-table-column align="center" width="200" prop="damageName" label="注销清点" :show-overflow-tooltip="true">
+          <el-table-column align="center" min-width="200" prop="damageName" label="注销清点" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <span>被盗:{{scope.row.stolen}}</span>
               <span>未还:{{scope.row.notReturn}}</span>

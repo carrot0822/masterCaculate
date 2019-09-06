@@ -1177,10 +1177,10 @@ export default {
         case 0:
           let arr = [];
           for (let item of this.tableObj.selectAll) {
-            arr.push(item.code);
+            arr.push(item.id);
           }
 
-          obj.codes = arr;
+          obj.ids = arr;
           this._remove(obj);
           break;
         case 1:

@@ -6,7 +6,7 @@
         <ul id="treeDemo" class="ztree" style="margin-left:15px"></ul>
       </div>
     </div>
-      <div style="width:1320px;margin-left: 30px;background-color:white;overflow: auto">
+      <div style=" width:100%;margin-left: 30px;background-color:white;overflow: auto">
         <el-container>
           <div class="box-card">
             <!-- 0.0 面包屑路由导航部分 此处路由导航可以直接跳 属于动态添加渲染出的 -->

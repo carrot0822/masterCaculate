@@ -69,7 +69,7 @@
             </el-table-column>
             <el-table-column width="150" align="center" prop="power" label="阅读权限">
             </el-table-column>
-            <el-table-column :show-overflow-tooltip="true" align="center" prop="title" label="标题" width="800">
+            <el-table-column :show-overflow-tooltip="true" align="center" prop="title" label="标题" min-width="800">
               <template slot-scope="scope">
                   <p class="textLeft">{{scope.row.title}}</p>
               </template>

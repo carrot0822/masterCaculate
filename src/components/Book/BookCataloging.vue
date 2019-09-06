@@ -700,6 +700,19 @@
       localCatalogData(){
         this.axios.get(catalog.localCataloging,{params:{isbn:this.addForm.isbn}}).then((res)=>{
           if(res.data.state==true){
+            if(res.data.row.length){
+              this.catalogingData = res.data.row
+              this.j=3
+              this.messageWidth='750px'
+              this.centerDialogVisible=true
+            }else if(res.data.row.length==0){
+              this.remoteCatalogData()
+            }
+          }else{
+            this.$message.error(res.data.msg);
+          }
+          
+          /* if(res.data.state==true){
             if(res.data.row.length>1){
               this.catalogingData = res.data.row
               this.j=3
@@ -714,7 +727,7 @@
             }
           }else{
             this.$message.error(res.data.msg);
-          }
+          } */
         },(err)=>{
           this.$message({
             message: '网络出错',
@@ -726,7 +739,7 @@
       remoteCatalogData(){
         this.axios.get(catalog.remoteCataloging,{params:{selectisbn:this.addForm.isbn}}).then((res)=>{
           
-          if(res.data.state==true){
+          /* if(res.data.state==true){
             if(res.data.row.length>1){
               this.catalogingData = res.data.row
               this.j=4
@@ -736,6 +749,18 @@
               let value = this.addForm.isbn
               this.addForm = Object.assign(this.addForm,res.data.row[0])
               this.addForm.isbn = value;
+            }else if(res.data.row==null){
+              return
+            }
+          } else{
+            this.$message.error(res.data.msg);
+          } */
+          if(res.data.state==true){
+            if(res.data.row.length){
+              this.catalogingData = res.data.row
+              this.j=4
+              this.messageWidth='750px'
+              this.centerDialogVisible=true
             }else if(res.data.row==null){
               return
             }

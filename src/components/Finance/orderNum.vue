@@ -1,15 +1,36 @@
 <template>
-  <div id="appointment">
+  <div id="orderNum">
     <section class="titleBox">
-      <h2 class="title">图书预约记录</h2>
+      <h2 class="title">订单记录</h2>
     </section>
     <!-- 按钮集合 -->
     <section class="changeBtnBox">
       <div class="searchBtn">
-        <el-form :inline="true" :model="searchInput">
+        <el-form :inline="true" :model="searchTime">
+          <el-form-item label="筛选 :">
+            <el-select
+              style="width: 150px"
+              v-model="searchInput.option"
+              placeholder="请选择"
+              clearable
+            >
+              <el-option
+                v-for="(item,index) of searchOption"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+            <el-input
+              v-model="searchInput.search"
+              placeholder="请输入相关信息"
+              clearable
+              style="width: 250px"
+            ></el-input>
+          </el-form-item>
           <el-form-item size="130" label="创建时间:">
             <el-date-picker
-              v-model="searchInput.beginTime"
+              v-model="searchTime.beginTime"
               type="date"
               placeholder="开始日期"
               style="width: 200px"
@@ -18,7 +39,7 @@
               value-format="yyyy-MM-dd"
             ></el-date-picker>
             <el-date-picker
-              v-model="searchInput.endTime"
+              v-model="searchTime.endTime"
               type="date"
               placeholder="结束日期"
               style="width: 200px"
@@ -27,6 +48,7 @@
               value-format="yyyy-MM-dd"
             ></el-date-picker>
           </el-form-item>
+
           <el-form-item>
             <el-button type="primary" @click="searchBtn">搜索</el-button>
           </el-form-item>
@@ -42,54 +64,57 @@
           style="width: 100%; text-align:center;"
           :data="tableObj.tableData"
           :row-style="tableObj.rowStyle"
-          @selection-change="selectAll"
         >
-          <el-table-column align="center" type="selection" width="100"></el-table-column>
-          <el-table-column align="center" prop="index" type="index" width="100" label="序号">
+          <el-table-column fixed align="center" prop="index" type="index" width="100" label="序号">
             <template slot-scope="scope">
               <span>{{(pagationObj.currentPage - 1) * pagationObj.pageSize + scope.$index + 1}}</span>
             </template>
           </el-table-column>
           <el-table-column
             align="center"
-            prop="bookName"
-            label="书籍名称"
+            prop="orderNumber"
+            label="订单号"
+            :show-overflow-tooltip="true"
+            width="300"
+          ></el-table-column>
+          <el-table-column
+            align="center"
+            prop="entranceGuardName"
+            label="设备名称"
             :show-overflow-tooltip="true"
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="fkLibraryName"
-            label="取书馆"
+            prop="entranceGuardNum"
+            label="设备号"
             :show-overflow-tooltip="true"
           ></el-table-column>
           <el-table-column
             align="center"
             prop="createTime"
-            label="预约登记时间"
+            label="交易产生时间"
+            :show-overflow-tooltip="true"
+          ></el-table-column>
+
+          <el-table-column
+            align="center"
+            prop="toState"
+            label="状态"
+            width="80"
             :show-overflow-tooltip="true"
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="updateTime"
-            label="预约生效时间"
+            prop="toMoney"
+            label="金额"
+            width="80"
             :show-overflow-tooltip="true"
           ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="updateTime"
-            label="预约失效时间"
-            :show-overflow-tooltip="true"
-          ></el-table-column>
-          <el-table-column
-            align="center"
-            prop="fkReaderName"
-            label="取书人"
-            :show-overflow-tooltip="true"
-          ></el-table-column>
+          <el-table-column align="center" prop="reason" label="错误说明" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column align="center" label="操作" fixed="right" width="200">
             <!-- 这里的scope代表着什么 index是索引 row则是这一行的对象 -->
             <template slot-scope="scope">
-              <span class="revise" @click="rescindBtn(scope.$index, scope.row)">撤销</span>
+              <span class="revise" @click="dealBtn(scope.$index, scope.row)">处理</span>
             </template>
           </el-table-column>
         </el-table>
@@ -130,7 +155,7 @@
         width="400px"
         center
       >
-        <div class="warBody">
+        <!-- <div class="warBody">
           <el-form label-width="50px">
             <el-form-item label="备注:">
               <el-input
@@ -143,8 +168,8 @@
               ></el-input>
             </el-form-item>
           </el-form>
-        </div>
-        <!-- <div class="dialogBody">是否{{warDialog.title[warIndex]}}?</div> -->
+        </div> -->
+        <div class="dialogBody">是否{{warDialog.title[warIndex]}}?</div>
         <div style="margin-bottom: 20px">
           <span class="dialogButton true mr_40" @click="warBtn">确 定</span>
           <span class="dialogButton cancel" @click="warDialog.display=false">取 消</span>
@@ -155,7 +180,7 @@
 </template>
 
 <script>
-import { appointmentInt } from "@request/api/opac/appoinment";
+import { orderNumInt } from "@request/api/Finance/orderNum.js";
 export default {
   data() {
     /*------ 校检规则 ------*/
@@ -176,15 +201,33 @@ export default {
       /*------ 非弹框数据 ------*/
 
       // 查询表单
-      searchInput: {
+      searchTime: {
         beginTime: "", // 选择框
         endTime: "" // 输入框
       },
+      searchOption: [
+        {
+          label: "订单号",
+          value: "1"
+        },
+        {
+          label: "设备名称",
+          value: "2"
+        },
+        {
+          label: "设备号",
+          value: "3"
+        }
+      ],
+      searchInput: {
+        option: "", // 选择框
+        search: "" // 输入框
+      },
       pickerOptions0: {
         disabledDate: time => {
-          if (this.searchInput.endTime) {
+          if (this.searchTime.endTime) {
             let second = new Date(
-              Date.parse(this.searchInput.endTime.replace(/-/g, "/"))
+              Date.parse(this.searchTime.endTime.replace(/-/g, "/"))
             );
             return (
               time.getTime() > Date.now() || time.getTime() > second.getTime()
@@ -196,9 +239,9 @@ export default {
       },
       pickerOptions1: {
         disabledDate: time => {
-          if (this.searchInput.beginTime) {
+          if (this.searchTime.beginTime) {
             let frist = new Date(
-              Date.parse(this.searchInput.beginTime.replace(/-/g, "/"))
+              Date.parse(this.searchTime.beginTime.replace(/-/g, "/"))
             );
             return (
               time.getTime() < frist.getTime() || time.getTime() > Date.now()
@@ -209,6 +252,9 @@ export default {
       searchForm: {
         beginTime: "",
         endTime: "",
+        orderNumber:"",
+        equipmentName:"",
+        equipmentCode:"",
         pageSize: 10,
         currentPage: 1
       },
@@ -238,7 +284,7 @@ export default {
       warIndex: 0, // 控制标题
       warDialog: {
         display: false,
-        title: ["撤销预约"],
+        title: ["处理订单"],
         id: "",
         remark: ""
       }
@@ -253,15 +299,7 @@ export default {
   },
   methods: {
     /*------ 通信框架函数 ------*/
-    selectCheck() {},
-    selectAll(val) {
-      let arr = [];
-      for (let item of val) {
-        arr.push(item.id);
-      }
-      this.tableObj.selectAll = arr;
-      console.log("全选的内容", val);
-    },
+
     current_change(val) {
       this.searchForm.currentPage = val;
       this.pagationObj.currentPage = val;
@@ -284,7 +322,7 @@ export default {
       this.pagationObj.currentPage = this.pagationObj.pageInput;
       this._search(this.searchForm);
     },
-    rescindBtn(index, row) {
+    dealBtn(index, row) {
       console.log(row, "撤销的");
       this.warIndex = 0;
       this.warDialog.display = true;
@@ -292,9 +330,31 @@ export default {
     },
     /*------ 非弹框触发按钮 ------*/
     searchBtn() {
-      this.searchForm = Object.assign(this.searchForm, this.searchInput);
+      let value = parseInt(this.searchInput.option);
+      console.log(value);
+      if (value) {
+        switch (value) {
+          case 1:
+            this.clearValue(this.searchForm);
+            this.searchForm.orderNumber = this.searchInput.search;
+            break;
+          case 2:
+            this.clearValue(this.searchForm);
+            this.searchForm.equipmentName = this.searchInput.search;
+            break;
+          case 3:
+            this.clearValue(this.searchForm);
+            this.searchForm.equipmentCode = this.searchInput.search;
+            break;
+        }
+      } else {
+        this.clearValue(this.searchForm);
+      }
+      this.searchForm.pageSize = 10;
+      this.searchForm.currentPage = 1;
+      this.searchForm = Object.assign(this.searchForm, this.searchTime);
       this._search(this.searchForm);
-      console.log(this.searchInput);
+      console.log(this.searchTime);
     },
 
     pagationBtn() {},
@@ -303,25 +363,29 @@ export default {
     warBtn() {
       let obj = {};
       obj.id = this.warDialog.id;
-      obj.remark = this.warDialog.remark;
-      this._rescind(obj);
+      
+      this._deal(obj);
       console.log(obj);
     },
     /*------ api ------*/
 
     _search(obj) {
       let data = obj;
-      appointmentInt.search(data).then(res => {
+      orderNumInt.search(data).then(res => {
         if (res.data.state == true) {
+          for (let item of res.data.row) {
+            item.toMoney = this.toMoney(item.money);
+            item.toState = this.toState(item.state);
+          }
           this.tableObj.tableData = res.data.row;
           this.pagationObj.total = res.data.total;
         }
         console.log(res, "查询");
       });
     },
-    _rescind(obj) {
+    _deal(obj) {
       let data = obj;
-      appointmentInt.rescind(data).then(res => {
+      orderNumInt.deal(data).then(res => {
         if (res.data.state == true) {
           this.$message.success(res.data.msg);
           this._search();
@@ -339,6 +403,15 @@ export default {
       for (let key of keys(obj)) {
         obj[key] = "";
       }
+    },
+    toState(num) {
+      let i = parseInt(num);
+      let arr = ["失败", "成功"];
+      return arr[i];
+    },
+    toMoney(num) {
+      let value = num + "元";
+      return value;
     }
   },
   created() {
@@ -348,7 +421,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#appointment {
+#orderNum {
   background-color: #ffffff;
   padding: 30px;
   .titleBox {
@@ -436,7 +509,7 @@ export default {
 </style>
 
 <style lang="scss">
-#appointment {
+#orderNum {
   .changeBtnBox {
     .searchBtn {
       .el-form-item {

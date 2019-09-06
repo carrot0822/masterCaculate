@@ -9,7 +9,7 @@ const reserveUrl = {
   search: `${url}bookcollectionmodule/collection/select`,
   add: `${url}bookcollectionmodule/collection/add`,
   revise: `${url}bookcollectionmodule/collection/edit`,
-  post: `${url}bookcollectionmodule/collection/post`,
+  remove: `${url}bookcollectionmodule/collection/delete`,
   getFront:`${url}bookcollectionmodule/collection/currency/selectOne`, // 获取修改回显信息
   // other接口
   reject: `${url}bookcollectionmodule/collection/letRemove`, // 剔除
@@ -65,7 +65,7 @@ function revise(data) {
 }
 
 function remove(data) {
-  return axios.post(reserveUrl.post, {data}).then((res) => {
+  return axios.post(reserveUrl.remove, data).then((res) => {
     return Promise.resolve(res)
   })
 }

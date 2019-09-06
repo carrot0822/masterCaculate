@@ -60,18 +60,18 @@
                   <span>{{(currentPage - 1) * pageSize + scope.$index + 1}}</span>
                 </template>
               </el-table-column>
-              <el-table-column align="center" prop="fkReaderName" width="160" label="用户名"></el-table-column>
-              <el-table-column align="center" prop="fkCardNumber" width="160" label="卡号"></el-table-column>
-              <el-table-column align="center" prop="bookName" width="170" label="书名" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column align="center" prop="libraryBookCode" width="200" label="馆内码" :show-overflow-tooltip="true"></el-table-column>
-              <el-table-column align="center" prop="createTime" width="200" label="借书时间"></el-table-column>
-              <el-table-column align="center" prop="renewCount" width="150" label="续借次数">
+              <el-table-column align="center" prop="fkReaderName" label="用户名"></el-table-column>
+              <el-table-column align="center" prop="fkCardNumber" label="卡号"></el-table-column>
+              <el-table-column align="center" prop="bookName"  label="书名" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column align="center" prop="libraryBookCode"  label="馆内码" :show-overflow-tooltip="true"></el-table-column>
+              <el-table-column align="center" prop="createTime"  label="借书时间"></el-table-column>
+              <el-table-column align="center" prop="renewCount"  label="续借次数">
                 <template slot-scope="scope">
                   <span>{{scope.row.renewCount}}次</span>
                 </template>
               </el-table-column>
-              <el-table-column align="center" prop="planReturnTime" width="200" label="预计归还时间"></el-table-column>
-              <el-table-column align="center" prop="realityReturnTime" width="200" label="实际归还时间"></el-table-column>
+              <el-table-column align="center" prop="planReturnTime"  label="预计归还时间"></el-table-column>
+              <el-table-column align="center" prop="realityReturnTime" label="实际归还时间"></el-table-column>
             </el-table>
             <section class="pagination mt_30">
               <el-pagination

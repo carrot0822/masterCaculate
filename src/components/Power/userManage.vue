@@ -91,7 +91,7 @@
                 </template>
               </el-table-column>
 
-              <el-table-column align="center" width="150" prop="headerAddress" label="头像">
+              <el-table-column align="center" min-width="150" prop="headerAddress" label="头像">
                 <template slot-scope="scope">
                   <span class="imgDefault" height="30px;" style="border-radius: 50%">
                     <img
@@ -120,15 +120,15 @@
                 width="150"
                 label="角色名称"
               ></el-table-column>
-              <el-table-column align="center" prop="username" label="姓名" width="150"></el-table-column>
-              <el-table-column align="center" prop="sex" label="性别" width="150">
+              <el-table-column align="center" prop="username" label="姓名" min-width="150"></el-table-column>
+              <el-table-column align="center" prop="sex" label="性别" min-width="150">
                 <template slot-scope="scope">
                   <span>{{scope.row.sex ===1?'男':'女'}}</span>
                 </template>
               </el-table-column>
-              <el-table-column align="center" prop="idShow" width="200" label="身份证号"></el-table-column>
-              <el-table-column align="center" prop="phoneShow" width="200" label="手机号码"></el-table-column>
-              <el-table-column align="center" prop="createTime" width="200" label="创建时间"></el-table-column>
+              <el-table-column align="center" prop="idShow" min-width="200" label="身份证号"></el-table-column>
+              <el-table-column align="center" prop="phoneShow" min-width="200" label="手机号码"></el-table-column>
+              <el-table-column align="center" prop="createTime" min-width="200" label="创建时间"></el-table-column>
               <el-table-column align="center" prop="isLock" width="150" label="状态">
                 <template slot-scope="scope">
                   <span>{{scope.row.isLock ===0?'启用':'禁用'}}</span>

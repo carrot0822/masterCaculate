@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "c-swipe": "^2.1.5",
     "countup.js": "^2.0.4",
     "driver.js": "^0.9.7",
     "echarts": "^4.2.1",
