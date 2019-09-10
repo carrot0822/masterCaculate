@@ -733,7 +733,7 @@
 
 <script>
 import { mergeInt } from "@request/api/magazine/merge";
-import { reserveInt } from "@/request/api/magazine";
+import { reserveInt } from "@/request/api/magazine/magazine.js";
 import pagationOwn from "@/common/pagation/pagation"
 export default {
   data() {
@@ -1269,6 +1269,7 @@ export default {
           this.aeDialog.aeForm.placeCode = this.aeDialog.libIndex.code;
           let cNbValue = this.aeDialog.cNbSelect.select;
           localStorage.setItem('selectValue', cNbValue);
+          this.aeDialog.aeForm.callNumber = this.aeDialog.cNbSelect.input
           console.log(this.aeDialog.aeForm, "检测");
           if (this.aeIndex == 0) {
             this._add(this.aeDialog.aeForm);

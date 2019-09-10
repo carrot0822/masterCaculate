@@ -70,6 +70,11 @@
             </el-table-column>
             <el-table-column align="center" prop="author" label="编著者" width="200" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column align="center" prop="fkTypeCode" label="分类号" width="200" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column align="center" prop="price" label="价格" width="200" :show-overflow-tooltip="true">
+              <template slot-scope="scope">
+                <span>{{scope.row.clusterName == null || scope.row.price=='' ?'无':scope.row.price + '元'}}</span>
+              </template>
+            </el-table-column>
             <el-table-column align="center" prop="fkTypeName" label="分类名" width="200" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column align="center" prop="fkPressName" label="出版社" width="200" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column align="center" prop="publishingTime" label="出版时间" width="200" :show-overflow-tooltip="true">

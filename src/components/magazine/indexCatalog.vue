@@ -506,7 +506,7 @@
 
 <script>
 import axios from "axios";
-import { logUrl } from "@request/api/magazine.js";
+import { logUrl } from "@request/api/magazine/magazine.js";
 import { catalog, deriveInt, uploadInt } from "@request/api/base.js";
 import moment from "moment";
 export default {
@@ -948,6 +948,8 @@ export default {
                 this.addForm = res.data.row[0];
                 this.addForm.isbn = value;
               }
+            } else {
+              this.$message.error(row.data.msg)
             }
             
           },

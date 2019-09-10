@@ -4,7 +4,7 @@ var url = window.glob.url;
 var imgurl = window.glob.imgurl;
 var fileUrl = window.glob.fileUrl;
 
-// 期刊典藏
+// 书籍典藏
 const reserveUrl = {
   search: `${url}bookcollectionmodule/collection/select`,
   add: `${url}bookcollectionmodule/collection/add`,

@@ -203,7 +203,7 @@
 </template>
 
 <script>
-import { indexNumInt } from "@/request/api/indexNum";
+import { indexNumInt } from "@/request/api/magazine/indexNum";
 export default {
   data() {
     /*------ 校检规则 ------*/

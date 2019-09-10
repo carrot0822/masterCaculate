@@ -704,7 +704,7 @@
 </template>
 
 <script>
-import { reserveInt } from "@/request/api/magazine";
+import { reserveInt } from "@/request/api/magazine/magazine.js";
 export default {
   data() {
     return {

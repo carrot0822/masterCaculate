@@ -3,7 +3,7 @@
     <el-container>
       <div class="commonMode" style="width:100%;overflow: auto">
         <div class="sonTitle">
-          <span class="titleName">图书位置信息</span>
+          <span class="titleName">期刊位置信息</span>
         </div>
         <!-- 2.0表单填写 -->
         <section class="searchBox">
@@ -22,8 +22,8 @@
                            @change="selectCheck(searchForm.makeMethod)">
                   <el-option label="索取号" value="0"></el-option>
                   <el-option label="馆藏码" value="1"></el-option>
-                  <el-option label="ISBN" value="2"></el-option>
-                  <el-option label="书名" value="3"></el-option>
+                  <el-option label="ISSN" value="2"></el-option>
+                  <el-option label="期刊名" value="3"></el-option>
                   <el-option label="状态" value="4"></el-option>
                 </el-select>
                 <el-input v-model="searchForm.searchData" clearable placeholder="请输入相关内容"
@@ -51,7 +51,7 @@
                 <span>{{(currentPage - 1) * pageSize + scope.$index + 1}}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" prop="name" label="书名" width="200"
+            <el-table-column align="center" prop="name" label="期刊名" width="200"
                              :show-overflow-tooltip="true"></el-table-column>
             <el-table-column align="center" prop="callNumber" label="索取号" width="200" :show-overflow-tooltip="true">
               <template slot-scope="scope">
@@ -60,9 +60,9 @@
             </el-table-column>
             <el-table-column align="center" prop="code" label="馆藏码" width="300"
                            ></el-table-column>
-            <el-table-column align="center" prop="isbn" label="ISBN" width="200"
+            <el-table-column align="center" prop="isbn" label="ISSN" width="200"
                              :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column align="center" prop="locationNam" label="图书位置" :show-overflow-tooltip="true" width="200">
+            <el-table-column align="center" prop="locationNam" label="期刊位置" :show-overflow-tooltip="true" width="200">
               <template slot-scope="scope">
                 <span>{{scope.row.locationNam == null || scope.row.locationNam=='' ?'---':scope.row.locationNam}}</span>
               </template>
@@ -71,7 +71,6 @@
                              :show-overflow-tooltip="true"></el-table-column>
             <!-- <el-table-column align="center" prop="updateTime" label="上架时间" width="200"></el-table-column> -->
             <el-table-column align="center" prop="fkTypeName" label="类型" width="200"></el-table-column>
-            <el-table-column align="center" prop="price" label="价格" width="200"></el-table-column>
             <el-table-column align="center" prop="lendState" label="状态" width="200">
               <template slot-scope="scope">
                 <span v-if="scope.row.lendState==0">不在架</span>
@@ -139,7 +138,7 @@
 
 <script>
   import axios from "axios";
-  import {bookLocationInfo} from "@request/api/base.js";
+  import {LocationInfo} from "../../request/api/magazine/position";
 
   export default {
     data() {
@@ -148,7 +147,7 @@
         dialogFormVisible: false, // // 新增修改弹框的展示和消失
         centerDialogVisible: false, // 删除弹框
         Messagetitle: ["上架", "下架"],
-        Dialogtitle: ["上架这本书", "下架这本书", "批量上架这些书", "批量下架这些书"],
+        Dialogtitle: ["上架期刊", "下架期刊", "批量上架期刊", "批量下架期刊"],
         i: null, // 切换弹框标题
         j: null,
         searchForm: {
@@ -303,7 +302,7 @@
         }
 
         if (this.j == 0) {
-          this.axios.post(bookLocationInfo.LendState, {
+          this.axios.post(LocationInfo.LendState, {
             state: 1,
             ids: this.iDs,
           }).then((res) => {
@@ -322,7 +321,7 @@
             }
           })
         } else if (this.j == 1) {
-          this.axios.post(bookLocationInfo.LendState, {
+          this.axios.post(LocationInfo.LendState, {
             state: 0,
             ids: this.iDs,
           }).then((res) => {
@@ -372,7 +371,7 @@
 
         this.tableLoading = true;
         axios
-          .get(bookLocationInfo.select, {
+          .get(LocationInfo.select, {
             params: value
           })
           .then(res => {
@@ -397,7 +396,7 @@
 
         this.tableLoading = true;
         axios
-          .get(bookLocationInfo.select, {
+          .get(LocationInfo.select, {
             params: value
           })
           .then(res => {

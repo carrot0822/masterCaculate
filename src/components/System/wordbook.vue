@@ -45,7 +45,7 @@
              <span class="ml_30" style="color: #878787">押金金额￥：{{changeForm.level.deposit}}元</span>
           </div>
         </el-form-item>
-        <el-form-item label="系统名称设置">
+        <!-- <el-form-item label="系统名称设置">
           <div class="inputBox">
             <el-input v-model.number="changeForm.manageSystemName"></el-input>
             <span class="ml_10 text" style="color: #ffffff">天</span>
@@ -53,7 +53,7 @@
         </el-form-item>
         <el-form-item class="uploadBox" label="系统logo更换">
           <section class="upload">
-            <!-- 背景图片做改动 -->
+           
             <div class="defultHead" @click="pointer" style="width:200px; height:100px; border-radius:6px;border:1px solid #DCDFE6">
               <img
                 ref="imgTest"
@@ -81,7 +81,7 @@
               >
             </div>
           </section>
-        </el-form-item>
+        </el-form-item> -->
         <div class="textCenter">
           <el-button type="primary" @click="editBtn">提交</el-button>
         </div>
