@@ -191,7 +191,7 @@
 
 <script>
 import axios from "axios";
-import { bookOperateInt, borrowInt, bookDamageInt } from "@request/api/base.js";
+import {  bookDamageInt, borrowInt } from "@request/api/base.js";
 export default {
   name:'damage',
   data() {
@@ -464,7 +464,7 @@ export default {
     },
     // 待归还Api
     returnBookApi(data) {
-      axios.get(bookOperateInt.return, { params: data }).then(res => {
+      axios.get( bookDamageInt.return, { params: data }).then(res => {
         if (res.data.state === true) {
           this.oweTable = res.data.row;
           console.log("待归还信息", this.oweTable);
@@ -475,7 +475,7 @@ export default {
     },
     // 历史借阅Api
     historyApi(data) {
-      axios.get(bookOperateInt.history, { params: data }).then(res => {
+      axios.get( bookDamageInt.history, { params: data }).then(res => {
         if (res.data.state === true) {
           this.bookHistory = res.data.row;
           console.log("历史借阅记录", this.bookHistory);

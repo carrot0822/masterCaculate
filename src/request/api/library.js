@@ -6,10 +6,10 @@ var imgurl = window.glob.imgurl;
 var fileUrl = window.glob.fileUrl;
 
 const libraryUrl = {
-    add:`${url}bookcollectionmodule/booklib/add`, 
-    remove:`${url}bookcollectionmodule/booklib/delete`, // 函数命名为delete会报错
-    search:`${url}bookcollectionmodule/booklib/select`,
-    revise:`${url}bookcollectionmodule/booklib/edit` //修改 edit是编辑
+    add:`${url}data/cata/dictionaries/lib/add`, 
+    remove:`${url}data/cata/dictionaries/lib/delete`, // 函数命名为delete会报错
+    search:`${url}data/cata/dictionaries/lib/select`,
+    revise:`${url}data/cata/dictionaries/lib/edit` //修改 edit是编辑
 }
 
 export const libraryInt ={

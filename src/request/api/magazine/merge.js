@@ -9,23 +9,22 @@ var fileUrl = window.glob.fileUrl;
 
 // 过刊合订
 const mergeUrl = {
-  search: `${url}periodicalmodule/itemHad/selectPage`,
-  add: `${url}periodicalmodule/itemHad/add`,
-  revise: `${url}periodicalmodule/itemHad/edit`,
-  remove: `${url}periodicalmodule/itemHad/delete`,
-  getFront:`${url}periodicalmodule/itemHad/selectOne`, // 获取编辑回显信息其一 子刊
-  getMore:`${url}periodicalmodule/itemHad/getDCQK`, // 获取典藏期刊信息（添加修改合刊）
+  search: `${url}data/cata/periodical/itemHad/selectPage`,
+  add: `${url}data/cata/periodical/itemHad/add`,
+  revise: `${url}data/cata/periodical/itemHad/edit`,
+  remove: `${url}data/cata/periodical/itemHad/delete`,
+  getFront:`${url}data/cata/periodical/itemHad/currency/selectOne`, // 获取编辑回显信息其一 子刊
+  getMore:`${url}data/cata/periodical/itemHad/getDCQK`, // 获取典藏期刊信息（添加修改合刊）
   // other接口
-  reject: `${url}periodicalmodule/itemHad/ridOf`, // 剔除
-  getLocal: `${url}periodicalmodule/itemHad/selectLocal`, // 获取本地issn
-  getIndex: `${url}periodicalmodule/itemHad/getPN`, // 获取所有期刊号
-  getNumber: `${url}bookcollectionmodule/collection/currency/getCode`, // 获取索书号等
-  getCity:`${url}periodicalmodule/itemHad/getLB`, // 查询所有藏馆
-  closeIndex:`${url}periodicalmodule/itemHad/stopUs`, // 停用
-  openIndex:`${url}periodicalmodule/itemHad/startUs`, // 启用
-  translate:`${url}periodicalmodule/itemHad/transferLibrary`, // 调馆
-  damage:`${url}periodicalmodule/itemHad/breakage`,  // 典藏期刊报损
-  getDamegeOp:`${url}periodicalmodule/itemHad/getDamageBox` // 查询损坏列表下拉框
+  reject: `${url}data/cata/periodical/itemHad/ridOf`, // 剔除
+  getLocal: `${url}data/cata/periodical/itemHad/selectLoca`, // 获取本地issn
+  getNumber: `${url}data/cata/book/bookcollection/currency/getCode`, // 获取索书号等
+  getCity:`${url}data/cata/periodical/itemHad/currency/getLB`, // 查询所有藏馆
+  closeIndex:`${url}data/cata/periodical/itemHad/stopUs`, // 停用
+  openIndex:`${url}data/cata/periodical/itemHad/startUs`, // 启用
+  translate:`${url}data/cata/periodical/itemHad/transferLibrary`, // 调馆
+  damage:`${url}data/cata/periodical/itemHad/breakage`,  // 典藏期刊报损
+  getDamegeOp:`${url}data/cata/periodical/itemHad/currency/getDamageBox` // 查询损坏列表下拉框
 }
 export const mergeInt = {
   search,

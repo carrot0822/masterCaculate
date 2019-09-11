@@ -6,9 +6,9 @@ var imgurl = window.glob.imgurl;
 var fileUrl = window.glob.fileUrl;
 
 const orderNum = {
-  search: `${url}authmodule/equipmentTbOrders/select`, // 订单查询查询
-  deal: `${url}authmodule/equipmentTbOrders/dealEquipmentTbOrder`, // 订单退款
-  getHistory:`${url}authmodule/equipmentTbOrders/selectHis` // 历史订单
+  search: `${url}financemodule/abnormal/select`, // 订单查询查询
+  deal: `${url}financemodule/abnormal/dealEquipmentTbOrder`, // 订单退款
+  getHistory:`${url}financemodule/orderlog/select` // 历史订单
 }
 
 export const orderNumInt = {

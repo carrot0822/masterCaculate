@@ -7,14 +7,13 @@ var imgurl = window.glob.imgurl;
 var fileUrl = window.glob.fileUrl;
 
 const backLog = {
-  search: `${url}authmodule/bak/select`, // 日志搜索
-  add: `${url}authmodule/bak/createBak`, // 创建备份
-  remove: `${url}authmodule/bak/delete`, // 删除备份
-  apply: `${url}authmodule/bak/useBak`, // 应用备份
-  upload: `${url}authmodule/bak/upload`, // 上传备份
-  download: `${url}authmodule/bak/downLoad`, // 下载备份
-  getLog: `${url}authmodule/bakLog/select`, // 备份查询
-  output: `${url}authmodule/bakLog/getFileFormTable` // 导出备份日志
+  search: `${url}authmodule/bak/bakdata/select`, // 日志搜索
+  add: `${url}authmodule/bak/bakdata/createBak`, // 创建备份
+  remove: `${url}authmodule/bak/bakdata/delete`, // 删除备份
+  apply: `${url}authmodule/bak/bakdata/useBak`, // 应用备份
+  upload: `${url}authmodule/bak/bakdata/upload`, // 上传备份
+  getLog: `${url}authmodule/bak/bakLog/select`, // 备份查询
+  output: `${url}authmodule/bak/bakLog/getFileFormTable` // 导出备份日志
 }
 export const backUrl = `${url}authmodule/bakLog/getFileFormTable`
 export const bakFile = `${fileUrl}filemodule/uploadBak/upload` // 上传文件

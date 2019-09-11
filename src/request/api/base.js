@@ -53,62 +53,81 @@ export const uploadInt = {
   showFile:`${fileUrl}filemodule/showFile/getFile`,
   excelFile:`${fileUrl}filemodule/uploadFile/addDataFile`
 };
+//书籍编目
+export const catalog ={
+  select:`${url}data/cata/book/bookcata/select`,
+  add:`${url}data/cata/book/bookcata/add`,
+  delete:`${url}data/cata/book/bookcata/delete`,
+  edit:`${url}data/cata/book/bookcata/edit`,
+  typeTree:`${url}data/cata/book/bookcata/currency/selectAllBookType`,
+  publishTree:`${url}data/cata/book/bookcata/currency/selectPressTree`,
+  language:`${url}data/cata/book/bookcata/currency/getLanguage`,
+  remoteCataloging:`${url}data/cata/book/bookcata/getBookInfoByLongRange`,//远程编目的数据
+  localCataloging:`${url}data/cata/book/bookcata/selectFromCata`,//本地编目的数据
+  getFields:`${url}data/cata/book/bookcata/currency/getFields`,//获取映射框数据
+  start:`${url}data/cata/book/bookcata/start`,//导入
+  getCountByConditon:`${url}data/cata/book/bookcata/getCountByConditon`,//获取对应条件的数据总数
+  getFileUrlByConditon:`${url}data/cata/book/bookcata/getFileUrlByConditon`,//开始导出
+};
 /*--- 批量导入书籍编目 ---*/
 export const bookUploadInt ={
-  getFields:`${url}catamodule/editing/cataTbBookInfo/getFields`,
-  add:`${url}catamodule/editing/cataTbBookInfo/start`
+  getFields:`${url}data/cata/book/bookcata/currency/getFields`,
+  add:`${url}data/cata/book/bookcata/start`
 };
+
+
 /*--- 批量导入期刊编目 ---*/
 export const indexloadInt ={
-  getFields:`${url}periodicalmodule/marcPeriodical/getFields`, // 期刊编目上传映射
-  add:`${url}periodicalmodule/marcPeriodical/start` // 期刊编目开始上传
+  getFields:`${url}data/cata/periodical/periodicalcata/currency/getFields`, // 期刊编目上传映射
+  add:`${url}data/cata/periodical/periodicalcata/start` // 期刊编目开始上传
 };
 /*--- 损坏清点 ---*/
 export const damageInt = {
-  outline:`${url}bookcollectionmodule/countDamage/getFristPage`,
-  detail:`${url}bookcollectionmodule/countDamage/getSecondPage`
+  outline:`${url}data/cata/book/bookcount/getFristPage`,
+  detail:`${url}data/cata/book/bookcount/getSecondPage`
 };
 /*------ 流通管理模块 ------*/
 /*--- 流通记录 ---*/
 // 报损记录与历史记录与处理操作
 export const damageCotInt = {
-  search:`${url}borrowmodule/borrowLog/damageLog/select`,
-  deal:`${url}borrowmodule/borrowLog/damageLog/deal`,
-  searchHis:`${url}borrowmodule/borrowLog/damageHis/select`
+  search:`${url}circulate/circulatelog/damagelog/select`,
+  deal:`${url}circulate/circulatelog/damagelog/deal`,
+  searchHis:`${url}circulate/circulatelog/damagehis/select`
 };
 /*--- 借阅管理 ---*/
 // 借书页面
 
 var borrow = url + 'tibetmuseummodule/bookRFID/';
 export const borrowInt = {
-  selectCode: `${url}borrowmodule/lend/borrow/selectByCode`,
-  selectRfid: `${url}borrowmodule/lend/borrow/selectByrfid`
+  selectCode: `${url}circulate/borrowmgr/borrow/currency/selectByCode`,
+  selectRfid: `${url}circulate/borrowmgr/borrow/currency/selectByrfid`
 };
 // 还书页面
 export const returnInt = {
-  selectCode: `${url}borrowmodule/lend/return/selectByCode`,
-  selectRfid: `${url}borrowmodule/lend/return/selectByrfid`,
-  sell:`${url}borrowmodule/lend/return/in`
+  selectCode: `${url}circulate/borrowmgr/return/currency/selectByCode`,
+  selectRfid: `${url}circulate/borrowmgr/return/currency/selectByrfid`,
+  sell:`${url}circulate/borrowmgr/return/in`
 };
 // 借书
 export const bookOperateInt = {
-  borrow: `${url}borrowmodule/lend/borrow/out`,
-  userInfo:`${url}borrowmodule/lend/borrow/getReaderInfo`,
-  return:`${url}borrowmodule/lend/borrow/getReaderLog`,
-  history:`${url}borrowmodule/lend/borrow/getReaderHis`
+  borrow: `${url}circulate/borrowmgr/borrow/out`,
+  userInfo:`${url}circulate/borrowmgr/borrow/currency/getReaderInfo`,
+  return:`${url}circulate/borrowmgr/borrow/currency/getReaderLog`,
+  history:`${url}circulate/borrowmgr/borrow/currency/getReaderHis`
 };
 // 续借
 export const renewInt = {
-  renew:`${url}borrowmodule/lend/renew/renewBooks`,
-  userInfo:`${url}borrowmodule/lend/renew/getReaderInfo`,
-  return:`${url}borrowmodule/lend/renew/getReaderLog`,
-  history:`${url}borrowmodule/lend/renew/getReaderHis`
+  renew:`${url}circulate/borrowmgr/renew/currency/getReaderLog`,
+  userInfo:`${url}circulate/borrowmgr/renew/currency/getReaderInfo`,
+  return:`${url}circulate/borrowmgr/renew/currency/getReaderLog`,
+  history:`${url}circulate/borrowmgr/renew/currency/getReaderHis`
 };
 // 书籍报损
 export const bookDamageInt = {
-  search:`${url}borrowmodule/lend/damage/getDamage`,
-  damage:`${url}borrowmodule/lend/damage/bookDamage`,
-  userInfo:`${url}borrowmodule/lend/damage/getReaderInfo`
+  search:`${url}circulate/borrowmgr/damage/currency/getDamage`,
+  damage:`${url}circulate/borrowmgr/damage/bookDamage`,
+  userInfo:`${url}circulate/borrowmgr/damage/currency/getReaderInfo`,
+  return:`${url}circulate/borrowmgr/damage/currency/getReaderLog`,
 };
 
 /*------ 读者管理模块 ------*/
@@ -253,11 +272,11 @@ export const bookModeInt = {
 };
 //图书出版社页面
 export const bookpublish = {
-  select:`${url}bookcollectionmodule/libraryPressManagementPage/select`,//图书出版社初始化查询接口
-  city:`${url}bookcollectionmodule/libraryPressManagementPage/selectCity`, //图书出版社城市信息
-  add:`${url}bookcollectionmodule/libraryPressManagementPage/add`, //图书出版社添加信息
-  edit:`${url}bookcollectionmodule/libraryPressManagementPage/edit`, //修改图书出版社
-  delete:`${url}bookcollectionmodule/libraryPressManagementPage/delete`, //删除图书出版社
+  select:`${url}data/cata/dictionaries/press/select`,//图书出版社初始化查询接口
+  city:`${url}data/cata/dictionaries/press/selectCity`, //图书出版社城市信息
+  add:`${url}data/cata/dictionaries/press/add`, //图书出版社添加信息
+  edit:`${url}data/cata/dictionaries/press/edit`, //修改图书出版社
+  delete:`${url}data/cata/dictionaries/press/delete`, //删除图书出版社
 };
 //图书类型查询
 export const booktype = url + 'bookmodule/bookTbType/select'; // 预览图片前缀
@@ -288,8 +307,8 @@ export const bookLocation = {
 };
 //图书位置信息
 export const bookLocationInfo = {
-  LendState:`${url}bookcollectionmodule/infoPage/editLendState`, //上架修改
-  select:`${url}bookcollectionmodule/infoPage/select`,//分页查询
+  LendState:`${url}data/cata/book/booklocation/editLendState`, //上架修改
+  select:`${url}data/cata/book/booklocation/select`,//分页查询
 };
 //藏馆信息
 export const libnews = {
@@ -304,17 +323,17 @@ export const deposit = {
 };
 //逾期管路
 export const overdue = {
-  table:`${url}borrowmodule/borrowLog/expectLog/select`, //逾期查询表格
+  table:`${url}circulate/circulatelog/expectLog/select`, //逾期查询表格
   phone:`${url}tibetmuseummodule/currency/expectLog/selectUserPhone`, //逾期催还电话
-  history:`${url}borrowmodule/borrowLog/expectHistoryLog/select`, //逾期历史记录查询表格
-  make:`${url}borrowmodule/borrowLog/expectLog/handle`, //逾期金额处理
+  history:`${url}circulate/circulatelog/expectHistoryLog/select`, //逾期历史记录查询表格
+  make:`${url}circulate/circulatelog/expectLog/handle`, //逾期金额处理
   setSelect:`${url}borrowmodule/borrowLog/overdueFunctionSet/select`,//逾期设置查询
   setEdit:`${url}borrowmodule/borrowLog/overdueFunctionSet/edit`//逾期设置修改
 };
 //借阅记录
 export const loan = {
-  table:`${url}borrowmodule/borrowLog/log/select`, //借阅记录表格查询
-  history:`${url}borrowmodule/borrowLog/history/select`, //借阅历史记录
+  table:`${url}circulate/circulatelog/borrowlog/select`, //借阅记录表格查询
+  history:`${url}circulate/circulatelog/returnlog/select`, //借阅历史记录
 };
 //失信记录
 export const dishonesty = {
@@ -327,18 +346,18 @@ export const dishonesty = {
 //库房模块
 var store = url + 'regionmodule/areaManagementPage/store';
 export const storeInt = {
-  select: `${url}bookcollectionmodule/areaManagementPage/storeselect`,
-  add: `${url}bookcollectionmodule/areaManagementPage/storeadd`,
-  edit: `${url}bookcollectionmodule/areaManagementPage/storeedit`,
-  delete: `${url}bookcollectionmodule/areaManagementPage/storedelete`
+  select: `${url}data/cata/dictionaries/areaManagementPage/storeselect`,
+  add: `${url}data/cata/dictionaries/areaManagementPage/storead`,
+  edit: `${url}data/cata/dictionaries/areaManagementPage/storeedit`,
+  delete: `${url}data/cata/dictionaries/areaManagementPage/storedelete`
 };
 //区模块
 var region = url + 'bookcollectionmodule/areaManagementPage/';
 export const regionInt = {
-  select: `${url}bookcollectionmodule/areaManagementPage/regionselect`,
-  add: `${url}bookcollectionmodule/areaManagementPage/regionadd`,
-  edit: `${url}bookcollectionmodule/areaManagementPage/regionedit`,
-  delete: `${url}bookcollectionmodule/areaManagementPage/regiondelete`,
+  select: `${url}data/cata/dictionaries/areaManagementPage/regionselect`,
+  add: `${url}data/cata/dictionaries/areaManagementPage/regionadd`,
+  edit: `${url}data/cata/dictionaries/areaManagementPage/regionedit`,
+  delete: `${url}data/cata/dictionaries/areaManagementPage/regiondelete`,
   selectBind: `${url}bookcollectionmodule/areaManagementPage/regionselectBind`,
   bind: `${url}bookcollectionmodule/areaManagementPage/regioneditBind`
 };
@@ -388,17 +407,17 @@ export const unBanOption = url + 'tibetmuseummodule/readerTbCardGradeinfo/curren
 
 //系统管理损坏管理
 export const damage={
-  select: `${url}authmodule/damageMgr/select`,
-  add: `${url}authmodule/damageMgr/add`,
-  edit: `${url}authmodule/damageMgr/edit`,
-  delete: `${url}authmodule/damageMgr/delete`
+  select: `${url}data/cata/dictionaries/damage/select`,
+  add: `${url}data/cata/dictionaries/damage/add`,
+  edit: `${url}data/cata/dictionaries/damage/edit`,
+  delete: `${url}data/cata/dictionaries/damage/delete`
 };
 //寒暑假设置
 export const vacation={
-  select:`${url}authmodule/holiday/select`,
-  add:`${url}authmodule/holiday/add`,
-  edit:`${url}authmodule/holiday/edit`,
-  delete:`${url}authmodule/holiday/delete`,
+  select:`${url}data/cata/dictionaries/holiday/select`,
+  add:`${url}data/cata/dictionaries/holiday/add`,
+  edit:`${url}data/cata/dictionaries/holiday/edit`,
+  delete:`${url}data/cata/dictionaries/holiday/delete`,
 };
 
 //充值设置
@@ -436,22 +455,6 @@ export const purchasing ={
   edit:`${url}catamodule/editing/procuremen/edit`,
 };
 
-//书籍编目
-export const catalog ={
-  select:`${url}catamodule/editing/cataTbBookInfo/select`,
-  add:`${url}catamodule/editing/cataTbBookInfo/add`,
-  delete:`${url}catamodule/editing/cataTbBookInfo/delete`,
-  edit:`${url}catamodule/editing/cataTbBookInfo/edit`,
-  typeTree:`${url}catamodule/editing/cataTbBookInfo/selectAllBookType`,
-  publishTree:`${url}catamodule/editing/cataTbBookInfo/selectPressTree`,
-  language:`${url}catamodule/editing/cataTbBookInfo/getLanguage`,
-  remoteCataloging:`${url}catamodule/editing/cataTbBookInfo/getBookInfoByLongRange`,//远程编目的数据
-  localCataloging:`${url}catamodule/editing/cataTbBookInfo/selectFromCata`,//本地编目的数据
-  getFields:`${url}catamodule/editing/cataTbBookInfo/getFields`,//获取映射框数据
-  start:`${url}catamodule/editing/cataTbBookInfo/start`,//导入
-  getCountByConditon:`${url}catamodule/editing/cataTbBookInfo/getCountByConditon`,//获取对应条件的数据总数
-  getFileUrlByConditon:`${url}catamodule/editing/cataTbBookInfo/getFileUrlByConditon`,//开始导出
-};
 
 //个人中心
 export const PersonalCentre={
@@ -473,8 +476,8 @@ export const editHeadPortrait=url+'authmodule/personalCore/editPersonalCenterHea
 export const editimgFile='http://192.168.2.54:8090/filemodule/showFile/getShow';
 // 导出接口
 export const deriveInt = {
-  select:`${url}catamodule/editing/cataTbBookInfo/getCountByConditon`,
-  derive:`${url}catamodule/editing/cataTbBookInfo/getFileUrlByConditon`,
+  select:`${url}data/cata/book/bookcata/getCountByConditon`,
+  derive:`${url}data/cata/book/bookcata/getFileUrlByConditon`,
   recommend:`${url}readermodule/recommend/recommendationHis/getFileFormTable`, // 荐购导出
   backlog:`${url}authmodule/bakLog/getFileFormTable`
 };

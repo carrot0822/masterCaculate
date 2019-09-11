@@ -7,39 +7,43 @@ var fileUrl = window.glob.fileUrl;
 // 期刊编目
 export const logUrl = {
   // 增删查改一套 编目数据
-  sLog: `${url}periodicalmodule/marcPeriodical/select`,
-  aLog: `${url}periodicalmodule/marcPeriodical/add`,
-  dLog: `${url}periodicalmodule/marcPeriodical/delete`,
-  rLog: `${url}periodicalmodule/marcPeriodical/edit`,
+  sLog: `${url}data/cata/periodical/periodicalcata/select`,
+  aLog: `${url}data/cata/periodical/periodicalcata/add`,
+  dLog: `${url}data/cata/periodical/periodicalcata/delete`,
+  rLog: `${url}data/cata/periodical/periodicalcata/edit`,
   // 弹框内的接口
-  sRemotelog: `${url}periodicalmodule/marcPeriodical/getPeriodicalInfoByLongRange`, // 远程编目获取
-  sLocalSearch: `${url}periodicalmodule/marcPeriodical/selectLocal`, // 本地获取数据
-  sBookType: `${url}periodicalmodule/marcPeriodical/selectAllBookType`, // 查询图书类型
-  sPublisher: `${url}periodicalmodule/marcPeriodical/selectPressTree`, // 查询出版社树
-  sLanguage: `${url}periodicalmodule/marcPeriodical/getLanguage`, // 查询语言
-  sMagazineType: `${url}periodicalmodule/marcPeriodical/periodicalType`, //  查询期刊类型
-  outPut:`${url}/periodicalmodule/marcPeriodical/getFileUrlByConditon`, // 期刊编目导出
+  sRemotelog: `${url}data/cata/periodical/periodicalcata/getPeriodicalInfoByLongRange`, // 远程编目获取
+  sLocalSearch: `${url}data/cata/periodical/periodicalcata/selectLocal`, // 本地获取数据
+  sBookType: `${url}data/cata/periodical/periodicalcata/currency/selectAllBookType`, // 查询图书类型
+  sPublisher: `${url}data/cata/periodical/periodicalcata/currency/selectPressTree`, // 查询出版社树
+  sLanguage: `${url}data/cata/periodical/periodicalcata/currency/getLanguage`, // 查询语言
+  sMagazineType: `${url}data/cata/periodical/periodicalcata/currency/periodicalType`, //  查询期刊类型
+  outPut:`${url}data/cata/periodical/periodicalcata/getFileUrlByConditon`, // 期刊编目导出
 }
-
+/*--- 批量导入期刊编目 ---*/
+export const indexloadInt ={
+  getFields:`${url}periodicalmodule/marcPeriodical/getFields`, // 期刊编目上传映射
+  add:`${url}periodicalmodule/marcPeriodical/start` // 期刊编目开始上传
+};
 // 期刊典藏
 const reserveUrl = {
-  search: `${url}periodicalmodule/periodicalTbCollectionInfo/select`,
-  add: `${url}periodicalmodule/periodicalTbCollectionInfo/add`,
-  revise: `${url}periodicalmodule/periodicalTbCollectionInfo/edit`,
-  delete: `${url}periodicalmodule/periodicalTbCollectionInfo/delete`,
-  getFront:`${url}periodicalmodule/periodicalTbCollectionInfo/selectOne`, // 获取修改回显信息
+  search: `${url}data/cata/periodical/collection/select`,
+  add: `${url}data/cata/periodical/collection/add`,
+  revise: `${url}data/cata/periodical/collection/edit`,
+  delete: `${url}data/cata/periodical/collection/delete`,
+  getFront:`${url}data/cata/periodical/collection/selectOne`, // 获取修改回显信息
   // other接口
-  reject: `${url}periodicalmodule/periodicalTbCollectionInfo/ridOf`, // 剔除
-  getLocal: `${url}periodicalmodule/periodicalTbCollectionInfo/selectLocal`, // 获取本地issn
-  getIndex: `${url}periodicalmodule/periodicalTbCollectionInfo/getPN`, // 获取所有期刊号
-  getNumber: `${url}bookcollectionmodule/collection/currency/getCode`, // 获取索书号等
-  getSearchNum:`${url}/bookcollectionmodule/collection/currency/getBopSearchNumber`, // 通用接口 获取索取号*2
-  getCity:`${url}periodicalmodule/periodicalTbCollectionInfo/getLB`, // 查询所有藏馆
-  closeIndex:`${url}periodicalmodule/periodicalTbCollectionInfo/stopUs`, // 停用
-  openIndex:`${url}periodicalmodule/periodicalTbCollectionInfo/startUs`, // 启用
-  translate:`${url}periodicalmodule/periodicalTbCollectionInfo/transferLibrary`, // 调馆
-  damage:`${url}periodicalmodule/periodicalTbCollectionInfo/breakage`,  // 典藏期刊报损
-  getDamegeOp:`${url}periodicalmodule/periodicalTbCollectionInfo/getDamageBox` // 查询损坏列表下拉框
+  reject: `${url}data/cata/periodical/collection/ridOf`, // 剔除
+  getLocal: `${url}data/cata/periodical/collection/selectLocal`, // 获取本地issn
+  getIndex: `${url}data/cata/periodical/collection/getPN`, // 获取所有期刊号
+  getNumber: `${url}data/cata/book/bookcollection/currency/getCode`, // 获取索书号等
+  getSearchNum:`${url}data/cata/book/bookcollection/currency/getBopSearchNumber`, // 通用接口 获取索取号*2
+  getCity:`${url}data/cata/book/bookcollection/currency/getLibName`, // 查询所有藏馆
+  closeIndex:`${url}data/cata/periodical/collection/stopUs`, // 停用
+  openIndex:`${url}data/cata/periodical/collection/startUs`, // 启用
+  translate:`${url}data/cata/periodical/collection/transferLibrary`, // 调馆
+  damage:`${url}data/cata/periodical/collection/breakage`,  // 典藏期刊报损
+  getDamegeOp:`${url}data/cata/book/bookcollection/currency/getDamage` // 查询损坏列表下拉框
 }
 export const reserveInt = {
   search,

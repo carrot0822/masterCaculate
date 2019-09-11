@@ -118,7 +118,7 @@
           <el-table-column
             width="200"
             align="center"
-            prop="publicationDate"
+            prop="publishingTime"
             label="出版日期"
             :show-overflow-tooltip="true"
           ></el-table-column>
@@ -582,7 +582,7 @@
             </div>
             <div class="backShow">
               <span class="label">出版日期</span>
-              <p class="showContent">{{damageDialog.showData.publicationDate}}</p>
+              <p class="showContent">{{damageDialog.showData.publishingTime}}</p>
             </div>
             <div class="backShow">
               <span class="label">分类号</span>
@@ -639,7 +639,7 @@
 </template>
 
 <script>
-import { reserveInt } from "../../request/api/book/cataAdd";
+import { reserveInt } from "@request/api/book/cataAdd";
 export default {
   data() {
     return {

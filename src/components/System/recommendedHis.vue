@@ -223,12 +223,25 @@ export default {
     },
     diriveApi(val) {
       this.downloadLoading = true;
-      axios
-        .get(deriveInt.derive, {
+      this.excelName = 'jiangou'
+      this.excelUrl =
+        deriveInt.recommend +
+        "?fileName=jiangou" 
+        
+      const a = document.getElementById("excel");
+
+      a.setAttribute("href", this.excelUrl);
+      a.setAttribute("download", this.excelName);
+      a.click();
+      this.downloadLoading = false;
+      /* axios
+        .get(deriveInt.recommend, {
           params: val
         })
         .then(res => {
+          console.log(res)
           if (res.data.state == true) {
+            
             this.excelName = res.data.row.name;
             this.excelUrl =
               uploadInt.showFile +
@@ -246,7 +259,7 @@ export default {
             this.$message.error(res.data.msg);
             this.downloadLoading = false;
           }
-        });
+        }); */
     },
     // 分页按钮
     jumpBtn() {

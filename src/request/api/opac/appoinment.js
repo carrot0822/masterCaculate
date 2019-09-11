@@ -6,9 +6,9 @@ var imgurl = window.glob.imgurl;
 var fileUrl = window.glob.fileUrl;
 
 const appointment = {
-  search: `${url}borrowmodule/borrowLog/bookTbSubscribeLog/select`, // 预约记录查询
-  rescind: `${url}borrowmodule/borrowLog/bookTbSubscribeLog/handle`, // 预约记录处理
-  getHistory: `${url}borrowmodule/borrowLog/bookTbSubscribeHistoryLog/select` // 预约历史记录查询
+  search: `${url}circulate/subscribe/subscribelog/select`, // 预约记录查询
+  rescind: `${url}circulate/subscribe/subscribelog/handle`, // 预约记录处理
+  getHistory: `${url}circulate/subscribe/subscribehis/select` // 预约历史记录查询
 }
 
 export const appointmentInt = {

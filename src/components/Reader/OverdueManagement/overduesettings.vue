@@ -3,7 +3,7 @@
     <div style="display: flex;flex-direction: row;justify-content:space-between;padding-left: 30px;padding-top: 30px;padding-right: 30px">
       <div>
         <div style="width: 4px;height: 17px;background-color: #0096FF"></div>
-        <div style="font-size: 16px;color: #878787;margin-left:10px;margin-top: -17px">逾期设置</div>
+        <div style="font-size: 16px;color: #878787;margin-left:10px;margin-top: -17px">初始参数</div>
       </div>
     </div>
     <div style="width: 370px;height: 370px;margin:200px auto">

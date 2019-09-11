@@ -907,16 +907,9 @@
         }
       },
       /*------ Api ------*/
-      selectDreApi(val){
-        axios.get(deriveInt.select,{
-          params:value
-        }).then((res)=>{
-
-        })
-      },
       diriveApi(val){
         this.downloadLoading = true
-        axios.get(deriveInt.derive,{
+        axios.get(catalog.getFileUrlByConditon,{
           params:val
         }).then((res) =>{
           if(res.data.state == true){

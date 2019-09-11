@@ -6,24 +6,24 @@ var fileUrl = window.glob.fileUrl;
 
 // 书籍典藏
 const reserveUrl = {
-  search: `${url}bookcollectionmodule/collection/select`,
-  add: `${url}bookcollectionmodule/collection/add`,
-  revise: `${url}bookcollectionmodule/collection/edit`,
-  remove: `${url}bookcollectionmodule/collection/delete`,
-  getFront:`${url}bookcollectionmodule/collection/currency/selectOne`, // 获取修改回显信息
+  search: `${url}data/cata/book/bookcollection/select`,
+  add: `${url}data/cata/book/bookcollection/add`,
+  revise: `${url}data/cata/book/bookcollection/edit`,
+  remove: `${url}data/cata/book/bookcollection/delete`,
+  getFront:`${url}data/cata/book/bookcollection/currency/selectOne`, // 获取修改回显信息
   // other接口
-  reject: `${url}bookcollectionmodule/collection/letRemove`, // 剔除
-  getLocal: `${url}catamodule/editing/cataTbBookInfo/selectFromCata`, // 获取本地issn
-  getbackTab:`${url}bookcollectionmodule/collection/selectFromCataID`, // issn搜剔除
-  getNumber: `${url}bookcollectionmodule/collection/currency/getCode`, // 获馆内码
-  getSearchNum:`${url}/bookcollectionmodule/collection/currency/getBopSearchNumber`, // 通用接口 获取索取号*2
+  reject: `${url}data/cata/book/bookcollection/letRemove`, // 剔除
+  getLocal: `${url}data/cata/book/bookcollection/selectFromCata`, // 获取本地issn
+  getbackTab:`${url}data/cata/book/bookcollection/selectFromCataID`, // issn搜剔除
+  getNumber: `${url}data/cata/book/bookcollection/currency/getCode`, // 获馆内码
+  getSearchNum:`${url}data/cata/book/bookcollection/currency/getBopSearchNumber`, // 通用接口 获取索取号*2
 	
-  getCity:`${url}bookcollectionmodule/collection/currency/getLibName`, // 查询所有藏馆
-  closeIndex:`${url}bookcollectionmodule/collection/stopUs`, // 停用
-  openIndex:`${url}bookcollectionmodule/collection/startUs`, // 启用
-  translate:`${url}bookcollectionmodule/collection/letLeave`, // 调馆
-  damage:`${url}bookcollectionmodule/collection/bookDamage`,  // 典藏期刊报损
-  getDamegeOp:`${url}bookcollectionmodule/collection/getDamage` // 查询损坏列表下拉框
+  getCity:`${url}data/cata/book/bookcollection/currency/getLibName`, // 查询所有藏馆
+  closeIndex:`${url}data/cata/book/bookcollection/stopUs`, // 停用
+  openIndex:`${url}data/cata/book/bookcollection/startUs`, // 启用
+  translate:`${url}data/cata/book/bookcollection/letLeave`, // 调馆
+  damage:`${url}data/cata/book/bookcollection/bookDamage`,  // 典藏期刊报损
+  getDamegeOp:`${url}data/cata/book/bookcollection/currency/getDamage` // 查询损坏列表下拉框
 }
 export const reserveInt = {
   search,

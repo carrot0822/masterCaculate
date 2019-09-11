@@ -6,12 +6,12 @@ var imgurl = window.glob.imgurl;
 var fileUrl = window.glob.fileUrl;
 
 const indexNumUrl = {
-    add:`${url}periodicalmodule/marcPeriodical/addPN`, 
-    remove:`${url}periodicalmodule/marcPeriodical/deletePN`, // 函数命名为delete会报错
-    search:`${url}periodicalmodule/marcPeriodical/getPN`,
-    revise:`${url}periodicalmodule/marcPeriodical/editPN`, //修改 edit是编辑
+    add:`${url}data/cata/periodical/periodicalcata/addPN`, 
+    remove:`${url}data/cata/periodical/periodicalcata/deletePN`, // 函数命名为delete会报错
+    search:`${url}data/cata/periodical/periodicalcata/getPN`,
+    revise:`${url}data/cata/periodical/periodicalcata/editPN`, //修改 edit是编辑
     // other
-    getPrev:`${url}periodicalmodule/marcPeriodical/getPNLast` // 获取上一次期刊
+    getPrev:`${url}data/cata/periodical/periodicalcata/getPNLast` // 获取上一次期刊
 }
 
 export const indexNumInt ={
