@@ -40,7 +40,7 @@ import Login from '@/components/login.vue'
 import Not from '../components/error.vue'
 
 import IndexTest from '../common/indexTest.vue'
-/*系统设置 */
+
 
 import {
   resolve
@@ -204,20 +204,12 @@ export default new Router({
         },
         // 数据字典
         {
-          path: '/overduesettings',
-          component: resolve => require(['@/components/Reader/OverdueManagement/overduesettings.vue'], resolve),
-          meta: {
-            title: '初始参数',
-            Mode: '1'
-          }
-        },
-        {
           path: '/publishhouse',
           meta: {
             title: '图书出版社',
             Mode: '1'
           },
-          component: resolve => require(['../components/Book/BookManage/BookPublishingHouse.vue'], resolve)
+          component: resolve => require(['../components/Book/Bookpublish.vue'], resolve)
         },
         {
           path: '/vacationSet',
@@ -250,6 +242,14 @@ export default new Router({
             Mode: '1'
           },
           component: StoneRoomInfo
+        },
+        {
+          path: '/baseData',
+          meta: {
+            title: '初始参数',
+            Mode: '1'
+          },
+          component: resolve => require(['../components/System/baseData.vue'], resolve)
         },
         /*------ 流通管理 ------*/
         {
@@ -509,6 +509,14 @@ export default new Router({
         },
         /*------ 系统管理 ------*/
         {
+          path: '/sysSet',
+          meta: {
+            title: '系统设置',
+            Mode: '5',
+          },
+          component: () => import('../components/System/systemSet.vue')
+        },
+        {
           path: '/recommandBook',
           meta: {
             title: '图书推荐',
@@ -625,26 +633,7 @@ export default new Router({
           },
           component: resolve => require(['../components/System/notice.vue'], resolve)
         },
-        /* */
-
-        {
-          path: '/bookLocation',
-          meta: {
-            title: '图书位置绑定',
-            Mode: '2'
-          },
-          component: resolve => require(['../components/Reader/libraryManage/bookLocation.vue'], resolve)
-        },
-
-
-        {
-          path: '/purchasingManagement',
-          meta: {
-            title: '采购管理',
-            Mode: '1'
-          },
-          component: resolve => require(['../components/Book/purchasingManagement.vue'], resolve)
-        },
+      
         
         {
           path: '/publisher',
@@ -667,14 +656,28 @@ export default new Router({
           },
           component: resolve => require(['../components/System/article.vue'], resolve)
         },
-        {
-          path: '/baseData',
-          meta: {
-            title: '数据字典',
-            Mode: '5'
+        
+
+          /*废弃 */
+
+          {
+            path: '/bookLocation',
+            meta: {
+              title: '图书位置绑定',
+              Mode: '2'
+            },
+            component: resolve => require(['../components/Reader/libraryManage/bookLocation.vue'], resolve)
           },
-          component: resolve => require(['../components/System/baseData.vue'], resolve)
-        },
+  
+  
+          {
+            path: '/purchasingManagement',
+            meta: {
+              title: '采购管理',
+              Mode: '1'
+            },
+            component: resolve => require(['../components/Book/purchasingManagement.vue'], resolve)
+          },
 
       ]
     },

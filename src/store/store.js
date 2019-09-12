@@ -6,7 +6,8 @@ const debug = process.env.NODE_ENV !== 'production'
 const state= {
     token:null,
     user:{},
-    menu:{}
+    menu:{},
+    logo:{},
 }
 const getters={
     userInfo: state =>{
@@ -14,6 +15,9 @@ const getters={
     },
     menu: state => {
         return state.menu
+    },
+    logo: state =>{
+        return state.logo
     }
 }
 const mutations={
@@ -37,6 +41,10 @@ const mutations={
     deleteMenu:(state) => {
         sessionStorage.removeItem('menu')
         state.menu = {}
+    },
+    setLogo:(state,data) =>{
+        
+        state.logo = data
     },
     loginOut:() =>{
         

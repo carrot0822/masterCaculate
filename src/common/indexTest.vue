@@ -7,8 +7,8 @@
         <!-- logo模块 logo图片载入 附加路由调转至首页 -->
         <div class="logoNav">
           <div id="logoBox" class="logoBox">
-            <img :src="logoUrl">
-            <span @click="skip" class="Logotext">图书馆管理平台</span>
+            <img class="logo" :src="logoUrl">
+            <span @click="skip" class="Logotext">{{systemName}}</span>
           </div>
           <!-- 头部导航模块 路由添加尚未完成 active驻留模块未完成 -->
           <div id="navBar" class="navBar" style="overflow: hidden">
@@ -23,12 +23,7 @@
               <el-menu-item v-for="(item,index) of menuLo" :index="'' + item.priority" :id="item.menuCode" :key="index">
                 {{item.menuName}}
               </el-menu-item>
-              <!-- <el-menu-item id="collect" index="1">采编管理</el-menu-item>
-              <el-menu-item id="reservation" index="2">典藏管理</el-menu-item>
-              <el-menu-item id="circle" index="3">流通管理</el-menu-item>
-              <el-menu-item id="reader" index="4">读者管理</el-menu-item>
-              <el-menu-item id="finance" index="5">财务管理</el-menu-item>
-              <el-menu-item id="system" index="6">系统管理</el-menu-item> -->
+              
             </el-menu>
           </div>
         </div>
@@ -86,143 +81,7 @@
             :key="index"
             :navMenus="item.roleModularMenus">
             </NavMenu>
-           <!--  <div v-show="Mode == 1">
-              <el-submenu index="3">
-                <template slot="title">
-                  <i style="fontSize:24px;" class="indexIcon indexIconMax iconwp-sj-3"></i>
-                  <span slot="title">书籍管理</span>
-                </template>
-                <el-menu-item index="/BookCataloging">书籍编目</el-menu-item>
-                <el-menu-item index="/purchasingManagement">采购管理</el-menu-item>
-              </el-submenu>
-            </div> -->
-            <!-- 典藏管理 -->
-            <!-- <div class="navMenu" v-show="Mode == 2">
-              <el-menu-item index="/publishhouse">
-                <i class="indexIcon indexIconMax iconchubanshe"></i>图书出版社
-              </el-menu-item>
-
-              <el-menu-item index="/BookCollection">
-                <i class="indexIcon iconshuji"></i>书籍典藏
-              </el-menu-item>
-              <el-menu-item index="/bookLocation">
-                <i class="indexIcon indexIconMax iconico_yunyingguanli_biangengbangdingjihuashu"></i>图书位置绑定
-              </el-menu-item>
-              <el-menu-item index="/BookLocationInformation">
-                <i class="indexIcon indexIconMax iconziliao"></i>图书位置信息
-              </el-menu-item>
-              <el-menu-item index="/shelfBind">
-                <i class="indexIcon indexIconMax iconcengji"></i>层架绑定
-              </el-menu-item>
-              <el-menu-item index="/stoneroomInfo">
-                <i class="indexIcon indexIconMax iconkufangguanli"></i>库房管理
-              </el-menu-item>
-              <el-menu-item index="/damageCount">
-                <i class="indexIcon iconbaosun"></i>损坏清点
-              </el-menu-item>
-            </div> -->
-
-
-            <!-- 流通管理 -->
-           <!--  <div class="navMenu" v-show="Mode == 3">
-              <el-submenu index="userbrowrr">
-                <template slot="title">
-                  <i class="indexIcon indexIconMax iconjieyuechaxun"></i>
-                  <span>借阅管理</span>
-                </template>
-                <el-menu-item-group>
-                  <el-menu-item index="/borrowingbooks">书籍借阅</el-menu-item>
-                  <el-menu-item index="/returnbooks">书籍归还</el-menu-item>
-                  <el-menu-item index="/renew">书籍续借</el-menu-item>
-                  <el-menu-item index="/bookDamage">书籍报损</el-menu-item>
-                </el-menu-item-group>
-              </el-submenu>
-              <el-submenu index="bookIndex">
-                <template slot="title">
-                  <i class="indexIcon iconliutong"></i>
-                  <span>流通记录</span>
-                </template>
-                <el-menu-item-group>
-                  <el-menu-item index="/loanrecorde">借书记录</el-menu-item>
-                  <el-menu-item index="/loanhistory">还书记录</el-menu-item>
-                  <el-menu-item index="/overduesettings">逾期设置</el-menu-item>
-                  <el-menu-item index="/overduerecords">逾期记录</el-menu-item>
-                  <el-menu-item index="/overduehistory">逾期历史记录</el-menu-item>
-                  <el-menu-item index="/reimburse">报损记录</el-menu-item>
-                  <el-menu-item index="/reimburseHistory">报损历史记录</el-menu-item>
-                </el-menu-item-group>
-              </el-submenu>
-            </div> -->
-            <!-- 读者管理 -->
-            <!-- <div class="navMenu" v-show="Mode == 4">
-
-              <el-submenu index="readerCard">
-                <template slot="title">
-                  <i class="indexIcon indexIconMax iconduzheguanli"></i>
-                  <span>读者卡管理</span>
-                </template>
-                <el-menu-item-group>
-                  <el-menu-item index="/readercardmanagement">读者卡信息</el-menu-item>
-                  <el-menu-item index="/readercardgrade">读者卡等级</el-menu-item>
-                </el-menu-item-group>
-              </el-submenu>
-              <el-submenu index="Dishonesty">
-                <template slot="title">
-                  <i class="indexIcon indexIconMax iconshixin"></i>
-                  <span>失信管理</span>
-                </template>
-                <el-menu-item-group>
-                  <el-menu-item index="/DishonestyRecords">失信记录</el-menu-item>
-                  <el-menu-item index="/DishonestyHistory">失信历史记录</el-menu-item>
-                </el-menu-item-group>
-              </el-submenu>
-            </div> -->
-            <!-- 财务管理 -->
-            <!-- <div class="navMenu" v-show="Mode == 5">
-              <el-menu-item index="/rechargeSet">
-                <i style="fontSize:24px;" class="indexIcon iconchongzhi"></i>充值管理
-              </el-menu-item>
-              <el-menu-item index="/logOut">
-                <i style="fontSize:24px;" class="indexIcon iconzhuxiaojilu"></i>注销记录
-              </el-menu-item>
-              <el-menu-item index="/OverdueCostCirculation">
-                <i class="indexIcon indexIconMax iconyuqi"></i>逾期费用记录
-              </el-menu-item>
-            </div> -->
-            <!-- 系统设置 -->
-            <!-- <div class="navMenu" v-show="Mode == 6">
-              <el-menu-item index="/guideTest">
-                <i class="indexIcon indexIconMax iconyindaoxuqiu"></i>引导页
-              </el-menu-item>
-              <el-menu-item index="/menuInformation">
-                <i class="indexIcon indexIconMax iconcaidanguanli"></i>菜单管理
-              </el-menu-item>
-              <el-menu-item index="/roleInformation">
-                <i class="indexIcon indexIconMax iconjiaoseguanli"></i>角色管理
-              </el-menu-item>
-              <el-menu-item index="/roleMenuElement">
-                <i class="indexIcon indexIconMax iconquanxianguanli"></i>权限管理
-              </el-menu-item>
-              <el-menu-item index="/managerInformation">
-                <i class="indexIcon indexIconMax iconyonghuguanli"></i>用户管理
-              </el-menu-item>
-              <el-menu-item index="/authTbManagerLoginLog">
-                <i class="indexIcon indexIconMax icondenglujilu"></i>登录记录
-              </el-menu-item>
-              <el-menu-item index="/damageSet">
-                <i class="indexIcon iconsunhuai"></i>损坏管理
-              </el-menu-item>
-              <el-menu-item index="/wordBook">
-                <i class="indexIcon iconshujuzidian"></i>数据字典
-              </el-menu-item>
-              <el-menu-item index="/noticeSet">
-                <i class="indexIcon indexIconMax icongonggao"></i>公告管理
-              </el-menu-item>
-              <el-menu-item index="/vacationSet">
-                <i class="indexIcon indexIconMax iconjiaqi-"></i>假期设置
-              </el-menu-item>
-            </div> -->
-
+           
           </el-menu>
         </section>
         <el-main>
@@ -254,7 +113,7 @@ import { uploadInt, PersonalCentre } from "@request/api/base.js";
 import axios from "axios";
 import NavMenu from "../common/test/NavMenu";
 import Tags from "../common/test/tags";
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -263,7 +122,8 @@ export default {
       menuLo: [],
       userLo: null,
       nomalHeader: require("../base/img/normalHead.jpg"), // 默认头像
-      logoUrl: require("../base/img/logo.png"),
+      logoNomalUrl: require("../base/img/logo.png"),
+      nomalName:'图书馆管理平台',
       settingHead: "",
       isCollapse: false
     };
@@ -310,11 +170,23 @@ export default {
           ? this.nomalHeader
           : this.settingHead;
       return src;
-    }
+    },
+    ...mapGetters([
+      'logo'
+    ]),
+    logoUrl(){
+      return this.logo.manageSystemLogoAddress?this.logo.manageSystemLogoAddress:this.logoNomalUrl
+    },
+    systemName(){
+      return this.logo.manageSystemName?this.logo.manageSystemName:this.nomalName
+    } 
   },
   components: {
     NavMenu,
     Tags
+  },
+  mounted(){
+    console.log('头像',this.logo)
   },
   created() {
     axios.get(PersonalCentre.userInfo).then(res => {
@@ -332,10 +204,11 @@ export default {
       }
 
     });
-    console.log("新方法", this.userLo);
+    
     let menu = JSON.parse(sessionStorage.getItem('menu'))
     this.menuLo = menu
     this.Mode = sessionStorage.getItem("headIndex");
+    
   },
   watch: {
     $route(newValue, oldValue) {
@@ -397,6 +270,8 @@ body,
 /* 应该可以点击回到首页 */
 .headmode .logoBox {
   width: 260px;
+  padding-left: 20px;
+  box-sizing: border-box;
   color: #fff;
   font-size: 20px;
   font-family: MicrosoftYaHei;
@@ -408,6 +283,8 @@ body,
   background-color: #0096ff;
 }
 .headmode .logoBox .logo {
+  width:34px;
+  height: 34px;
 }
 /*头部nav区域*/
 .nav {
@@ -547,17 +424,14 @@ body,
 }
 
 /*====== 图标类 可能后期需要更换 ======*/
-.logo {
-  background-image: url("../base/img/normal/email-icon.png");
-  background-repeat: no-repeat;
-  width: 40px;
-  height: 40px;
-  margin-right: 9px;
-  background-position-y: 10px;
-}
+
 .Logotext {
   line-height: 26px;
   margin-left: 10px;
+  max-width: 230px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .notice {
   background-image: url("../base/img/normal/email-icon.png");

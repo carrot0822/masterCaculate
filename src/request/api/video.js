@@ -5,11 +5,11 @@ var url = window.glob.url;
 var imgurl = window.glob.imgurl;
 var fileUrl = window.glob.fileUrl;
 
-/* 书籍推荐 */
+/* 视频推荐 */
 const recommendInt = {
-    search:`${url}authmodule/videoTbBigDataReferr/select`,
-    add:`${url}authmodule/videoTbBigDataReferr/add`,
-    delete:`${url}authmodule/videoTbBigDataReferr/delete`,
+    search:`${url}authmodule/bigData/videoTbBigDataReferr/select`,
+    add:`${url}authmodule/bigData/videoTbBigDataReferr/add`,
+    delete:`${url}authmodule/bigData/videoTbBigDataReferr/delete`,
     videoUpload:`${fileUrl}filemodule/uploadVideo/addBigDataVideo`
 }
 export const  videoUpload=`${fileUrl}filemodule/uploadVideo/addBigDataVideo`

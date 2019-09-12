@@ -483,9 +483,9 @@ export const deriveInt = {
 };
 //馆内公告设置
 export const libNotice = {
-  select:`${url}authmodule/noticeTbBigDataReferr/select`,
-  delete:`${url}authmodule/noticeTbBigDataReferr/delete`,
-  add:`${url}authmodule/noticeTbBigDataReferr/add`,
+  select:`${url}authmodule/bigData/noticeTbBigDataReferr/select`,
+  delete:`${url}authmodule/bigData/noticeTbBigDataReferr/delete`,
+  add:`${url}authmodule/bigData/noticeTbBigDataReferr/add`,
 };
 //书籍审核
 export const recommPurchase={

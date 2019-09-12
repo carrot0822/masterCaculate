@@ -2,86 +2,76 @@
   <div class="dataError">
     <div class="commonMode normal" style="width:100%">
       <div class="sonTitle">
-        <span class="titleName">数据字典</span>
+        <span class="titleName">初始参数</span>
         <p class="tips"></p>
       </div>
     </div>
     <div class="errBox">
-      <el-form ref="changeForm" :model="changeForm" :rules="changeRules" label-width="140px" size="mini">
-        <el-form-item label="公告置顶条数" prop="apex">
+      <el-form
+        ref="changeForm"
+        :model="changeForm"
+        :rules="changeRules"
+        label-width="140px"
+        size="mini"
+      >
+        <el-form-item label="公告置顶条数" prop="maxPlacingNum">
           <div class="inputBox">
-            <el-input v-model.number="changeForm.apex"></el-input>
+            <el-input v-model.number="changeForm.sysTbParam.maxPlacingNum"></el-input>
             <span class="ml_10 text">条</span>
           </div>
         </el-form-item>
         <el-form-item label="充值验证额度" prop="recharge">
           <div class="inputBox">
-            <el-input v-model.number="changeForm.recharge"></el-input>
+            <el-input v-model.number="changeForm.sysTbParam.maxRechargeNum"></el-input>
             <span class="ml_10 text">元</span>
           </div>
         </el-form-item>
         <el-form-item label="补办费用设置" prop="assist">
           <div class="inputBox">
-            <el-input v-model.number="changeForm.assist"></el-input>
+            <el-input v-model.number="changeForm.sysTbParam.setReissueCost"></el-input>
             <span class="ml_10 text">元</span>
           </div>
         </el-form-item>
         <el-form-item label="读者卡有效时间" prop="cardValid">
           <div class="inputBox">
-            <el-input v-model.number="changeForm.cardValid"></el-input>
+            <el-input v-model.number="changeForm.sysTbParam.effectiveTime"></el-input>
             <span class="ml_10 text">天</span>
           </div>
         </el-form-item>
         <el-form-item label="办卡机默认等级" prop="cardValid">
           <div class="inputBox">
-            <el-select @change="test"  value-key="code"  v-model="changeForm.level" placeholder="请选择">
-                <el-option
-                  v-for="(item) in optionsData"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item"
-                ></el-option>
-              </el-select>
-             <span class="ml_30" style="color: #878787">押金金额￥：{{changeForm.level.deposit}}元</span>
+            <el-select @change="trans" value-key="code"  v-model="changeForm.code" placeholder="请选择">
+              <el-option
+                v-for="(item) in optionsData"
+                :key="item.code"
+                :label="item.name"
+                :value="item"
+              ></el-option>
+            </el-select>
+            <span class="ml_30" style="color: #878787">当前办卡机名称：{{show.name}}</span>
+            <span class="ml_30" style="color: #878787">当前押金金额￥：{{show.deposit}}元</span>
+            
           </div>
         </el-form-item>
-        <!-- <el-form-item label="系统名称设置">
+        <el-form-item label="逾期天数" prop="expectDay">
           <div class="inputBox">
-            <el-input v-model.number="changeForm.manageSystemName"></el-input>
-            <span class="ml_10 text" style="color: #ffffff">天</span>
+            <el-input v-model.number="changeForm.expectDay"></el-input>
+            <span class="ml_10 text">天</span>
           </div>
         </el-form-item>
-        <el-form-item class="uploadBox" label="系统logo更换">
-          <section class="upload">
-           
-            <div class="defultHead" @click="pointer" style="width:200px; height:100px; border-radius:6px;border:1px solid #DCDFE6">
-              <img
-                ref="imgTest"
-                class="defaultimage"
-                style="width:100px; height:100px; border-radius:20px;margin-left: 50px"
-                alt="怎么回事小老弟"
-                :src="srcPre"
-                v-if="!preloadImg"
-              >
+        <el-form-item label="逾期金额" prop="expectMoneyF">
+          <div class="inputBox">
+            <el-input v-model.number="changeForm.expectMoneyF"></el-input>
+            <span class="ml_10 text">元</span>
+          </div>
+        </el-form-item>
+        <el-form-item label="催还间隔" prop="reminderInterval">
+          <div class="inputBox">
+            <el-input v-model.number="changeForm.reminderInterval"></el-input>
+            <span class="ml_10 text">天</span>
+          </div>
+        </el-form-item>
 
-              <img
-                style="width:100%; height:100px"
-                v-if="preloadImg"
-                :src="preloadImg"
-                alt="预览照片"
-                class="preloadImg"
-              >
-              <input
-                type="file"
-                accept="jpg/png"
-                style="display:none;"
-                ref="file"
-                id="file"
-                @change="getFile"
-              >
-            </div>
-          </section>
-        </el-form-item> -->
         <div class="textCenter">
           <el-button type="primary" @click="editBtn">提交</el-button>
         </div>
@@ -91,27 +81,40 @@
 </template>
 <script>
 import axios from "axios";
-import { bookWordInt,cardLevelInt,logoImg,uploadInt } from "@request/api/base.js";
-import { control } from '@/request/api/base';
+import {
+  bookWordInt,
+  cardLevelInt,
+  logoImg,
+  uploadInt
+} from "@request/api/base.js";
+import { baseInt } from "../../request/api/system/baseData";
 export default {
   data() {
     return {
-      defaultImg: " ", // 上传头像默认头像
-      preloadImg: "",
       changeForm: {
-        manageSystemName:'',//系统名称
-        headerAddress: "", // 图片相关
-        headIcon: "",
-        files: "", // 用于上传
-        apex: "",
-        recharge: "",
-        assist: "",
-        cardValid: "",
-        id: "",
-        level:{}
+        expectDay: "", //逾期天数
+        expectMoneyF: "", // 逾期金额
+        id: "", // 逾期方式ID
+        reminderInterval: "", //催还间隔
+        sysTbParam: {
+          effectiveTime: "", // 读者卡有效时间
+          equipmentGardCardCode: "", // 设置机器办卡等级code
+          id: "", // 系统设置id
+          maxPlacingNum: "", //置顶最大值
+          maxRechargeNum: "", //单笔押金最大值
+          setReissueCost: "", // 补办金额
+        },
+        level:{
+          code:""
+        }
+      },
+      show:{
+        name:"",
+        deposit:"",
+        code:""
       },
       changeRules: {
-        apex: [
+        /* sysTbParam.maxPlacingNum: [
           {
             required: true,
             message: "公告置顶条数不得为空",
@@ -126,48 +129,51 @@ export default {
         ],
         cardValid: [
           { required: true, message: "读者卡有效时间不得为空", trigger: "blur" }
-        ]
+        ] */
       },
-      optionsData:[]
+      optionsData: []
     };
   },
   methods: {
     editBtn() {
-      this.editApi(this.submitForm);
+      this.changeForm.sysTbParam.equipmentGardCardCode = this.show.code
+      this.editApi(this.changeForm);
     },
     searchApi() {
-      axios.get(bookWordInt.search).then(res => {
+      axios.get(baseInt.search).then(res => {
         if (res.data.state) {
-          console.log('数据字典初始化数据',res)
-          let data = res.data.row;
-          this.changeForm.manageSystemName = data.manageSystemName
-          this.changeForm.apex = data.maxPlacingNum;
-          this.changeForm.recharge = data.maxRechargeNum;
-          this.changeForm.assist = data.setReissueCost;
-          this.changeForm.cardValid = data.effectiveTime;
-          this.changeForm.id = data.id;
-          this.changeForm.level.code = data.equipmentGardCardCode
-          this.changeForm.level.name = data.equipmentGardCardName
-          this.changeForm.level.deposit = data.equipmentGardCardDeposit
-          this.preloadImg = uploadInt.preimg + data.manageSystemLogoAddress;
           console.log("接收的数据", res.data.row);
-          console.log("回显", this.changeForm);
+          let data= res.data.row
+          this.changeForm.expectDay = data.expectDay;
+          this.changeForm.expectMoneyF = data.expectMoneyF;
+          this.changeForm.id = data.id
+          this.changeForm.reminderInterval = data.reminderInterval
+          this.changeForm.sysTbParam = Object.assign(data.sysTbParam)
+          this.show.name = data.sysTbParam.equipmentGardCardName
+          this.show.deposit = data.sysTbParam.equipmentGardCardDeposit
+          this.show.code = data.sysTbParam.equipmentGardCardCode
+          this.changeForm.level.code = data.sysTbParam.equipmentGardCardCode
         } else {
           this.$message.error(res.data.msg);
         }
       });
+    },
+    trans(val){
+      console.log(val,'下拉的值')
+      this.show.name = val.name;
+      this.show.deposit = val.deposit;
+      this.show.code = val.code
     },
     editApi(value) {
       this.$refs.changeForm.validate(valid => {
         if (valid) {
           axios({
             method: "put",
-            url: bookWordInt.edit,
+            url: baseInt.revise,
             data: value
           }).then(res => {
             if (res.data.state) {
               this.$message.success("修改成功");
-
             } else {
               this.$message.error(res.data.msg);
             }
@@ -180,108 +186,21 @@ export default {
     },
     levelOptionApi() {
       axios.get(bookWordInt.select).then(res => {
-        if(res.data.state == true){
-          this.optionsData = res.data.row
-          console.log('当前下拉框',this.optionsData)
-        } else{
-          this.$message.error(res.data.msg)
+        if (res.data.state == true) {
+          this.optionsData = res.data.row;
+          console.log("当前下拉框", this.optionsData);
+        } else {
+          this.$message.error(res.data.msg);
         }
         console.log("查询等级下拉框", res);
       });
-    },
-    test(){
-      console.log('你是否变化了',this.changeForm)
-    },
-    uPphotoApi() {
-      let files = this.files;
-      if (files != null) {
-        // 检测是否有文件 有就意味着被更改了
-        var formdatas = new FormData();
-        formdatas.append("file", files);
-        //console.log(formdatas.get('file'))
-        this.axios({
-          method: "post",
-          url: logoImg,
-          data: formdatas,
-          //cache: false,//上传文件无需缓存
-          processData: false, //用于对data参数进行序列化处理 这里必须false
-          contentType: false, //
-          dataType: "JSON",
-          ContentType: "multipart/form-data",
-          xhrFields: {
-            withCredentials: true
-          },
-          crossDomain: true
-        }).then(request => {
-          // 如果是编辑 更换图片失败后
-          if (request.data.state == true) {
-            this.changeForm.headerAddress = request.data.row;
-            console.log("是否图片", this.changeForm);
-            console.log("图片上传成功", request.data.row, this.addEdit);
-          } else {
-            this.$message.error(request.data.msg);
-          }
-        });
-      }
-    },
-    pointer() {
-      this.$refs.file.click();
-    },
-    getFile(e) {
-      // 1.判断选择事件是否为空
-      // 2. 获取数据
-      let _this = this; // 缓存this
-      let value = _this.$refs.file.value;
-
-      var files = e.target.files[0]; // 事件对象包含的信息 files是路径
-      _this.files = files;
-      console.log(_this.files);
-      // 2.1 防止后台拿不到数据 可能需要提交额外数据时
-
-      if (!e || !window.FileReader) return; // 看支持不支持FileReader
-      let reader = new FileReader(); // 定义 fileReader对象
-      _this.uPphotoApi();
-      reader.readAsDataURL(files); // 转换为base64的url路径 其他三个API转换为text 二进制  arraybuffer
-      reader.onloadend = function() {
-        _this.preloadImg = this.result; // 此时this指向的fileReader对象
-        _this.$refs.file.value = "";
-      };
-    },
-  },
-  computed: {
-    srcPre() {
-      let src = "";
-      if (
-        this.changeForm.headerAddress != null &&
-        this.changeForm.headerAddress != ""
-      ) {
-        src = this.changeForm.preUrl;
-        console.log(this.changeForm.preUrl);
-        console.log("真就不执行了？");
-      } else {
-        src = require('../..//base/img/logoChange.png');
-      }
-      return src;
-    },
-    submitForm() {
-      let obj = {
-        manageSystemName: this.changeForm.manageSystemName,
-        maxPlacingNum: this.changeForm.apex,
-        maxRechargeNum: this.changeForm.recharge,
-        setReissueCost: this.changeForm.assist,
-        manageSystemLogoAddress: this.changeForm.headerAddress,
-        effectiveTime: this.changeForm.cardValid,
-        equipmentGardCardCode:this.changeForm.level.code,
-        equipmentGardCardName:this.changeForm.level.name,
-        id: this.changeForm.id
-      };
-      return obj;
     }
   },
+
   created() {
     this.searchApi();
-    this.levelOptionApi()
-     console.log('你是否变化了',this.changeForm)
+    this.levelOptionApi();
+    console.log("你是否变化了", this.changeForm);
   }
 };
 </script>

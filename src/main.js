@@ -37,11 +37,13 @@ router.beforeEach((to, from, next) => {
   let token = sessionStorage.getItem('token')
   let userInfo = JSON.parse(sessionStorage.getItem('userInfo'))
   let menu = JSON.parse(sessionStorage.getItem('menu'))
+  let logo = JSON.parse(sessionStorage.getItem('logo'))
   if(to.path === '/login'){
     if(token&&userInfo&&menu){ // token存在的话 如果是刷新的话 应该去本地或者session里面取 这里应该提提示
       if(store.state.token == null){ // 还有个bug
         store.commit('setUserInfo', userInfo)// 刷新后拉取用户信息
         store.commit('setMenu', menu)
+        store.commit('setLogo', logo)
         console.log('去往',to.path)
         console.log('来源',from.path)
       }
@@ -63,6 +65,7 @@ router.beforeEach((to, from, next) => {
       if(store.state.menu == null){
         store.commit('setMenu', menu)
       }
+      store.commit('setLogo', logo)
       next()
 
     }else{
@@ -77,36 +80,7 @@ router.afterEach(() => {
 
   NProgress.done()
 })
-//判定依据token起手 废弃
-/*
-router.beforeEach((to, from, next) => {
-  let token = getToken()
-  if(token == null){
-    if(to.path === '/login'){
-      next()
-    } else{
-      next('login') // 沒有出口 但是login需要斜杠也不影響結果
-      Message.error("请先登录")
-    }
 
-  } else {
-
-    if(store.state.token == null){
-      store.commit('login', token)
-    }
-    if(to.path === '/login'){
-      Message.error("您已登录");
-
-      let Frompath = from.path
-      console.log(typeof(Frompath),Frompath) // '不需要加斜杠' 把返回的路径斜杠去掉
-      next('powerMode') // 如何返回之前頁面
-    }
-
-    next()
-  }
-
-})
-*/
 Vue.use(ElementUI) // 注册插件
 // vuerouter会自动调用 这就是可以直接this.$router.push的根本？
 Vue.prototype.axios = axios // 挂载到vue实例 注册到vue实例中
