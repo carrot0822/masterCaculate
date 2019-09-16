@@ -389,6 +389,7 @@ export const addCardInt = {
 //通用接口
 export const photoUrl = 'http://192.168.2.31'; // 预览图片前缀
 export const loginInter = url + 'authmodule/index/login';
+export const logoInter = `${url}authmodule/sysSet/select` // 查询系统参数
 export const headUpload = imgurl + 'filemodule/uploadImg/addHead'; //
 export const roleType = url + 'authmodule/roleInformation/currency/addSelectRole';// 添加权限管理下拉
 export const selectRoleType = url + 'authmodule/roleInformation/currency/selectRole'; // 角色管理下拉

@@ -7,7 +7,7 @@
         <!-- logo模块 logo图片载入 附加路由调转至首页 -->
         <div class="logoNav">
           <div id="logoBox" class="logoBox">
-            <img class="logo" :src="logoUrl">
+            <img class="logo" :src="logoUrl" />
             <span @click="skip" class="Logotext">{{systemName}}</span>
           </div>
           <!-- 头部导航模块 路由添加尚未完成 active驻留模块未完成 -->
@@ -20,10 +20,12 @@
               :default-active="Mode"
               v-if="menuLo.length"
             >
-              <el-menu-item v-for="(item,index) of menuLo" :index="'' + item.priority" :id="item.menuCode" :key="index">
-                {{item.menuName}}
-              </el-menu-item>
-              
+              <el-menu-item
+                v-for="(item,index) of menuLo"
+                :index="'' + item.priority"
+                :id="item.menuCode"
+                :key="index"
+              >{{item.menuName}}</el-menu-item>
             </el-menu>
           </div>
         </div>
@@ -31,7 +33,7 @@
         <!-- 用户头像模块 点击交互功能尚未完成 小图标添加及相应功能 -->
         <div id="userName" class="headBox">
           <div class="headiconBox">
-            <img :src="headSrc" class="avatarImg">
+            <img :src="headSrc" class="avatarImg" />
           </div>
           <div class="userBox">
             <div class="username">
@@ -75,13 +77,11 @@
             </el-menu-item>
             <!--采编管理 -->
             <NavMenu
-
-            v-for="(item,index) of menuLo"
-            v-show="Mode==item.priority"
-            :key="index"
-            :navMenus="item.roleModularMenus">
-            </NavMenu>
-           
+              v-for="(item,index) of menuLo"
+              v-show="Mode==item.priority"
+              :key="index"
+              :navMenus="item.roleModularMenus"
+            ></NavMenu>
           </el-menu>
         </section>
         <el-main>
@@ -89,10 +89,8 @@
             <Tags></Tags>
           </div>
           <!-- <div class="space"></div> -->
-           <transition name="fade-transform" mode="out-in">
-             
-                <router-view></router-view>
-              
+          <transition name="fade-transform" mode="out-in">
+            <router-view></router-view>
           </transition>
           <!-- <transition name="fade-transform" mode="out-in">
               <keep-alive>
@@ -109,11 +107,11 @@
 </template>
 
 <script>
-import { uploadInt, PersonalCentre } from "@request/api/base.js";
+import { uploadInt, PersonalCentre,  } from "@request/api/base.js";
 import axios from "axios";
 import NavMenu from "../common/test/NavMenu";
 import Tags from "../common/test/tags";
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -123,7 +121,7 @@ export default {
       userLo: null,
       nomalHeader: require("../base/img/normalHead.jpg"), // 默认头像
       logoNomalUrl: require("../base/img/logo.png"),
-      nomalName:'图书馆管理平台',
+      nomalName: "图书馆管理平台",
       settingHead: "",
       isCollapse: false
     };
@@ -158,7 +156,8 @@ export default {
     },
     cardBtn() {
       this.$router.push("/logoff");
-    }
+    },
+   
   },
   computed: {
     onRoutes() {
@@ -171,44 +170,40 @@ export default {
           : this.settingHead;
       return src;
     },
-    ...mapGetters([
-      'logo'
-    ]),
-    logoUrl(){
-      return this.logo.manageSystemLogoAddress?this.logo.manageSystemLogoAddress:this.logoNomalUrl
+    ...mapGetters(["logo"]),
+    logoUrl() {
+      return this.logo.manageSystemLogoAddress
+        
     },
-    systemName(){
-      return this.logo.manageSystemName?this.logo.manageSystemName:this.nomalName
-    } 
+    systemName() {
+      return this.logo.manageSystemName
+        
+    }
   },
   components: {
     NavMenu,
     Tags
   },
-  mounted(){
-    console.log('头像',this.logo)
+  mounted() {
+    console.log("头像", this.logo);
   },
   created() {
     axios.get(PersonalCentre.userInfo).then(res => {
       console.log("看看bug到底在哪里", res);
 
-
-      if(res.data.state==true){
+      if (res.data.state == true) {
         this.userLo = res.data.row;
-        if(res.data.row.headerAddress){
-        this.settingHead = uploadInt.preimg + res.data.row.headerAddress;
+        if (res.data.row.headerAddress) {
+          this.settingHead = uploadInt.preimg + res.data.row.headerAddress;
+        }
+      } else {
+        this.$message.error(res.data.msg);
       }
-
-      }else{
-        this.$message.error(res.data.msg)
-      }
-
     });
-    
-    let menu = JSON.parse(sessionStorage.getItem('menu'))
-    this.menuLo = menu
+    //this._getLogo();
+    let menu = JSON.parse(sessionStorage.getItem("menu"));
+    this.menuLo = menu;
     this.Mode = sessionStorage.getItem("headIndex");
-    
   },
   watch: {
     $route(newValue, oldValue) {
@@ -283,7 +278,7 @@ body,
   background-color: #0096ff;
 }
 .headmode .logoBox .logo {
-  width:34px;
+  width: 34px;
   height: 34px;
 }
 /*头部nav区域*/

@@ -7,7 +7,10 @@ const state= {
     token:null,
     user:{},
     menu:{},
-    logo:{},
+    logo:{
+        manageSystemLogoAddress:"",
+        manageSystemName:""
+    },
 }
 const getters={
     userInfo: state =>{
@@ -18,6 +21,12 @@ const getters={
     },
     logo: state =>{
         return state.logo
+    },
+    logoName: state =>{
+        return state.logo.manageSystemName
+    },
+    logoUrl: state=>{
+        state.logo.manageSystemName
     }
 }
 const mutations={
@@ -53,6 +62,9 @@ const mutations={
 const actions= {
     userInfo({commit},data){
         commit('setUserInfo',data)
+    },
+    logo({commit},data){
+        commit('setLogo',data)
     }
 }
 
