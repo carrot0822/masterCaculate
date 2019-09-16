@@ -1,7 +1,7 @@
 <template>
   <div id="backLog">
     <section class="titleBox">
-      <h2 class="title">备份日志</h2>
+      <h2 class="title">备份记录</h2>
     </section>
     <!-- 按钮集合 -->
     <section class="changeBtnBox">

@@ -20,7 +20,7 @@
             <el-input
 
               clearable
-              placeholder="请输入卡号或身份证号"
+              placeholder="请输入卡号"
               v-model="cardInput"
               class="input-with-select"
             >

@@ -555,7 +555,7 @@ export default new Router({
         {
           path: '/backLog',
           meta: {
-            title: '备份日志',
+            title: '备份记录',
             Mode: "5"
           },
           component: () => import('../components/Opac/backLog.vue')

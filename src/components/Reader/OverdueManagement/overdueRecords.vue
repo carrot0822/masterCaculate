@@ -56,7 +56,7 @@
               <el-table-column align="center" label="操作" fixed="right">
               <!-- 这里的scope代表着什么 index是索引 row则是这一行的对象 -->
               <template slot-scope="scope">
-                <span class="edit" @click="handleEdit(scope.$index, scope.row)">催还</span>
+                <!-- <span class="edit" @click="handleEdit(scope.$index, scope.row)">催还</span> -->
                 <span class="edit" @click="handleBan(scope.$index, scope.row)">处理</span>
               </template>
             </el-table-column>

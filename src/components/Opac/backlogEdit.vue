@@ -1,7 +1,7 @@
 <template>
   <div id="backlogEdit">
     <section class="pagetitle">
-      <div class="titleName">日志备份处理</div>
+      <div class="titleName">备份管理</div>
     </section>
     <div class="horizontai">
       <!-- 上传 -->
