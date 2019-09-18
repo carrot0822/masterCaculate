@@ -70,7 +70,7 @@
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="fkHandleModeName"
+            prop="subscribeEfficientTime"
             label="预约生效时间"
             :show-overflow-tooltip="true"
           ></el-table-column>

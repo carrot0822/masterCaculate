@@ -133,13 +133,13 @@
             label="分类号"
             :show-overflow-tooltip="true"
           ></el-table-column>
-          <el-table-column
+          <!-- <el-table-column
             width="100"
             align="center"
             prop
             label="典藏者"
             :show-overflow-tooltip="true"
-          ></el-table-column>
+          ></el-table-column> -->
           <el-table-column
             width="100"
             align="center"
@@ -665,18 +665,18 @@
               <span class="label">馆藏地:</span>
               <p class="showContent">{{damageDialog.showData.place}}</p>
             </div>
-            <div class="backShow">
+            <!-- <div class="backShow">
               <span class="label">刊期号:</span>
               <p class="showContent">{{damageDialog.showData.anumber}}</p>
-            </div>
+            </div> -->
             <div class="backShow">
               <span class="label">价格:</span>
               <p class="showContent">{{damageDialog.showData.price}}</p>
             </div>
-            <div class="backShow">
+            <!-- <div class="backShow">
               <span class="label">出版日期</span>
               <p class="showContent">{{damageDialog.showData.publicationDate}}</p>
-            </div>
+            </div> -->
             <div class="backShow">
               <span class="label">分类号</span>
               <p class="showContent">{{damageDialog.showData.fkTypeCode}}</p>

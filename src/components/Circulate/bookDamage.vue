@@ -115,17 +115,21 @@
                 <el-table-column align="center" type="index" width="80" label="序号"></el-table-column>
                 <el-table-column align="center" prop="fkBookName" label="书籍名称"></el-table-column>
                 <el-table-column align="center" prop="createTime" label="处理时间"></el-table-column>
-                <el-table-column align="center" prop="state" label="处理金额">
-                  <template>
-                    <span>1</span>
-                  </template>
+                <el-table-column align="center" prop="price" label="处理金额">
+                  
                 </el-table-column>
                 <el-table-column align="center" prop="message" label="提示">
                   <template>
                     <span>------</span>
                   </template>
                 </el-table-column>
+                <el-table-column align="center" prop="message" label="报损结果">
+                  <template>
+                    <span>报损成功</span>
+                  </template>
+                </el-table-column>
               </el-table>
+              
             </section>
           </el-tab-pane>
         </el-tabs>

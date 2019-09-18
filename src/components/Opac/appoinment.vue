@@ -58,7 +58,7 @@
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="fkLibraryName"
+            prop="place"
             label="取书馆"
             :show-overflow-tooltip="true"
           ></el-table-column>
@@ -70,13 +70,13 @@
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="updateTime"
+            prop="beginTime"
             label="预约生效时间"
             :show-overflow-tooltip="true"
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="updateTime"
+            prop="endTime"
             label="预约失效时间"
             :show-overflow-tooltip="true"
           ></el-table-column>

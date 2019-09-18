@@ -124,10 +124,10 @@ export const renewInt = {
 };
 // 书籍报损
 export const bookDamageInt = {
-  search:`${url}circulate/borrowmgr/damage/currency/getDamage`,
-  damage:`${url}circulate/borrowmgr/damage/bookDamage`,
-  userInfo:`${url}circulate/borrowmgr/damage/currency/getReaderInfo`,
-  return:`${url}circulate/borrowmgr/damage/currency/getReaderLog`,
+  search:`${url}circulate/borrowmgr/letdamage/currency/getDamage`,
+  damage:`${url}circulate/borrowmgr/letdamage/bookDamage`,
+  userInfo:`${url}circulate/borrowmgr/letdamage/currency/getReaderInfo`,
+  return:`${url}circulate/borrowmgr/letdamage/currency/getReaderLog`,
 };
 
 /*------ 读者管理模块 ------*/

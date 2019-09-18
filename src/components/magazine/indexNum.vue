@@ -59,11 +59,12 @@
           <el-table-column align="center" prop="aNumber" label="期刊号" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column align="center" prop="sNumber" label="总期号" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column align="center" prop="page" label="页数" :show-overflow-tooltip="true"></el-table-column>
-          <el-table-column align="center" prop="price" label="价格" :show-overflow-tooltip="true"></el-table-column>
+          <el-table-column align="center" prop="price" label="价格" :show-overflow-tooltip="true"></el-table-column>。
+          
           <el-table-column
             align="center"
             prop="publicationDateStr"
-            label="创建时间"
+            label="出版日期"
             :show-overflow-tooltip="true"
           ></el-table-column>
           <el-table-column
