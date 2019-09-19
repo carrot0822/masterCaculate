@@ -593,7 +593,7 @@
             <el-form ref="damageForm" class="showBodyBox" :model="damageDialog.form">
               <div class="left">
                 <el-form-item label=" 卡　　号 :" label-width="100px" id="cardErr">
-                  <el-input v-model="damageDialog.form.cardNumber "></el-input>
+                  <el-input v-model="damageDialog.form.cardNum "></el-input>
                 </el-form-item>
                 <el-form-item label=" 损坏原因 :" prop="price" class="errTitle" label-width="100px">
                   <el-select
@@ -856,7 +856,7 @@ export default {
         index: 0,
         titleData: ["报损"],
         form: {
-          cardNumber: "",
+          cardNum: "",
           damageId: "",
           price: null,
           remarks: "",

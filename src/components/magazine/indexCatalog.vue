@@ -342,7 +342,7 @@
                           ></el-option>
                         </el-select>
                       </el-form-item>
-                      <el-form-item label=" 期刊类别 :" class="threeInput">
+                      <el-form-item prop="periodicalTypeId" label=" 期刊类别 :" class="threeInput">
                         <el-select v-model="addForm.periodicalTypeId">
                           <el-option
                             v-for="(item,index) in magazineOptions"
@@ -365,7 +365,7 @@
                     <div class="flexLayout twoInput">
                       <!-- <el-form-item label="参考单价:" prop="issnPrice" style>
                         <el-input v-model="addForm.issnPrice"></el-input>
-                      </el-form-item> -->
+                      </el-form-item>-->
                       <el-form-item label="主题词:" prop="themeWord" style>
                         <el-input v-model="addForm.themeWord "></el-input>
                       </el-form-item>
@@ -482,7 +482,7 @@
                   label="分类号"
                   :show-overflow-tooltip="true"
                 ></el-table-column>
-                
+
                 <el-table-column align="center" label="操作">
                   <!-- 这里的scope代表着什么 index是索引 row则是这一行的对象 -->
                   <template slot-scope="scope">
@@ -604,6 +604,9 @@ export default {
         ],
         fkPressName: [
           { required: true, message: "出版社不能为空", trigger: "change" }
+        ],
+        periodicalTypeId:[
+          { required: true, message: "期刊类型不能为空", trigger: "change" }
         ]
       },
       dialogFormVisible: false, // // 新增修改弹框的展示和消失
@@ -642,7 +645,6 @@ export default {
   },
   computed: {
     searchTimeForm() {
-
       if (this.searchData) {
         switch (parseInt(this.searchData)) {
           case 0:
@@ -678,9 +680,9 @@ export default {
     }
   },
   methods: {
-    indexBtn(index,row){
-      let id = row.id
-      this.$router.push({ path: `/indexNumber/${id}` })
+    indexBtn(index, row) {
+      let id = row.id;
+      this.$router.push({ path: `/indexNumber/${id}` });
     },
     SuitBookFun(val) {
       if ((val = false)) {
@@ -700,15 +702,15 @@ export default {
     BookInfoFun(value) {},
     //选中某条数据的选中按钮
     decideOn(index, row) {
-      let value = this.addForm.isbn
+      let value = this.addForm.isbn;
       this.decideOnData = true;
-      this.addForm = Object.assign(this.addForm,row);
+      this.addForm = Object.assign(this.addForm, row);
       this.addForm.isbn = value;
       this.centerDialogVisible = false;
     },
     //取消本地获取，获取远程数据
     decideOut() {
-/*       if(this.type.length == 2){
+      /*       if(this.type.length == 2){
 
       } */
       this.centerDialogVisible = false;
@@ -841,8 +843,8 @@ export default {
     rechargeBtn() {
       this.type = [1, 2];
       this.i = 1;
-      this.addForm.openBook = '32'
-      this.addForm.periodicalTypeId = '1'
+      this.addForm.openBook = "32";
+      this.addForm.periodicalTypeId = "1";
       this.dialogFormVisible = true;
       this.languageFun();
     },
@@ -885,43 +887,26 @@ export default {
             break;
         }
       } else {
-        this.$message.error('ISSN不得为空')
+        this.$message.error("ISSN不得为空");
       }
     },
-    //本地数据
-    localCatalogData() {
+    // 两者都有
+    bothSearch() {
       this.axios
         .get(logUrl.sLocalSearch, { params: { queryIssn: this.addForm.issn } })
         .then(
           res => {
-            console.log("本地数据", res);
             if (res.data.state == true) {
-              if (res.data.row) {
-                let length = res.data.row.length;
-                if (length) {
-                  this.catalogingData = res.data.row;
-                  this.j = 3;
-                  this.messageWidth = "750px";
-                  this.centerDialogVisible = true;
-                }
-                /* if (length > 1) {
-                  this.catalogingData = res.data.row;
-                  this.j = 3;
-                  this.messageWidth = "750px";
-                  this.centerDialogVisible = true;
-                } else if (length == 1) {
-                  let value = this.addForm.isbn
-                this.addForm = res.data.row[0]
-                this.addForm.isbn = value;
-                } */
+              let length = res.data.row.length
+              if(length){
+                this.catalogingData = res.data.row;
+              this.j = 3;
+              this.messageWidth = "750px";
+              this.centerDialogVisible = true;
               } else {
-                let judg = this.type.length;
-                if (length == 1) {
-                  this.$message.error("暂无数据，请检查输入的ISSN编号是否有误");
-                } else {
-                  this.$message.info("暂无数据,正在启用远程检索");
-                }
+                this.remoteCatalogData()
               }
+              
             } else {
               this.$message.error(res.data.msg);
             }
@@ -933,6 +918,31 @@ export default {
             });
           }
         );
+        
+    },
+    //本地数据
+    localCatalogData() {
+      this.axios
+        .get(logUrl.sLocalSearch, { params: { queryIssn: this.addForm.issn } })
+        .then(
+          res => {
+            if (res.data.state == true) {
+              this.catalogingData = res.data.row;
+              this.j = 3;
+              this.messageWidth = "750px";
+              this.centerDialogVisible = true;
+            } else {
+              this.$message.error(res.data.msg);
+            }
+          },
+          err => {
+            this.$message({
+              message: "网络出错",
+              type: "error"
+            });
+          }
+        );
+    
     },
     //远程数据
     remoteCatalogData() {
@@ -940,35 +950,14 @@ export default {
         .get(logUrl.sRemotelog, { params: { issn: this.addForm.issn } })
         .then(
           res => {
-            console.log("外地数据", res);
-            
             if (res.data.state == true) {
-              let length = res.data.row.length;
-              // 用switch吧
-              if (!length) {
-                this.$message.error("暂无数据,请检测ISSN是否正确");
-                return;
-              }
-              if (length) {
-                this.catalogingData = res.data.row;
-                this.j = 4;
-                this.messageWidth = "750px";
-                this.centerDialogVisible = true;
-              }
-              /* if (length > 1) {
-                this.catalogingData = res.data.row;
-                this.j = 4;
-                this.messageWidth = "750px";
-                this.centerDialogVisible = true;
-              } else {
-                let value = this.addForm.isbn
-                this.addForm = res.data.row[0];
-                this.addForm.isbn = value;
-              } */
+              this.catalogingData = res.data.row;
+              this.j = 4;
+              this.messageWidth = "750px";
+              this.centerDialogVisible = true;
             } else {
-              this.$message.error(row.data.msg)
+              this.$message.error(row.data.msg);
             }
-            
           },
           err => {
             this.$message({
@@ -1174,13 +1163,13 @@ export default {
     paginationApi(value) {
       //获取登录记录
       this.tableLoading = true;
-      
+
       axios
         .get(logUrl.sLog, {
           params: value
         })
         .then(res => {
-          console.log('分页查询数据',res)
+          console.log("分页查询数据", res);
           if (res.data.state === true) {
             this.tableData = res.data.row; //获取返回数据
             this.total = res.data.total; //总条目数

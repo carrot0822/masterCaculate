@@ -310,7 +310,7 @@
             <section class="tableBox">
               <el-table
                 :header-cell-style="{background:'#0096FF', color:'#fff',height:'50px', fontSize:'18px',borderRight:'none'}"
-                empty-text="无数据"
+                empty-text="无数据,请确认搜索条件是否正确"
                 style="width: 690px; text-align:center;"
                 :data="catalogingData"
                 height="250"
@@ -693,50 +693,58 @@
               this.remoteCatalogData()
             }
           }else if(this.type.length===2){
-            this.localCatalogData()
-            /* if(this.catalogingData.length==0){
-              this.remoteCatalogData()
-            } */
+            this.bothSearch()
           }else{
             this.$message({
               message: '请先选择远程获取或本地获取',
               type: "error"
             });
           }
+        } else {
+          this.$message.error('请输入ISSN号')
         }
       },
-      //本地数据
-      localCatalogData(){
+      bothSearch(){
         this.axios.get(catalog.localCataloging,{params:{isbn:this.addForm.isbn}}).then((res)=>{
           if(res.data.state==true){
-            if(res.data.row.length){
+            let length = res.data.row.length
+            if(length){
               this.catalogingData = res.data.row
               this.j=3
               this.messageWidth='750px'
               this.centerDialogVisible=true
-            }else if(res.data.row.length==0){
+            } else {
+              
               this.remoteCatalogData()
+              
             }
           }else{
             this.$message.error(res.data.msg);
           }
           
-          /* if(res.data.state==true){
-            if(res.data.row.length>1){
+          
+        },(err)=>{
+          this.$message({
+            message: '网络出错',
+            type: "error"
+          });
+        })
+      },
+      //本地数据
+      localCatalogData(){
+        this.axios.get(catalog.localCataloging,{params:{isbn:this.addForm.isbn}}).then((res)=>{
+          if(res.data.state==true){
+            
               this.catalogingData = res.data.row
               this.j=3
               this.messageWidth='750px'
               this.centerDialogVisible=true
-            }else if(res.data.row.length==1){
-              let value = this.addForm.isbn
-              this.addForm = Object.assign(this.addForm,res.data.row[0]) 
-              this.addForm.isbn = value;
-            }else if(res.data.row.length==0){
-              this.remoteCatalogData()
-            }
+            
           }else{
             this.$message.error(res.data.msg);
-          } */
+          }
+          
+          
         },(err)=>{
           this.$message({
             message: '网络出错',
@@ -747,36 +755,14 @@
       //远程数据
       remoteCatalogData(){
         this.axios.get(catalog.remoteCataloging,{params:{selectisbn:this.addForm.isbn}}).then((res)=>{
-          
-          /* if(res.data.state==true){
-            if(res.data.row.length>1){
-              this.catalogingData = res.data.row
-              this.j=4
-              this.messageWidth='750px'
-              this.centerDialogVisible=true
-            }else if(res.data.row.length==1){
-              let value = this.addForm.isbn
-              this.addForm = Object.assign(this.addForm,res.data.row[0])
-              this.addForm.isbn = value;
-            }else if(res.data.row==null){
-              return
-            }
-          } else{
-            this.$message.error(res.data.msg);
-          } */
           if(res.data.state==true){
-            if(res.data.row.length){
               this.catalogingData = res.data.row
               this.j=4
               this.messageWidth='750px'
               this.centerDialogVisible=true
-            }else if(res.data.row==null){
-              return
-            }
           } else{
             this.$message.error(res.data.msg);
           }
-          
         },(err)=>{
           this.$message({
             message: '网络出错',

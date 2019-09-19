@@ -1543,7 +1543,7 @@ export default {
     // 点击获取
     _getFront(obj) {
       let data = obj;
-
+      let arr = []
       mergeInt.getFront(data).then(res => {
         if (res.data.state == true) {
           console.log(res, "编辑回显");
@@ -1559,11 +1559,11 @@ export default {
 
           this.aeDialog.showIndexForm.tableData = dataNom.periodicalTbCollectionInfos;
           for (let item of dataNom.periodicalTbCollectionInfos) {
-            
+            arr.push(item.id)
             item.toLendState = this.toLendState(item.lendState);
             
           }
-
+          this.aeDialog.aeForm.ids = arr
           this.aeDialog.aeForm.fkCataPeriodicalId = dataNom.fkCataPeriodicalId;
           this.aeDialog.aeForm.hkPrice = dataNom.hkPrice;
           this.aeDialog.aeForm.hkRemark = dataNom.hkRemark

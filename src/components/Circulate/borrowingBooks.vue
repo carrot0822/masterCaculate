@@ -537,23 +537,18 @@ export default {
         let damage = /damage/.test(e.data);
         let result = /^IC/.test(e.data);
         let notice = /error/.test(e.data);
+        let reconnect = /reconnect/.test(e.data);
         console.log("接收的信息",e.data);
-        console.log(damage,"是否匹配")
-        if (notice) {
-          this.$message.error("连接串口已断开");
-          this.tips = "连接串口已断开"
-          return;
-        }
-        if (result) {
-          let now = e.data.replace(/^IC/, "");
-          console.log("IC卡", now);
-          this.searchForm.cardNum = e.data.replace(/^IC/, "");
-          console.log();
-        } else if(damage) {
+        console.log(reconnect,"是否匹配")
+        
+         if(damage) {
           this.$message.error("设备连接已断开，请刷新页面或联系相关人员")
           this.tips = "设备连接已断开，请刷新页面或联系相关人员"
-          console.log("是否执行")
+          ws.send("knowError")
           
+        } else if(reconnect){
+          this.$message.success("设备已重新连接")
+          this.tips = "连接成功"
         } else {
           let obj = {};
           obj.rfid = e.data.replace(/\s+/g, "");
