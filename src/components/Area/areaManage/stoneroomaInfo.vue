@@ -4,12 +4,12 @@
       <!-- 左侧列表含添加 编辑区 添加区 删除四个功能  -->
       <section class="storeRoomInfo mr_30">
         <div class="songTitle">
-          <span class="titleName">库房管理</span>
+          <span class="titleName">楼房管理</span>
         </div>
         <section class="storeModeBox">
           <!-- 可能被遍历循环的地方 -->
           <div class="storeMode" v-for="(store,index) of storeInfo" :key="index">
-            <!-- 这里应该是点击后 右边显示这个库房的信息？ -->
+            <!-- 这里应该是点击后 右边显示这个楼房的信息？ -->
             <div :class="{isactive:activeIndex===index}" @click.stop="regionBtn(store,index)" class="storeModeTitle">
               <span class="storeName mr_30">{{store.storeName}}</span>
               <div class="storeOprate">
@@ -81,7 +81,7 @@
     <!-- 弹框组 -->
     <div class="dialogBox">
       <!-- 左侧弹框组 -->
-      <!-- 库房添加/编辑 -->
+      <!-- 楼房添加/编辑 -->
       <div class="storeRoomDia common stonerMessage">
         <el-dialog
           :title="dialogTitle[i]"
@@ -90,7 +90,7 @@
           @close="handleClose('changeStoreForm')"
         >
           <el-form ref="changeStoreForm" :rules="changeStoreRules" :model="changeStoreForm">
-            <el-form-item class="spec" label="库房名称:" :label-width="changelabel" prop="storeName">
+            <el-form-item class="spec" label="楼房名称:" :label-width="changelabel" prop="storeName">
               <el-input v-model="changeStoreForm.storeName"></el-input>
             </el-form-item>
             <el-form-item class="spec" label="楼　　号:" :label-width="changelabel" prop="storeNum">
@@ -126,7 +126,7 @@
 
       <!-- 右侧弹框组 -->
       <!-- 绑定区 -->
-      <!-- 删除区Or删除库房 -->
+      <!-- 删除区Or删除楼房 -->
       <div class="forbid collectionDelete">
         <el-dialog :title="dialogTitle[i]" :visible.sync="deleteDialog" width="400px" center>
           <div class="dialogBody">
@@ -337,7 +337,7 @@ export default {
 
       /*====== 左侧弹框配置项 ======*/
       // 未完待续 验证规则更严格 比如数字的验证 以及表单的placeholder
-      /*------ 添加/编辑库房 ------*/
+      /*------ 添加/编辑楼房 ------*/
       storeRoomDialog: false,
       preImg: "",
       imgfiles: null,
@@ -355,7 +355,7 @@ export default {
       },
       changeStoreRules: {
         storeName: [
-          { required: true, message: "请输入库房名称", trigger: "blur" }
+          { required: true, message: "请输入楼房名称", trigger: "blur" }
         ],
         storeNum:[
           { required: true, trigger: "blur",validator: isvalidNumberEnglish }
@@ -373,7 +373,7 @@ export default {
           { required: true, message: "请输入湿度警告", trigger: "blur" }
         ]
       },
-      /*------ 删除库房 ------*/
+      /*------ 删除楼房 ------*/
       deleteStoreData: {},
       /*====== 右侧弹框配置项 ======*/
 
@@ -395,9 +395,9 @@ export default {
         "编辑区",
         "绑定区",
         "删除区",
-        "编辑库房",
-        "添加库房",
-        "删除库房"
+        "编辑楼房",
+        "添加楼房",
+        "删除楼房"
       ],
       i: 0, // 控制区弹框的添加编辑绑定 删除标题和调用API
       changeDialog: false,
@@ -554,7 +554,7 @@ export default {
           break;
         case 6:
           this.deleteStore();
-          //console.log("删除库房API");
+          //console.log("删除楼房API");
       }
     },
     submitForm(formName, dialogName) {
@@ -564,7 +564,7 @@ export default {
       let data = {};
       //let method = 'post'
       let url = "";
-      // 库房编辑和添加接口
+      // 楼房编辑和添加接口
       if (i == 4 || i == 5) {
         url = i == 4 ? storeInt.edit : storeInt.add;
         //method = 'put'
@@ -645,9 +645,9 @@ export default {
       // 清空的是手动输入的值 而绑定的值还是要手动清理掉 循环清理吧
     },
     /*====== Api部分 总计10个接口 ======*/
-    /*------ 库房API ------*/
+    /*------ 楼房API ------*/
     searchStore() {
-      // 查询库房
+      // 查询楼房
       axios.get(storeInt.select).then(res => {
 
         if (res.data.state === true) {
@@ -659,7 +659,7 @@ export default {
       });
     },
     deleteStore() {
-      // 删除库房
+      // 删除楼房
       let data = this.deleteStoreData;
 
       axios.post(storeInt.delete, data).then(res => {

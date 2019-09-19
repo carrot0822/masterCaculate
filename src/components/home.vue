@@ -141,6 +141,7 @@ import VePie from "v-charts/lib/pie.common";
 import VeHis from "v-charts/lib/histogram.common";
 import { indexInt } from "../request/api/base.js";
 import axios from "axios";
+
 export default {
   data() {
     return {

@@ -460,7 +460,7 @@ export default {
           this.createLoading = false;
           this.aeDialog.display = false;
         } else {
-          this.aeDialog.display = false;
+          this.createLoading = false;
           this.$message.error(res.data.msg);
         }
       });

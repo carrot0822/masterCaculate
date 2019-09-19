@@ -642,21 +642,24 @@ export default {
   },
   computed: {
     searchTimeForm() {
+
       if (this.searchData) {
         switch (parseInt(this.searchData)) {
           case 0:
             this.selectSearchForm.name = this.searchForm.searchData;
+            this.selectSearchForm.issn = "";
             break;
           case 1:
-            this.selectSearchForm.isbn = this.searchForm.searchData;
+            this.selectSearchForm.issn = this.searchForm.searchData;
+            this.selectSearchForm.name = "";
             break;
         }
       } else {
         this.selectSearchForm.name = "";
-        this.selectSearchForm.isbn = "";
+        this.selectSearchForm.issn = "";
       }
       let newData = {
-        isbn: this.selectSearchForm.isbn,
+        queryIssn: this.selectSearchForm.issn,
         name: this.selectSearchForm.name,
         pageSize: this.pageSize,
         currentPage: 1
@@ -888,14 +891,20 @@ export default {
     //本地数据
     localCatalogData() {
       this.axios
-        .get(logUrl.sLocalSearch, { params: { issn: this.addForm.issn } })
+        .get(logUrl.sLocalSearch, { params: { queryIssn: this.addForm.issn } })
         .then(
           res => {
             console.log("本地数据", res);
             if (res.data.state == true) {
               if (res.data.row) {
                 let length = res.data.row.length;
-                if (length > 1) {
+                if (length) {
+                  this.catalogingData = res.data.row;
+                  this.j = 3;
+                  this.messageWidth = "750px";
+                  this.centerDialogVisible = true;
+                }
+                /* if (length > 1) {
                   this.catalogingData = res.data.row;
                   this.j = 3;
                   this.messageWidth = "750px";
@@ -904,7 +913,7 @@ export default {
                   let value = this.addForm.isbn
                 this.addForm = res.data.row[0]
                 this.addForm.isbn = value;
-                }
+                } */
               } else {
                 let judg = this.type.length;
                 if (length == 1) {
@@ -913,6 +922,8 @@ export default {
                   this.$message.info("暂无数据,正在启用远程检索");
                 }
               }
+            } else {
+              this.$message.error(res.data.msg);
             }
           },
           err => {
@@ -938,7 +949,13 @@ export default {
                 this.$message.error("暂无数据,请检测ISSN是否正确");
                 return;
               }
-              if (length > 1) {
+              if (length) {
+                this.catalogingData = res.data.row;
+                this.j = 4;
+                this.messageWidth = "750px";
+                this.centerDialogVisible = true;
+              }
+              /* if (length > 1) {
                 this.catalogingData = res.data.row;
                 this.j = 4;
                 this.messageWidth = "750px";
@@ -947,7 +964,7 @@ export default {
                 let value = this.addForm.isbn
                 this.addForm = res.data.row[0];
                 this.addForm.isbn = value;
-              }
+              } */
             } else {
               this.$message.error(row.data.msg)
             }

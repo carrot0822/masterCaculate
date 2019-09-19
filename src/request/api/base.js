@@ -193,7 +193,7 @@ export const editorInt = {
 };
 // 数据字典
 export const bookWordInt = {
-  search:`${url}authmodule/sysTbParamInfo/select`,
+  search:`${url}readermodule/cardManagement/readerTbCardInfo/select`,
   edit:`${url}authmodule/sysTbParamInfo/edit`,
   select:`${url}readermodule/cardManagement/readerTbCardGradeinfo/currency/selectEffectiveDropBoxAll`,
 };
@@ -347,7 +347,7 @@ export const dishonesty = {
 var store = url + 'regionmodule/areaManagementPage/store';
 export const storeInt = {
   select: `${url}data/cata/dictionaries/areaManagementPage/storeselect`,
-  add: `${url}data/cata/dictionaries/areaManagementPage/storead`,
+  add: `${url}data/cata/dictionaries/areaManagementPage/storeadd`,
   edit: `${url}data/cata/dictionaries/areaManagementPage/storeedit`,
   delete: `${url}data/cata/dictionaries/areaManagementPage/storedelete`
 };

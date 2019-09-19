@@ -6,7 +6,11 @@
       <el-header class="headmode" style="font-size: 12px">
         <!-- logo模块 logo图片载入 附加路由调转至首页 -->
         <div class="logoNav">
-          <div id="logoBox" class="logoBox">
+          <div v-if="!logo" id="logoBox" class="logoBox">
+            <img class="logo" :src="logoNomalUrl" />
+            <span @click="skip" class="Logotext">{{nomalName}}</span>
+          </div>
+           <div v-if="logo" id="logoBox" class="logoBox">
             <img class="logo" :src="logoUrl" />
             <span @click="skip" class="Logotext">{{systemName}}</span>
           </div>

@@ -72,7 +72,7 @@
             <el-table-column align="center" prop="fkTypeCode" label="分类号" width="200" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column align="center" prop="price" label="价格" width="200" :show-overflow-tooltip="true">
               <template slot-scope="scope">
-                <span>{{scope.row.clusterName == null || scope.row.price=='' ?'无':scope.row.price + '元'}}</span>
+                <span>{{scope.row.price == null || scope.row.price=='' ?'无':scope.row.price + '元'}}</span>
               </template>
             </el-table-column>
             <el-table-column align="center" prop="fkTypeName" label="分类名" width="200" :show-overflow-tooltip="true"></el-table-column>
@@ -470,13 +470,17 @@
             case 0:
 
               this.selectSearchForm.name = this.searchForm.searchData;
+              this.selectSearchForm.isbn = "";
+              this.selectSearchForm.clusterName = ""
               break;
             case 1:
-
               this.selectSearchForm.isbn = this.searchForm.searchData;
+              this.selectSearchForm.clusterName = ""
+              this.selectSearchForm.name = "";
               break;
             case 2:
-
+              this.selectSearchForm.name = "";
+              this.selectSearchForm.isbn = "";
               this.selectSearchForm.clusterName = this.searchForm.searchData
           }
         } else {

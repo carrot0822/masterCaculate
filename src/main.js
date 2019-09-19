@@ -29,7 +29,7 @@ import 'quill/dist/quill.bubble.css'
 import '../src/base/css/font.css'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import {PersonalCentre} from '@/request/api/base.js'
+import messageFix from './mess'
 Vue.config.productionTip = false
 NProgress.configure({ showSpinner: false })
 router.beforeEach((to, from, next) => {
@@ -84,7 +84,7 @@ router.afterEach(() => {
 Vue.use(ElementUI) // 注册插件
 // vuerouter会自动调用 这就是可以直接this.$router.push的根本？
 Vue.prototype.axios = axios // 挂载到vue实例 注册到vue实例中
-
+Vue.prototype.messageFix = messageFix
 /* eslint-disable no-new */
 // 这里挂载的原因是？
 window.vm = new Vue({

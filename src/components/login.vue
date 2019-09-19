@@ -198,6 +198,10 @@ export default {
       }
     });
     $("#yzm").hide();
+  },
+  created(){
+    
+    this.messageFix.error('向帅丑比')
   }
 };
 </script>

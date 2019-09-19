@@ -86,12 +86,10 @@
           ></el-table-column>
           <el-table-column
             align="center"
-            prop="readerSex"
+            prop="toSex"
             label="性别"
           >
-            <template slot-scope="scope">
-              <span>{{scope.readerSex?'女':'男'}}</span>
-            </template>
+            
           </el-table-column>
           <el-table-column
             align="center"
@@ -333,6 +331,7 @@ export default {
         if (res.data.state == true) {
           for (let item of res.data.row) {
               item.toState = this.toState(item.state)
+              item.toSex = this.toSex(item.readerSex)
           }
           this.tableObj.tableData = res.data.row;
           this.pagationObj.total = res.data.total;
@@ -371,6 +370,11 @@ export default {
     toMoney(num) {
       let value = num + "元";
       return value;
+    },
+    toSex(num){
+      let i = parseInt(num)
+      let arr = ['女','男']
+      return arr[i]
     }
   },
   created() {
