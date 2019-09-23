@@ -341,7 +341,7 @@ export default {
 
 
         } else {
-          this.$message.error(res.data.msg);
+          this.messageFix.error(res.data.msg);
         }
       });
     },
@@ -352,7 +352,7 @@ export default {
           console.log('今日归还',res)
           this.returnNum = res.data.row;
         } else {
-          this.$message.error(res.data.msg);
+          this.messageFix.error(res.data.msg);
         }
       });
     },
@@ -363,7 +363,7 @@ export default {
           this.bookNum = res.data.row;
 
         } else {
-          this.$message.error(res.data.msg);
+          this.messageFix.error(res.data.msg);
         }
       });
     },
@@ -374,7 +374,7 @@ export default {
           this.cardNum = res.data.row
           console.log('办卡记录',res.data.row)
         } else {
-          this.$message.error(res.data.msg);
+          this.messageFix.error(res.data.msg);
         }
       })
     },
@@ -386,7 +386,7 @@ export default {
           this.recardList = res.data.row;
           console.log("借出记录", this.recardList);
         } else {
-          this.$message.error(res.data.msg);
+          this.messageFix.error(res.data.msg);
         }
       });
     },
@@ -397,7 +397,7 @@ export default {
           console.log('热门分类',res)
           this.PieData.rows = res.data.row;
         } else {
-          this.$message.error(res.data.msg);
+          this.messageFix.error(res.data.msg);
         }
       });
     },
@@ -414,7 +414,7 @@ export default {
           }
           this.HisData.rows = dataArr;
         } else {
-          this.$message.error(res.data.msg);
+          this.messageFix.error(res.data.msg);
         }
       });
     },
@@ -425,7 +425,7 @@ export default {
           this.systemList = res.data.row
           console.log('具体数据',res.data)
         }else {
-          this.$message.error(res.data.msg);
+          this.messageFix.error(res.data.msg);
         }
       })
     },

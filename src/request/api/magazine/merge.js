@@ -17,7 +17,7 @@ const mergeUrl = {
   getMore:`${url}data/cata/periodical/itemHad/getDCQK`, // 获取典藏期刊信息（添加修改合刊）
   // other接口
   reject: `${url}data/cata/periodical/itemHad/ridOf`, // 剔除
-  getLocal: `${url}data/cata/periodical/itemHad/selectLoca`, // 获取本地issn
+  getLocal: `${url}data/cata/periodical/itemHad/selectLocal`, // 获取本地issn
   getNumber: `${url}data/cata/book/bookcollection/currency/getCode`, // 获取索书号等
   getCity:`${url}data/cata/periodical/itemHad/currency/getLB`, // 查询所有藏馆
   closeIndex:`${url}data/cata/periodical/itemHad/stopUs`, // 停用

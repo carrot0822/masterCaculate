@@ -8,7 +8,7 @@ var fileUrl = window.glob.fileUrl;
 /* 书籍推荐 */
 const recommendInt = {
     search:`${url}authmodule/bigData/bookTbBigDataReferr/select`,
-    add:`${url}authmodule/bigData/noticeTbBigDataReferr/add`,
+    add:`${url}authmodule/bigData/bookTbBigDataReferr/add`,
     delete:`${url}authmodule/bigData/bookTbBigDataReferr/delete`,
     imgUpload:`${fileUrl}filemodule/uploadImg/addBookCover`
 }

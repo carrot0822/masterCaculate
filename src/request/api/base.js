@@ -117,7 +117,7 @@ export const bookOperateInt = {
 };
 // 续借
 export const renewInt = {
-  renew:`${url}circulate/borrowmgr/renew/currency/getReaderLog`,
+  renew:`${url}circulate/borrowmgr/renew/renewBooks`,
   userInfo:`${url}circulate/borrowmgr/renew/currency/getReaderInfo`,
   return:`${url}circulate/borrowmgr/renew/currency/getReaderLog`,
   history:`${url}circulate/borrowmgr/renew/currency/getReaderHis`
@@ -480,7 +480,7 @@ export const deriveInt = {
   select:`${url}data/cata/book/bookcata/getCountByConditon`,
   derive:`${url}data/cata/book/bookcata/getFileUrlByConditon`,
   recommend:`${url}readermodule/recommend/recommendationHis/getFileFormTable`, // 荐购导出
-  backlog:`${url}authmodule/bakLog/getFileFormTable`
+  backlog:`${url}authmodule/bak/bakLog/getFileFormTable`
 };
 //馆内公告设置
 export const libNotice = {

@@ -1,7 +1,7 @@
 <template>
   <div id="orderNum">
     <section class="titleBox">
-      <h2 class="title">订单记录</h2>
+      <h2 class="title">异常订单</h2>
     </section>
     <!-- 按钮集合 -->
     <section class="changeBtnBox">
@@ -99,7 +99,7 @@
           <el-table-column
             align="center"
             prop="toState"
-            label="状态"
+            label="订单状态"
             width="80"
             :show-overflow-tooltip="true"
           ></el-table-column>

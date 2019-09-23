@@ -107,7 +107,7 @@ export default {
             sessionStorage.setItem("logo", JSON.stringify(obj));
           }
         } else {
-          this.$message.error(res.data.msg);
+          this.messageFix.error(res.data.msg);
         }
 
         console.log(res, "看看logo");
@@ -201,7 +201,7 @@ export default {
   },
   created(){
     
-    this.messageFix.error('向帅丑比')
+    
   }
 };
 </script>

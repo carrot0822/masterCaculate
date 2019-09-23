@@ -15,7 +15,7 @@ const backLog = {
   getLog: `${url}authmodule/bak/bakLog/select`, // 备份查询
   output: `${url}authmodule/bak/bakLog/getFileFormTable` // 导出备份日志
 }
-export const backUrl = `${url}authmodule/bakLog/getFileFormTable`
+export const backUrl = `${url}authmodule/bak/bakLog/getFileFormTable` // 导出备份日志
 export const bakFile = `${fileUrl}filemodule/uploadBak/upload` // 上传文件
 export const backLogInt = {
   search,

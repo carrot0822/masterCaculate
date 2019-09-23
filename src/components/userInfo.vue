@@ -263,7 +263,7 @@ export default {
             this.hidePassword+='*'
           }
         }else{
-          this.$message.error(res.data.msg)
+          this.messageFix.error(res.data.msg)
         }
       })
     },
@@ -285,7 +285,7 @@ export default {
           //将数据渲染到ztree树
           $.fn.zTree.init($("#treeDemo"), this.setting, this.zNodes);
         }else{
-          this.$message({
+          this.messageFix({
             message: response.data.msg,
             type: 'error'
           });
@@ -310,7 +310,7 @@ export default {
       this.axios.put(PersonalCentre.editUsername,{id:this.id,username:this.changeInput}).then((res)=>{
         console.log('修改用户名结果',res)
         if(res.data.state==true){
-          this.$message({
+          this.messageFix({
             message:res.data.msg,
             type: 'success'
           });
@@ -320,7 +320,7 @@ export default {
           sessionStorage.setItem('token',token)
           this.$store.commit('setToken',token)
         }else{
-          this.$message({
+          this.messageFix({
             message:res.data.msg,
             type: 'error'
           });
@@ -339,7 +339,7 @@ export default {
         this.axios.put(PersonalCentre.editPassword,{password:this.oldInput,newPassword:this.newInput}).then((res)=>{
           console.log('修改密码后的结果',res)
           if(res.data.state==true){
-            this.$message({
+            this.messageFix({
               message:'修改成功，三秒后返回重新登录',
               type: 'success'
             });
@@ -348,14 +348,14 @@ export default {
               this.$router.push({ path: "/" });
             },3000)
           }else{
-            this.$message({
+            this.messageFix({
               message:res.data.msg,
               type: 'error'
             });
           }
         })
       }else{
-        this.$message({
+        this.messageFix({
           message:'您的确认密码与新密码不相同',
           type: 'error'
         });

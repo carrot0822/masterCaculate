@@ -1,7 +1,7 @@
 <template>
   <div id="orderNum">
     <section class="titleBox">
-      <h2 class="title">历史订单记录</h2>
+      <h2 class="title">订单记录</h2>
     </section>
     <!-- 按钮集合 -->
     <section class="changeBtnBox">
@@ -75,7 +75,7 @@
             prop="orderNumber"
             label="订单号"
             :show-overflow-tooltip="true"
-            width="300"
+            width="250"
           ></el-table-column>
           <el-table-column
             align="center"
@@ -99,7 +99,7 @@
           <el-table-column
             align="center"
             prop="toState"
-            label="状态"
+            label="订单状态"
             width="80"
             :show-overflow-tooltip="true"
           ></el-table-column>
@@ -107,10 +107,10 @@
             align="center"
             prop="toMoney"
             label="金额"
-            width="80"
+            width="120"
             :show-overflow-tooltip="true"
           ></el-table-column>
-          <el-table-column align="center" prop="reason" label="错误说明" :show-overflow-tooltip="true"></el-table-column>
+          
           <!-- <el-table-column align="center" label="操作" fixed="right" width="200">
             
             <template slot-scope="scope">
