@@ -32,12 +32,85 @@
               </el-form-item>
             </el-form>
           </section>
+					
           <!-- 4.0 表格展示内容 编辑功能：状态用上 禁用 批量禁用弹框 弹框可尝试用slot插槽封装 -->
           <section class="text item tablebox" v-loading="tableLoading">
+						<el-table
+						  @selection-change="selectAllBtn"
+						  :data="tableData"
+						  style="width: 100%; text-align:center;"
+							max-height="745"
+						  :row-style="rowStyle"
+						  :header-cell-style="{background:'#0096FF', color:'#fff',height:'60px'}"
+						>
+						  <el-table-column align="center" type="selection" width="100" fixed="left"></el-table-column>
+						  <el-table-column width="100" align="center" prop="index" type="index" label="序号" fixed="left">
+						    <template slot-scope="scope">
+						      <span>{{(currentPage - 1) * pageSize + scope.$index + 1}}</span>
+						    </template>
+						  </el-table-column>
+							 <el-table-column type="expand">
+							   <template slot-scope="props">
+							     <el-form label-position="left" inline class="demo-table-expand">
+							       <el-form-item label="书籍借阅天数">
+							         <span>{{ props.row.borrowTime}}天</span>
+							       </el-form-item>
+							       <el-form-item label="书籍借阅数量">
+							         <span>{{ props.row.borrowNumber}}本</span>
+							       </el-form-item>
+							       <el-form-item label="书籍借阅次数">
+							         <span>{{ props.row.renewNumber }}次</span>
+							       </el-form-item>
+							       <el-form-item label="期刊借阅天数">
+							         <span>{{ props.row.periodicalBorrowTime }}天</span>
+							       </el-form-item>
+							       <el-form-item label="期刊借阅数量">
+							         <span>{{ props.row.periodicalBorrowNumber }}本</span>
+							       </el-form-item>
+							       <el-form-item label="期刊借阅次数">
+							         <span>{{ props.row.periodicalRenewNumber }}次</span>
+							       </el-form-item>
+							       <el-form-item label="预借数量">
+							         
+											 <span>{{props.row.subscribeNumScope  == null || props.row.subscribeNumScope =='' ?0:props.row.subscribeNumScope }}本</span>
+							       </el-form-item>
+										 <el-form-item label="预约保护时间">
+										   
+											 <span>{{props.row.subscribeTimeScope == null || props.row.subscribeTimeScope=='' ?'---':props.row.subscribeTimeScope}}天</span>
+										 </el-form-item>
+							     </el-form>
+							   </template>
+							 </el-table-column>
+						  <el-table-column align="center" prop="name" width="200" label="等级名称"></el-table-column>
+						  
+
+						  <el-table-column align="center" prop="deposit" label="押金金额" width="150">
+						    <template slot-scope="scope">
+						      <span>{{scope.row.deposit}}元</span>
+						    </template>
+						  </el-table-column>
+						  
+						  <el-table-column align="center" prop="creatTime"  label="创建时间"></el-table-column>
+						  <el-table-column align="center" prop="updateTime" label="修改时间"></el-table-column>
+						  <el-table-column align="center" prop="disabled" width="150" label="状态">
+						    <template slot-scope="scope">
+						      <span>{{scope.row.disabled ===0?'启用':'禁用'}}</span>
+						    </template>
+						  </el-table-column>
+						  <el-table-column align="center" label="操作" width="150" fixed="right">
+						    
+						    <template slot-scope="scope">
+						      <span class="edit" @click="editBtn(scope.$index, scope.row)">编辑</span>
+						      
+						    </template>
+						  </el-table-column>
+						</el-table>
+						<!--
             <el-table
               @selection-change="selectAllBtn"
               :data="tableData"
               style="width: 100%; text-align:center;"
+							max-height="745"
               :row-style="rowStyle"
               :header-cell-style="{background:'#0096FF', color:'#fff',height:'60px'}"
             >
@@ -47,6 +120,7 @@
                   <span>{{(currentPage - 1) * pageSize + scope.$index + 1}}</span>
                 </template>
               </el-table-column>
+							 
               <el-table-column align="center" prop="name" width="200" label="等级名称"></el-table-column>
               <el-table-column align="center" prop="renewNumber" width="150" label="续借次数">
                 <template slot-scope="scope">
@@ -86,13 +160,14 @@
                 </template>
               </el-table-column>
               <el-table-column align="center" label="操作" width="150" fixed="right">
-                <!-- 这里的scope代表着什么 index是索引 row则是这一行的对象 -->
+                
                 <template slot-scope="scope">
                   <span class="edit" @click="editBtn(scope.$index, scope.row)">编辑</span>
-                  <!-- <span class="ban" @click="banBtn(scope.$index, scope.row)">禁用</span> -->
+                  
                 </template>
               </el-table-column>
             </el-table>
+						-->
             <section class="pagination mt_30">
               <el-pagination
                 style="display: inline-block"
@@ -153,16 +228,24 @@
             <el-form-item label="等级名称" prop="name" :label-width="formLabelWidth">
               <el-input v-model="changeForm.name" autocomplete="off" @blur="verifyGradeFun"></el-input>
             </el-form-item>
-            <el-form-item label="续借次数" prop="renewNum" :label-width="formLabelWidth">
+            <el-form-item label="书籍续借次数" prop="renewNum" :label-width="formLabelWidth">
               <el-input v-model="changeForm.renewNum" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="借阅天数" prop="readerTime" :label-width="formLabelWidth">
+            <el-form-item label="书籍借阅天数" prop="readerTime" :label-width="formLabelWidth">
               <el-input v-model="changeForm.readerTime" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="借书数量" prop="bookNum" :label-width="formLabelWidth">
+            <el-form-item label="书籍借阅数量" prop="bookNum" :label-width="formLabelWidth">
               <el-input v-model="changeForm.bookNum" autocomplete="off"></el-input>
             </el-form-item>
-
+						<el-form-item label="期刊续借次数" prop="periodicalRenewNumber" :label-width="formLabelWidth">
+						  <el-input v-model="changeForm.periodicalRenewNumber" autocomplete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="期刊借阅天数" prop="periodicalBorrowTime" :label-width="formLabelWidth">
+						  <el-input v-model="changeForm.periodicalBorrowTime" autocomplete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="期刊借阅数量" prop="periodicalBorrowNumber" :label-width="formLabelWidth">
+						  <el-input v-model="changeForm.periodicalBorrowNumber" autocomplete="off"></el-input>
+						</el-form-item>
             <el-form-item label="押金金额" prop="deposit" :label-width="formLabelWidth">
               <el-input :disabled="editJude" v-model="changeForm.deposit" autocomplete="off" @blur="verifyDepositFun"></el-input>
             </el-form-item>
@@ -229,7 +312,7 @@ export default {
       // 添加编辑
       i: 0, // 切换弹框标题
       changeFormDialog: false, // // 添加弹框的展示和消失
-      formLabelWidth: "105px",
+      formLabelWidth: "120px",
       changeForm: {
         name: "", // 等级名称
         renewNum: "", // 续借次数
@@ -239,7 +322,11 @@ export default {
         subscribeTimeScope:'',//预约保护时间
         subscribeNumScope:'',//预借数量
         disabled: "", // 状态
-        id: "" // ID
+        id: "", // ID
+				/*新增期刊*/
+				periodicalBorrowNumber:"",
+				periodicalBorrowTime:"",
+				periodicalRenewNumber:""
       },
       editJude: false, //押金输入框锁定
       addRules: {
@@ -247,6 +334,9 @@ export default {
         renewNum: [{ required: true, message: "请输入续借天数", trigger: "blur" }],
         readerTime: [{ required: true, message: "请输入借阅时间", trigger: "blur" }],
         subscribeNumScope: [{ required: true, message: "请输入预借数量", trigger: "blur" }],
+				periodicalRenewNumber: [{ required: true, message: "请输入续借天数", trigger: "blur" }],
+				periodicalBorrowTime: [{ required: true, message: "请输入借阅时间", trigger: "blur" }],
+				periodicalBorrowNumber: [{ required: true, message: "请输入预借数量", trigger: "blur" }],
         subscribeTimeScope:[{ required: true, message: "请输入预约保护时间", trigger: "blur" }],
         bookNum: [{ required: true, message: "请输入借阅数量", trigger: "blur" }],
         deposit: [{ required: true, message: "请输入押金金额", trigger: "blur" }],
@@ -272,7 +362,10 @@ export default {
         borrowTime: this.changeForm.readerTime,
         borrowNumber: this.changeForm.bookNum,
         deposit: this.changeForm.deposit,
-        disabled: this.changeForm.disabled
+        disabled: this.changeForm.disabled,
+				periodicalRenewNumber:this.changeForm.periodicalRenewNumber,
+				periodicalBorrowTime:this.changeForm.periodicalBorrowTime,
+				periodicalBorrowNumber:this.changeForm.periodicalBorrowNumber
       };
       return obj;
     },
@@ -286,7 +379,10 @@ export default {
         borrowNumber: this.changeForm.bookNum,
         deposit: this.changeForm.deposit,
         id: this.changeForm.id,
-        disabled: this.changeForm.disabled
+        disabled: this.changeForm.disabled,
+				periodicalRenewNumber:this.changeForm.periodicalRenewNumber,
+				periodicalBorrowTime:this.changeForm.periodicalBorrowTime,
+				periodicalBorrowNumber:this.changeForm.periodicalBorrowNumber
       };
       return obj;
     },
@@ -382,6 +478,10 @@ export default {
       this.changeForm.bookNum = row.borrowNumber;
       this.changeForm.deposit = row.deposit;
       this.changeForm.id = row.id;
+			this.changeForm.periodicalRenewNumber = row.periodicalRenewNumber;
+			this.changeForm.periodicalBorrowTime = row.periodicalBorrowTime
+			this.changeForm.periodicalBorrowNumber = row.periodicalBorrowNumber
+			
       this.changeForm.disabled = row.disabled.toString();
       this.editJude = true;
       this.changeFormDialog = true;
@@ -850,6 +950,25 @@ export default {
   z-index: 3;
   text-align: center;
   line-height: 100px;
+}
+
+ 
+</style>
+<style>
+	 .demo-table-expand {
+	  font-size: 0;
+	}
+	.demo-table-expand label {
+	  width: 120px;
+	  color: rgba(0,150,255,1);
+	}
+	.demo-table-expand .el-form-item {
+	  margin-right: 0;
+	  margin-bottom: 0;
+	  width: 40%;
+	}
+	.el-table__expanded-cell[class*=cell] {
+    padding: 20px 300px;
 }
 </style>
 

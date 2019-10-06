@@ -2,7 +2,7 @@
   <div id="damageCount">
     <div class="commonMode" style="width:100%">
       <div class="sonTitle">
-        <span class="titleName">损坏清点</span>
+        <span class="titleName">书籍清点</span>
       </div>
     </div>
     <!-- 2.0表单填写 -->

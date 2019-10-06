@@ -80,6 +80,18 @@
             label="预约失效时间"
             :show-overflow-tooltip="true"
           ></el-table-column>
+					<el-table-column
+					  align="center"
+					  prop="toState"
+					  label="状态"
+					  :show-overflow-tooltip="true"
+					></el-table-column>
+					<el-table-column
+					  align="center"
+					  prop="remark"
+					  label="备注"
+					  :show-overflow-tooltip="true"
+					></el-table-column>
           <el-table-column
             align="center"
             prop="fkReaderName"
@@ -271,13 +283,20 @@ export default {
       let data = obj;
       appointmentInt.getHistory(data).then(res => {
         if (res.data.state == true) {
+					for(let item of res.data.row){
+						item.toState = this.toState(item.state);
+					}
           this.tableObj.tableData = res.data.row;
           this.pagationObj.total = res.data.total;
         }
         console.log(res, "查询");
       });
     },
-
+		toState(num){
+			let i = parseInt(num);
+			let arr = ['成功','失败'];
+			return arr[i];
+		},
     /*------ 过滤函数 filter ------*/
     clearValue(obj) {
       // 不使用for in 避免遍历出原型属性

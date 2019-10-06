@@ -222,7 +222,7 @@ export default new Router({
         {
           path: '/damageSet',
           meta: {
-            title: '损坏设置',
+            title: '损坏管理',
             Mode: '1'
           },
           component: resolve => require(['../components/System/damage.vue'], resolve)
