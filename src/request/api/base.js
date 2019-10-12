@@ -23,6 +23,9 @@ var fileUrl = 'http://192.168.2.121:8090/';*/
 var url = window.glob.url;
 var imgurl = window.glob.imgurl;
 var fileUrl = window.glob.fileUrl;
+/*临时新加的*/
+// 补办费用
+export const supplyInt = `${url}/authmodule/sysSet/currency/select`;
 /*------ 文件上传模块 ------*/
 export const buttonInt = `${url}authmodule/currency/selectElements`;
 export function getPower (value){

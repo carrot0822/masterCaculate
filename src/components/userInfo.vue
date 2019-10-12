@@ -381,9 +381,11 @@ export default {
       this.axios.put(editHeadPortrait,{id:this.id,headerAddress:imgFile})
       .then((res)=>{
         console.log('头像上传后返回的数据',res)
+				/*
         var token = res.data.row.authorization
         sessionStorage.setItem('token',token)
         this.$store.commit('setToken',token)
+				* */
 
       })
     },

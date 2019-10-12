@@ -35,7 +35,7 @@
         <el-form-item label="读者卡有效时间" prop="cardValid">
           <div class="inputBox">
             <el-input v-model.number="changeForm.sysTbParam.effectiveTime"></el-input>
-            <span class="ml_10 text">天</span>
+            <span class="ml_10 text">年</span>
           </div>
         </el-form-item>
         <el-form-item label="办卡机默认等级" prop="cardValid">

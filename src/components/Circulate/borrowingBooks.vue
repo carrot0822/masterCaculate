@@ -170,7 +170,7 @@
                   label="馆内码"
                 ></el-table-column>
                 <el-table-column align="center" prop="start" label="借书开始时间"></el-table-column>
-                <!-- <el-table-column align="center" prop="end" label="预计书籍归还时间"></el-table-column> -->
+                 <el-table-column align="center" prop="end" label="预计书籍归还时间"></el-table-column>
                 <el-table-column align="center" prop="state" label="借书状态">
                   <template slot-scope="scope">
                     <span>{{scope.row.state ===0?'借书失败':'借书成功'}}</span>
