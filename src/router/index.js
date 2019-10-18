@@ -88,6 +88,15 @@ export default new Router({
 
       children: [
         /*------ 资料管理 ------*/
+        // 微型图书馆
+        {
+          path:'/smallLib',
+          meta:{
+            title:'漂流柜典藏',
+            Mode:'1'
+          },
+          component:()=> import('../components/SmallLib/sLibCata.vue')
+        },
         // 书籍管理
         {
           path: '/BookCataloging',

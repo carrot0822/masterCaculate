@@ -4,9 +4,9 @@ var url = window.glob.url;
 var imgurl = window.glob.imgurl;
 var fileUrl = window.glob.fileUrl;
 
-// 书籍典藏
+// 微型图书馆 书籍典藏
 const reserveUrl = {
-  search: `${url}data/cata/book/bookcollection/select`,
+  search: `${url}data/slib/slibbookcollection/select`,
   add: `${url}data/cata/book/bookcollection/add`,
   revise: `${url}data/cata/book/bookcollection/edit`,
   remove: `${url}data/cata/book/bookcollection/delete`,
@@ -18,10 +18,10 @@ const reserveUrl = {
   getNumber: `${url}data/cata/book/bookcollection/currency/getCode`, // 获馆内码
   getSearchNum:`${url}data/cata/book/bookcollection/currency/getBopSearchNumber`, // 通用接口 获取索取号*2
 	
-  getCity:`${url}data/cata/book/bookcollection/currency/getLibNameAndsLib`, // 查询所有藏馆
+  getCity:`${url}data/cata/book/bookcollection/currency/getLibName`, // 查询所有藏馆
   closeIndex:`${url}data/cata/book/bookcollection/stopUs`, // 停用
   openIndex:`${url}data/cata/book/bookcollection/startUs`, // 启用
-  translate:`${url}data/cata/book/bookcollection/letLeave`, // 调馆
+  translate:`${url}data/slib/slibbookcollection/letLeave`, // 调馆
   damage:`${url}data/cata/book/bookcollection/bookDamage`,  // 典藏期刊报损
   getDamegeOp:`${url}data/cata/book/bookcollection/currency/getDamage` // 查询损坏列表下拉框
 }

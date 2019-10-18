@@ -351,7 +351,7 @@ export default {
       if (!value) {
         return callback(new Error("请输入手机号"));
       } else {
-        const reg = /^1[3|4|5|7|8][0-9]\d{8}$/;
+        const reg = /^1(3|4|5|6|7|8|9)\d{9}$/;
         console.log("正则验证", reg.test(value));
         if (reg.test(value)) {
           callback();
