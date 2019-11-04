@@ -143,7 +143,9 @@ export default {
               if (res.data.row.roleModularMenus.length) {
                 let number = String(res.data.row.roleModularMenus[0].priority);
                 sessionStorage.setItem("headIndex", number);
-              }
+              } else {
+								sessionStorage.setItem("headIndex", '1');
+							}
               this.$store.commit("setToken", token);
               this.$store.commit("setUserInfo", userInfo);
               this.$store.commit("setMenu", menu);

@@ -16,6 +16,8 @@ axios.interceptors.request.use(
     if (store.state.token != null) {
 
       config.headers['Authorization'] = store.state.token // 约定头部字段
+			
+			//config.headers['accept-encoding'] = 'gzip'
     }
 
     return config

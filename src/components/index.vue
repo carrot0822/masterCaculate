@@ -19,7 +19,7 @@
               background-color="#0096ff"
               v-if="menuLo.length"
             >
-              <el-menu-item :index="num"   v-for="(item,num) of menuLo" :key="num">{{item.menuName}}</el-menu-item>
+              <el-menu-item :index="index + 1"   v-for="(item,index) of menuLo" :key="index">{{item.menuName}}</el-menu-item>
 
             </el-menu>
           </div>

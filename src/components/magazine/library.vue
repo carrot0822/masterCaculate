@@ -57,6 +57,7 @@
           </el-table-column>
           <el-table-column align="center" prop="code" label="馆藏地代码" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column align="center" prop="name" label="馆藏地名称" :show-overflow-tooltip="true"></el-table-column>
+					<el-table-column align="center" prop="location" label="馆藏地地址" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column
             align="center"
             prop="creatTime"
@@ -135,6 +136,11 @@
                     <el-input v-model="aeDialog.aeForm.name" placeholder="请输入馆藏地名称"></el-input>
                   </el-form-item>
                 </div>
+								<div class="diagOneInput">
+								  <el-form-item prop="location" label="馆藏地地址:">
+								    <el-input v-model="aeDialog.aeForm.location" placeholder="请输入馆藏地地址"></el-input>
+								  </el-form-item>
+								</div>
                 <div class="diagOneInput">
                   <el-form-item label="馆藏地备注:">
                     <el-input
@@ -239,6 +245,7 @@ export default {
         aeForm: {
           code: "",
           name: "",
+					location:"",
           remark: ""
         },
         // 弹框验证
@@ -248,7 +255,10 @@ export default {
           ],
           name: [
             { required: true, message: "请输入馆藏地名称", trigger: "blur" }
-          ]
+          ],
+					location: [
+					  { required: true, message: "请输入馆藏地地址", trigger: "blur" }
+					]
         }
       },
       // war:waring

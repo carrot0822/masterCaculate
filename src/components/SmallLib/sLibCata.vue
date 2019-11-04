@@ -1,23 +1,14 @@
 <template>
   <div id="sLibCataBox">
     <section class="titleBox">
-      <h2 class="title">书籍典藏</h2>
+      <h2 class="title">漂流柜典藏</h2>
     </section>
     <!-- 按钮集合 -->
     <section class="changeBtnBox">
       <div class="oprateBtn">
-        <!-- <button class="addBtn" @click="addBtn">
-          <i class="addIcon el-icon-plus"></i>添加
-        </button>
-        <button class="deleteBtn" @click="removeBtn">
-          <i class="deleteIcon el-icon-delete"></i>批量删除
-        </button> -->
         <button class="transferBtn" @click="transferBtn">
           <i class="transferIcon el-icon-edit"></i>批量调馆
         </button>
-        <!-- <button class="rejectBtn" @click="rejectBtn">
-          <i class="deleteIcon el-icon-delete"></i>剔除
-        </button> -->
         <!-- <button class="outputBtn" @click="outputBtn">
           <i class="outputIcon el-icon-share"></i>导出
         </button>-->
@@ -28,7 +19,7 @@
             <el-select
               style="width: 150px"
               v-model="searchInput.option"
-              placeholder="请选择"
+              placeCodeholder="请选择"
               clearable
             >
               <el-option
@@ -40,7 +31,7 @@
             </el-select>
             <el-input
               v-model="searchInput.search"
-              placeholder="请输入相关信息"
+              placeCodeholder="请输入相关信息"
               clearable
               style="width: 250px"
             ></el-input>
@@ -85,8 +76,8 @@
           <el-table-column
             width="200"
             align="center"
-            prop="issn"
-            label="ISSN"
+            prop="isbn"
+            label="ISBN"
             :show-overflow-tooltip="true"
           ></el-table-column>
 
@@ -94,7 +85,7 @@
             width="200"
             align="center"
             prop="name"
-            label="期刊名称"
+            label="书籍名称"
             :show-overflow-tooltip="true"
           ></el-table-column>
           <el-table-column
@@ -104,8 +95,18 @@
             label="馆藏地"
             :show-overflow-tooltip="true"
           ></el-table-column>
+		  <el-table-column
+		    align="center"
+		    prop="clusterName"
+		    label="丛编题名"
+		    width="200"
+		    :show-overflow-tooltip="true"
+		  >
+		    <template slot-scope="scope">
+		      <span>{{scope.row.clusterName == null || scope.row.clusterName=='' ?'---':scope.row.clusterName}}</span>
+		    </template>
+		  </el-table-column>
 
-          <el-table-column align="center" prop="anumber" label="刊期号" :show-overflow-tooltip="true"></el-table-column>
           <el-table-column
             width="100"
             align="center"
@@ -116,7 +117,7 @@
           <el-table-column
             width="200"
             align="center"
-            prop="publicationDate"
+            prop="publishingTime"
             label="出版日期"
             :show-overflow-tooltip="true"
           ></el-table-column>
@@ -141,13 +142,7 @@
             label="语种"
             :show-overflow-tooltip="true"
           ></el-table-column>
-          <el-table-column
-            width="100"
-            align="center"
-            prop="periodicalTypeName"
-            label="期刊类型"
-            :show-overflow-tooltip="true"
-          ></el-table-column>
+
           <el-table-column
             width="100"
             align="center"
@@ -717,28 +712,29 @@ export default {
         search: "", // 输入框
         optionsArr: [
           {
-            label: "藏馆码",
+            label: "馆内码",
             value: 1
           },
           {
-            label: "期刊名",
+            label: "书名",
             value: 2
           },
           {
-            label: "并列题名",
+            label: "丛编题名",
             value: 3
           },
           {
-            label: "ISSN",
+            label: "ISBN",
             value: 4
           },
           {
-            label: "备注",
+            label: "索取号",
             value: 5
           }
         ]
       },
       searchForm: {
+				
         libraryBookCode: "", // 藏馆码
         name: "", // 名字
         parallelTitle: "", // 并列题名
@@ -1087,23 +1083,23 @@ export default {
         switch (value) {
           case 1:
             this.clearValue(this.searchForm);
-            this.searchForm.libraryBookCode = this.searchInput.search;
+            this.searchForm.code = this.searchInput.search;
             break;
           case 2:
             this.clearValue(this.searchForm);
-            this.searchForm.name = this.searchInput.search;
+            this.searchForm.bookName = this.searchInput.search;
             break;
           case 3:
             this.clearValue(this.searchForm);
-            this.searchForm.parallelTitle = this.searchInput.search;
+            this.searchForm.clusterName = this.searchInput.search;
             break;
           case 4:
             this.clearValue(this.searchForm);
-            this.searchForm.queryIssn = this.searchInput.search;
+            this.searchForm.isbn = this.searchInput.search;
 
           case 5:
             this.clearValue(this.searchForm);
-            this.searchForm.remark = this.searchInput.search;
+            this.searchForm.callNumber = this.searchInput.search;
             break;
         }
       } else {
