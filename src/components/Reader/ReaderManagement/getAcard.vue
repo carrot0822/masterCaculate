@@ -156,7 +156,8 @@ import {
   bookWordInt,
   cardInfoInt,
   rechargeInt,
-  idCardType
+  idCardType,
+  supplyInt
 } from "@request/api/base.js";
 export default {
   name: "getAcard",
@@ -439,11 +440,11 @@ export default {
     },
     // 补办费用获取API
     supplyCashApi(){
-      axios.get(bookWordInt.search).then(res => {
+      axios.get(supplyInt).then(res => {
         if (res.data.state) {
           this.supplyCost = res.data.row.setReissueCost
-          console.log("接收的数据", res.data.row);
-          console.log('补卡费用',this.supplyCost)
+          console.log("接收的数据",res);
+          console.log('补卡费用')
         } else {
          // this.$message.error(res.data.msg);
         }

@@ -41,10 +41,6 @@ import Not from '../components/error.vue'
 
 import IndexTest from '../common/indexTest.vue'
 
-
-import {
-  resolve
-} from 'upath';
 Vue.use(Router)
 // 暴露一个router对象
 /*导航守卫 */
@@ -666,7 +662,29 @@ export default new Router({
           component: resolve => require(['../components/System/article.vue'], resolve)
         },
         
-
+        /* 微信小程序 */
+        {
+          path:"/wxEditor/:id",
+          meta:{
+            title: '资讯编辑'
+          },
+          component: () => import('../components/progress/editor.vue')
+        },
+        {
+          path:"/wxCreator",
+          meta:{
+            title: '资讯编辑'
+          },
+          component: () => import('../components/progress/activeEditor')
+        },
+        {
+          path:"/wxNoticeInfo",
+          meta:{
+            title: '活动资讯管理',
+            Mode:'5'
+          },
+          component: () => import('../components/progress/activeList')
+        },
           /*废弃 */
 
           {
