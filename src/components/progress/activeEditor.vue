@@ -36,12 +36,13 @@
                 <el-form-item label="发布者" prop="person">
                   <el-input placeholder="请填写发布者" v-model="editForm.person"></el-input>
                 </el-form-item>
-                <el-form-item label="活动时间" prop="time">
-                  <el-input placeholder="请填写活动时间" v-model="editForm.time"></el-input>
-                </el-form-item>
                 <el-form-item label="活动地点" prop="place">
                   <el-input placeholder="请填写活动地点" v-model="editForm.place"></el-input>
                 </el-form-item>
+                <el-form-item label="活动时间" prop="time">
+                  <el-input placeholder="请填写活动时间" v-model="editForm.time"></el-input>
+                </el-form-item>
+                
                 <el-form-item label="简介" prop="introducation">
                   <el-input placeholder="请填写简介" v-model="editForm.introducation"></el-input>
                 </el-form-item>
@@ -124,17 +125,21 @@ export default {
       /*------ 表单配置项 ------*/
       labelPosition: "right",
       editForm: {
-        title: "标题",
-        content: "待输入内容",
+        title: "",
+        content: "",
         introducation: "",
-        place: "默认地点",
-        person: "发布人",
-        time: "默认事件",
+        place: "",
+        person: "",
+        time: "",
         creater: "",
         disabled: "1"
       },
       editrules: {
-        title: [{ required: true, message: "请输入文章标题", trigger: "blur" }]
+        title: [{ required: true, message: "请填写文章标题", trigger: "blur" }],
+        person: [{ required: true, message: "请填写发布者", trigger: "blur" }],
+        time: [{ required: true, message: "请填写活动时间", trigger: "blur" }],
+        place: [{ required: true, message: "请填写文章活动地点", trigger: "blur" }],
+        introducation: [{ required: true, message: "请输入简介", trigger: "blur" }],
       },
       /*------ 富文本配置项 ------*/
       editorloading: false,
@@ -243,12 +248,12 @@ export default {
       if (this.content) {
         flag = true;
       }
-      this._add(obj);
+      
       // 是否需要判定文件列表为空 对了 这里要开验证
       this.$refs.editForm.validate(valid => {
 
         if (valid && flag) {
-          
+            this._add(obj);
         } else {
           if (!flag) {
             this.$message.error("请填写文章内容");
@@ -418,7 +423,7 @@ export default {
 
 .imgBox {
   padding-left: 100px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   .preBox {
     width: 310px;
     height: 140px;
@@ -458,6 +463,9 @@ export default {
         font-family: MicrosoftYaHei;
       }
     }
+  }
+  .tips{
+    padding-top: 20px;
   }
 }
 </style>

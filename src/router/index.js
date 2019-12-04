@@ -93,6 +93,14 @@ export default new Router({
           },
           component:()=> import('../components/SmallLib/sLibCata.vue')
         },
+        {
+          path:'/smallAdvertisement',
+          meta:{
+            title:'广告栏管理',
+            
+          },
+          component:()=>import('../components/SmallLib/bannerSet.vue')
+        },
         // 书籍管理
         {
           path: '/BookCataloging',
@@ -673,7 +681,7 @@ export default new Router({
         {
           path:"/wxCreator",
           meta:{
-            title: '资讯编辑'
+            title: '资讯添加'
           },
           component: () => import('../components/progress/activeEditor')
         },

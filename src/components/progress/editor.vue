@@ -1,5 +1,5 @@
 <template>
-  <div class="editor">
+  <div class="editor" id="editor">
     <section class="titleBox mb_30">
       <p>修改资讯</p>
       <span class="backBtn" @click="backBtn">
@@ -36,12 +36,13 @@
                 <el-form-item label="发布者" prop="person">
                   <el-input placeholder="请填写发布者" v-model="editForm.person"></el-input>
                 </el-form-item>
-                <el-form-item label="活动时间" prop="time">
-                  <el-input placeholder="请填写活动时间" v-model="editForm.time"></el-input>
-                </el-form-item>
                 <el-form-item label="活动地点" prop="place">
                   <el-input placeholder="请填写活动地点" v-model="editForm.place"></el-input>
                 </el-form-item>
+                <el-form-item label="活动时间" prop="time">
+                  <el-input placeholder="请填写活动时间" v-model="editForm.time"></el-input>
+                </el-form-item>
+
                 <el-form-item label="简介" prop="introducation">
                   <el-input placeholder="请填写简介" v-model="editForm.introducation"></el-input>
                 </el-form-item>
@@ -87,7 +88,7 @@
 
     <!-- 发布按钮 -->
     <section class="buttonBox mb_30">
-      <el-button type="primary" @click="submitFile">发布</el-button>
+      <el-button type="primary" @click="submitFile">修改</el-button>
     </section>
     <section class="imageLoad">
       <el-upload
@@ -124,17 +125,25 @@ export default {
       /*------ 表单配置项 ------*/
       labelPosition: "right",
       editForm: {
-        title: "标题",
-        content: "待输入内容",
+        title: "",
+        content: "",
         introducation: "",
-        place: "默认地点",
-        person: "发布人",
-        time: "默认事件",
+        place: "",
+        person: "",
+        time: "",
         creater: "",
         disabled: "1"
       },
       editrules: {
-        title: [{ required: true, message: "请输入文章标题", trigger: "blur" }]
+        title: [{ required: true, message: "请填写文章标题", trigger: "blur" }],
+        person: [{ required: true, message: "请填写发布者", trigger: "blur" }],
+        time: [{ required: true, message: "请填写活动时间", trigger: "blur" }],
+        place: [
+          { required: true, message: "请填写文章活动地点", trigger: "blur" }
+        ],
+        introducation: [
+          { required: true, message: "请输入简介", trigger: "blur" }
+        ]
       },
       /*------ 富文本配置项 ------*/
       editorloading: false,
@@ -235,20 +244,17 @@ export default {
       let flag = false;
       let obj = {};
       obj.picture = this.submitImg || "";
-
       obj.content = this.content;
-
       obj = Object.assign(this.editForm, obj);
       console.log(obj, "测试提交的数据");
       if (this.content) {
         flag = true;
       }
-      this._add(obj);
+
       // 是否需要判定文件列表为空 对了 这里要开验证
       this.$refs.editForm.validate(valid => {
-
         if (valid && flag) {
-          
+          this._revise(obj);
         } else {
           if (!flag) {
             this.$message.error("请填写文章内容");
@@ -258,33 +264,41 @@ export default {
         }
       });
     },
-    clearObj(obj){
-      for(var key in obj){
-        obj[key] = ''
+    clearObj(obj) {
+      for (var key in obj) {
+        obj[key] = "";
       }
     },
     /*------ Api ------*/
-    _add(params = {}) {
+    _revise(params = {}) {
       let data = params;
-      wxInterface.add(data).then(res => {
-        if(res.data.state){
+      wxInterface.revise(data).then(res => {
+        if (res.data.state) {
           this.$message.success(res.data.msg);
-          this.clearObj(this.editForm)
-          this.content = ''
-          this.preImg = ''
-          this.submitImg = ''
-          console
-        }else{
+        } else {
           this.$message.error(res.data.msg);
         }
-        
       });
     },
-    _search(params = {}){
-      
-    },
+    _search(params = {}) {
+      let data = params;
+      wxInterface.selectOne(data).then(res => {
+        if (res.data.state) {
+          this.editForm = Object.assign(this.editForm, res.data.row);
+          this.content = res.data.row.content;
+          this.submitImg = res.data.row.picture;
+          this.preImg = uploadInt.preimg + res.data.row.picture;
+        }
+
+        console.log(res, "联邦调查");
+      });
+    }
   },
   created() {
+    let obj = {};
+    obj.id = this.$route.params.id;
+    this._search(obj);
+
     console.log(this.$route.params.id);
   }
 };
@@ -331,8 +345,7 @@ export default {
   text-align: center;
 }
 </style>
-
-<style>
+<style lang="scss">
 .ql-tooltip.ql-editing {
   left: 0 !important;
 }
@@ -344,7 +357,7 @@ export default {
 .layerBox {
   display: flex;
   justify-content: center;
-  .mirronBox{
+  .mirronBox {
     margin-right: 100px;
   }
 }
@@ -374,18 +387,19 @@ export default {
   padding-top: 10px;
   .demoimgBox {
     width: 100%;
-    height: 140px;
+    height: 100px;
     background-color: #555555;
     margin-bottom: 5px;
     .normalImg {
       width: 100%;
-      height: 140px;
+      height: 100%;
+      object-fit: cover;
     }
   }
   .contentBox {
     margin-bottom: 5px;
     width: 100%;
-    word-wrap: break-word; 
+    word-wrap: break-word;
     word-break: normal;
     .title {
       font-size: 15px;
@@ -398,30 +412,30 @@ export default {
       color: #878997;
       text-align: justify;
       line-height: 18px;
-      min-height: 200px
+      min-height: 200px;
     }
-    .authorBox {
-      display: -webkit-box;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-box-orient: vertical;
-      -webkit-box-direction: normal;
-      -webkit-flex-direction: column;
-      flex-direction: column;
-      p {
-        font-size: 14rpx;
-        color: #000000;
-        line-height: 21px;
-        font-weight: bold;
-        margin-bottom: 4rpx;
-      }
+  }
+  .authorBox {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    p {
+      font-size: 14px;
+      color: #000000;
+      line-height: 21px;
+      font-weight: bold;
+      margin-bottom: 4px;
     }
   }
 }
 
 .imgBox {
   padding-left: 100px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   .preBox {
     width: 310px;
     height: 140px;
@@ -434,6 +448,7 @@ export default {
     .normalImg {
       width: 100%;
       height: 100%;
+      object-fit: cover;
     }
     .mask {
       position: absolute;
@@ -461,6 +476,9 @@ export default {
         font-family: MicrosoftYaHei;
       }
     }
+  }
+  .tips {
+    padding-top: 20px;
   }
 }
 </style>

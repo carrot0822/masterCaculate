@@ -9,7 +9,7 @@ const wxUrl = {
   add:`${url}authmodule/wx/wxNoticeInfo/add`, // 添加
   revise: `${url}authmodule/wx/wxNoticeInfo/edit`, // 修改
   remove:`${url}authmodule/wx/wxNoticeInfo/delete`, // 删除
-  open:`${url}authmodule/wxNoticeInfo/disable`, // 启用
+  open:`${url}authmodule/wx/wxNoticeInfo/disable`, // 启用
   close:`${url}authmodule/wx/wxNoticeInfo/undisable`, // 禁用
 }
 export const wxInt = wxUrl
@@ -35,7 +35,7 @@ function search(obj) {
 }
 
 function revise(data) {
-  return axios.post(wxUrl.revise, data).then((res) => {
+  return axios.put(wxUrl.revise, data).then((res) => {
     return Promise.resolve(res)
   })
 }

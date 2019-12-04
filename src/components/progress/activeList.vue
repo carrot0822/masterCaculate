@@ -1,5 +1,5 @@
 <template>
-  <div id="Notice">
+  <div class="wxed" id="Notice">
     <el-container>
       <div style="width:100%">
         <div class="sonTitle">
@@ -86,7 +86,10 @@
               <template slot-scope="scope">
                 <span class="operate editColor" @click="editBtn(scope.$index, scope.row)">编辑</span>
                 <span class="operate deleteColor" @click="deleteBtn(scope.$index, scope.row)">删除</span>
-                <span class="operate" @click="controlBtn(scope.row)">{{scope.row.disabled ==0?'启用':'禁用'}}</span>
+                <span
+                  class="operate"
+                  @click="controlBtn(scope.row)"
+                >{{scope.row.disabled ==0?'启用':'禁用'}}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -123,6 +126,16 @@
         </section>
       </div>
     </el-container>
+    <!-- 弹框 -->
+    <section class="waringDialog">
+      <el-dialog :title="warDialog.title" :visible.sync="warDialog.display" width="400px" center>
+        <div class="dialogBody">是否{{warDialog.title}}?</div>
+        <div style="margin-bottom: 20px">
+          <span class="dialogButton true mr_40" @click="warBtn">确 定</span>
+          <span class="dialogButton cancel" @click="warDialog.display=false">取 消</span>
+        </div>
+      </el-dialog>
+    </section>
   </div>
 </template>
 
@@ -134,6 +147,12 @@ import { wxInt } from "../../request/api/progress/api";
 export default {
   data() {
     return {
+      /*------ 弹框参数 ------*/
+      warDialog:{
+        title:"删除",
+        display:false
+      },
+      row:{},
       /*====== 2.0表单搜索区域 ======*/
       searchForm: {
         // 接受搜索表单的数据
@@ -141,21 +160,6 @@ export default {
         beginTime: "",
         endTime: ""
       },
-      /*初始化 */
-      options: [
-        {
-          value: "0",
-          label: "管理员&读者"
-        },
-        {
-          value: "1",
-          label: "管理员"
-        },
-        {
-          value: "2",
-          label: "读者"
-        }
-      ],
       /*日期禁用规则 */
       pickerOptions: {
         // 双重绑定限制规则
@@ -217,19 +221,24 @@ export default {
   methods: {
     // 新增按钮
     addBtn() {
-      this.$router.push({ path: "/publisher" });
+      this.$router.push({ path: "/wxCreator" });
     },
-    // 删除按钮
-    deleteBtn(index, row) {
-      let id = row.id;
+    warBtn(){
+      let id = this.row.id;
       let obj = [
         {
           id: id
         }
       ];
-
-      console.log(obj, "删除");
       this.deleteApi(obj);
+    },
+    // 删除按钮
+    deleteBtn(index, row) {
+      
+      this.row = row
+      this.warDialog.display = true
+      console.log(this.row,'参数是否传递')
+      
     },
     // 编辑按钮
     editBtn(index, row) {
@@ -243,19 +252,18 @@ export default {
       this.currentPage = 1;
     },
     // 禁用启用按钮
-    controlBtn(row){
-        let disabled = row.disabled
-        let obj = {}
-        obj.id = row.id
-        if(disabled){
-            this.closeApi(obj)
-            console.log('禁用')
-        }else{
-            this.openApi(obj)
-            console.log('启用')
-        }
-        console.log(row.disabled,'启用禁用')
-        
+    controlBtn(row) {
+      let disabled = row.disabled;
+      let obj = {};
+      obj.id = row.id;
+      if (disabled) {
+        this.closeApi(obj);
+        console.log("禁用");
+      } else {
+        this.openApi(obj);
+        console.log("启用");
+      }
+      console.log(row.disabled, "启用禁用");
     },
     // 跳转按钮
     jumpArticle(id) {
@@ -315,6 +323,7 @@ export default {
       }).then(res => {
         if (res.data.state == true) {
           this.$message.success("删除成功");
+          this.warDialog.display = false
           this.searchApi(this.searchTimeForm);
         } else {
           this.$message.error(res.data.msg);
@@ -329,15 +338,15 @@ export default {
       }).then(res => {
         if (res.data.state == true) {
           this.$message.success("启用成功");
-          
+
           this.searchApi(this.searchTimeForm);
         } else {
           this.$message.error(res.data.msg);
         }
       });
     },
-    closeApi(params = {}){
-        axios({
+    closeApi(params = {}) {
+      axios({
         url: wxInt.close,
         method: "put",
         data: params
@@ -388,7 +397,18 @@ export default {
   }
 };
 </script>
-
+<style lang="scss">
+.wxed {
+  .waringDialog {
+    .dialogBody {
+      text-align: center;
+      font-size: 16px;
+      margin-top: 15px;
+      margin-bottom: 30px;
+    }
+  }
+}
+</style>
 <style scoped>
 #Notice {
   background: #ffffff;
