@@ -693,6 +693,15 @@ export default new Router({
           },
           component: () => import('../components/progress/activeList')
         },
+        {
+          path:"/WxAdvertisement",
+          meta:{
+            title: '微信广告栏管理',
+            Mode:'5'
+          },
+          component: () => import('../components/progress/bannerM')
+        },
+
           /*废弃 */
 
           {

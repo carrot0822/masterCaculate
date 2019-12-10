@@ -44,7 +44,7 @@
               </template>
             </el-table-column>
             <el-table-column align="center" prop="fkReaderName" label="读者名字" :show-overflow-tooltip="true"></el-table-column>
-            <el-table-column align="center" prop="fkReaderName" label="读者卡号" :show-overflow-tooltip="true"></el-table-column>
+            <el-table-column align="center" prop="cardNum" label="读者卡号" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column align="center" prop="bookName" label="书籍名称" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column align="center" prop="author" label="编著者" :show-overflow-tooltip="true"></el-table-column>
             <el-table-column align="center" prop="isbn" label="ISBN" :show-overflow-tooltip="true">

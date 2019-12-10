@@ -54,7 +54,7 @@
       </section>
       <div class="forbid collectionDelete">
         <el-dialog title="删除" :visible.sync="centerDialogVisible" width="400px" center>
-          <div class="dialogBody">是否删除这条视频?</div>
+          <div class="dialogBody">是否删除这条广告?</div>
           <div style="margin-bottom: 30px">
             <span class="dialogButton true mr_40" @click="deleteDefineBut()">确 定</span>
             <span class="dialogButton cancel" @click="centerDialogVisible = false">取 消</span>
@@ -102,12 +102,13 @@ export default {
   methods: {
     /*------ 图片封面 ------*/
     imgDelete(value) {
-        this.addForm.url.value = ''
-        console.log(value,'删除的')
+        this.addForm.url = ''
+        
     },
     imgSuccess(value){
+      
         this.addForm.url = value.row
-        console.log(value,'上传的')
+        
     },
     /*--- ---*/
     cancelBtn() {

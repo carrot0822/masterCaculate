@@ -5,7 +5,7 @@
     <div class="uploadImg">
       <!-- 外层盒子 仿B乎 上传单张 -->
       <section class="control">
-        <div class="wrapper">
+        <div class="wrapper" :style="{height:height + 'px',width:width + 'px'}">
           <!-- 点击上传图片层 -->
           <div @click="imgBtn" class="iconBox">
             <div class="icon">
@@ -14,7 +14,7 @@
             </div>
           </div>
           <!-- 图片预览层 -->
-          <div v-if="preImg" class="preImgBox">
+          <div v-if="preImg" :style="{height:height + 'px',width:width + 'px'}" class="preImgBox">
             <img  :src="preImg" class="img" />
             <div class="iconMore">
               <button @click="imgBtn" class="iconBtn">
@@ -48,6 +48,16 @@
 <script>
 import { uploadInt } from "@request/api/base.js";
 export default {
+  props:{
+    height:{
+      type:Number,
+      default:180
+    },
+    width:{
+      type:Number,
+      default:590
+    }
+  },
   data() {
     return {
       /*------ 图片上传配置 ------*/
@@ -95,8 +105,8 @@ export default {
   .uploadImg {
     .control {
       .wrapper {
-        width: 590px;
-        height: 180px;
+        /* width: 590px;
+        height: 180px; */
         background-color: #f6f6f6;
         color: grey;
         position: relative;
@@ -120,8 +130,10 @@ export default {
         .preImgBox {
           position: absolute;
           z-index: 22;
+          /*
           width: 590px;
           height: 180px;
+          */
           top: 0;
           .img {
             width: 100%;

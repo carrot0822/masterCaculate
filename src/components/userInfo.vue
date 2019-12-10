@@ -9,11 +9,20 @@
 
     <section class="headBox">
       <div class="headIcon">
+				<!--
         <span class="avatar"  >
           <img v-if="imgDataUrl" class="avatarImg"  :src="imgDataUrl">
           <img class="avatarImg" :src="headSrc">
         </span>
         <span class="edit" @click="toggleShow">编辑</span>
+				-->
+				<div class="avatar"  >
+				  <img v-if="imgDataUrl" class="avatarImg"  :src="imgDataUrl">
+				  <img class="avatarImg" :src="headSrc">
+				</div>
+				<div class="fixButton">
+					<el-button @click="toggleShow" type="primary">修改</el-button>
+				</div>
       </div>
     </section>
     <!-- 用户信息 -->
@@ -635,5 +644,16 @@ export default {
 }
 .confrim:hover{
   color:#81b0e9
+}
+.fixedit{
+	font-size: 18px;
+	text-align: center;
+	line-height: 36px;
+	height: 36px;
+	background-color: #0096ff;
+	color: #FFFFFF;
+}
+.fixButton{
+	margin-top: 10px;
 }
 </style>

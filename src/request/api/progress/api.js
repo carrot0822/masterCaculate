@@ -2,7 +2,7 @@ import axios from 'axios'
 var url = window.glob.url;
 var imgurl = window.glob.imgurl;
 var fileUrl = window.glob.fileUrl;
-
+// 公告
 const wxUrl = {
   search: `${url}authmodule/wx/wxNoticeInfo/select`, // 查询全部
   selectOne:`${url}authmodule/wx/wxNoticeInfo/selectOne`, // 查询详情
