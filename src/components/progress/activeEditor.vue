@@ -265,7 +265,12 @@ export default {
     },
     clearObj(obj){
       for(var key in obj){
-        obj[key] = ''
+        if(key == 'disabled'){
+
+        }else{
+          obj[key] = ''
+        }
+        
       }
     },
     /*------ Api ------*/

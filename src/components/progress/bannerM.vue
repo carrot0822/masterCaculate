@@ -1,292 +1,280 @@
 <template>
-  <div id="video" class="video">
-    <section class="pagetitle">
-      <div class="titleName">微信-广告栏管理</div>
-    </section>
-    <div class="videoBox">
-      <section class="uploadBox">
-        <div class="nomal-Box">
-          <div class="upload-demo">
-            <div class="inputBox">
-              <el-form :model="addForm" :rules="rules" ref="addForm" label-width="70px">
-                <el-form-item label prop="title">
-                  <el-input placeholder="标题不得超过10个字" v-model="addForm.title"></el-input>
-                </el-form-item>
-                <el-form-item label="活动区域">
-                  <el-select v-model="sizeForm.region" placeholder="请选择活动区域">
-                    <el-option label="区域一" value="shanghai"></el-option>
-                    <el-option label="区域二" value="beijing"></el-option>
-                  </el-select>
-                </el-form-item>
-              </el-form>
-            </div>
-            <cover
-              :height="175"
-              :width="375"
-              ref="cover"
-              @imgSuccess="imgSuccess"
-              @imgDelete="imgDelete"
-            ></cover>
-            <div class="textCenter firstButton">
-              <el-button class="buttonBlue" type="primary" @click="addBtn">上传</el-button>
-            </div>
-          </div>
+  <div class="wxed" id="Notice">
+    <el-container>
+      <div style="width:100%">
+        <div class="sonTitle">
+          <span class="titleName">微信广告栏管理</span>
         </div>
-      </section>
-      <section class="ListBox">
-        <el-scrollbar class="recomandList">
-          <section>
-            <p class="data-title mb_20" style="color:#0096FF">广告栏列表</p>
-            <section class="tableBox">
-              <el-table
-                :header-cell-style="{background:'#0096FF', color:'#fff',height:'50px', fontSize:'18px',borderRight:'none'}"
-                empty-text="无数据"
-                style="width: 100%; text-align:center;"
-                :data="list"
-                :row-style="{height:'50px'}"
-              >
-                <el-table-column min-width="160px" align="center" prop="name" label="预览封面">
-                  <template slot-scope="scope">
-                    <div class="tab-imgBox">
-                      <img :src="scope.row.url" style="width:354px;height:108px;" />
-                    </div>
-                  </template>
-                </el-table-column>
-                <!-- <el-table-column align="center" prop="link" label="链接"></el-table-column> -->
-                <el-table-column align="center" label="操作">
-                  <template slot-scope="scope">
-                    <span class="red" @click="deleteBtn(scope.$index, scope.row)">删除</span>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </section>
-          </section>
-        </el-scrollbar>
-      </section>
-      <div class="forbid collectionDelete">
-        <el-dialog title="删除" :visible.sync="centerDialogVisible" width="400px" center>
-          <div class="dialogBody">是否删除这条广告?</div>
-          <div style="margin-bottom: 30px">
-            <span class="dialogButton true mr_40" @click="deleteDefineBut()">确 定</span>
-            <span class="dialogButton cancel" @click="centerDialogVisible = false">取 消</span>
+        <!-- 2.0表单填写 -->
+        <section class="searchBox">
+          <div class="left buttonBox">
+            <button @click="addBtn" class="add">
+              <i class="addIcon el-icon-plus"></i>添加
+            </button>
           </div>
-        </el-dialog>
+        </section>
+        <!-- 3.0表格数据 -->
+        <section class="tableBox" v-loading="tableLoading">
+          <el-table
+            :header-cell-style="{background:'#0096FF', color:'#fff',height:'60px', fontSize:'14px',borderRight:'none'}"
+            empty-text="无数据"
+            
+            style="width: 100%; text-align:center;"
+            :data="tableData"
+            :row-style="{height:'60px'}"
+          >
+            <el-table-column
+              align="center"
+              prop="index"
+              type="index"
+              width="100"
+              label="序号"
+              fixed="left"
+            >
+              <template slot-scope="scope">
+                <span>{{(currentPage - 1) * pageSize + scope.$index + 1}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column width="200px" align="center" prop="name" label="预览封面">
+              <template slot-scope="scope">
+                <div class="tab-imgBox">
+                  <img :src="scope.row.preImg" style="width:187px;height:87px;" />
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              :show-overflow-tooltip="true"
+              align="center"
+              prop="linkType"
+              label="链接类型"
+            >
+              <template slot-scope="scope">
+                <span
+                >{{scope.row.linkType =='0'?'内部链接':'外部链接'}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              :show-overflow-tooltip="true"
+              align="center"
+              prop="link"
+              label="链接地址"
+              width="500"
+            >
+            </el-table-column>
+            <!-- 自定义插槽 -->
+            <el-table-column width="300" align="center" prop="state" label="操作" fixed="right">
+              <template slot-scope="scope">
+                <span class="operate editColor" @click="editBtn(scope.$index, scope.row)">编辑</span>
+                <span class="operate deleteColor" @click="deleteBtn(scope.$index, scope.row)">删除</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </section>
       </div>
-    </div>
+    </el-container>
+    <!-- 弹框 -->
+    <section class="waringDialog">
+      <el-dialog :title="warDialog.title" :visible.sync="warDialog.display" width="400px" center>
+        <div class="dialogBody">是否{{warDialog.title}}?</div>
+        <div style="margin-bottom: 20px">
+          <span class="dialogButton true mr_40" @click="warBtn">确 定</span>
+          <span class="dialogButton cancel" @click="warDialog.display=false">取 消</span>
+        </div>
+      </el-dialog>
+    </section>
   </div>
 </template>
 
 <script>
-import { coverInt } from "@request/api/smallLib/coverSet";
-import cover from "../../common/upload/upCover";
+import axios from "axios";
+import { coverInt } from "@request/api/progress/banner";
+import { uploadInt } from "@request/api/base.js";
 export default {
   data() {
     return {
-      centerDialogVisible: false,
-      list: [], // 循环列表
-      jude: false, // 判定是否禁用
-      addForm: {
-        title: "",
-        url: "",
-        check:'',
-        inLink:'',
-        outLink:''
+      currentPage: 1,
+      pageSize: 10,
+      /*------ 弹框参数 ------*/
+      warDialog: {
+        title: "删除",
+        display: false
       },
-
-      rules: {
-        title: [{ required: true, message: "标题不得为空", trigger: "blur" }]
-      },
-      timeFile: null, // 文件转换
-      deleteObj: {}
+      row: {},
+      tableLoading: true,
+      tableData: []
     };
   },
-  computed: {
-    addTimeForm() {
-      let obj = {
-        url: this.addForm.url,
-        title: this.addForm.title
-      };
-      return obj;
+  methods: {
+    // 新增按钮
+    addBtn() {
+      this.$router.push({ path: "/addWxAdvertisement" });
+    },
+    warBtn() {
+      let id = this.row.id;
+      let obj = [
+        {
+          id: id
+        }
+      ];
+      this.deleteApi(obj);
+    },
+    // 删除按钮
+    deleteBtn(index, row) {
+      this.row = row;
+      this.warDialog.display = true;
+      console.log(this.row, "参数是否传递");
+    },
+    // 编辑按钮
+    editBtn(index, row) {
+      let id = row.id;
+      this.$router.push({ path: `/wxEditor/${id}` });
+      console.log("这个信息是", row);
+    },
+    /*------ Api ------*/
+    _search(value) {
+      this.tableLoading = true;
+      coverInt.search().then(res => {
+        if (res.data.state) {
+          for(let item of res.data.row){
+            item.preImg = uploadInt.preimg + item.url
+          }
+          this.tableData = res.data.row;
+        } else {
+        }
+        this.tableLoading = false;
+        console.log(res);
+      });
+    },
+    deleteApi(value) {
+      axios({
+        url: wxInt.remove,
+        method: "delete",
+        data: value
+      }).then(res => {
+        if (res.data.state == true) {
+          this.$message.success("删除成功");
+          this.warDialog.display = false;
+          this.searchApi();
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
     }
   },
   created() {
     this._search();
-  },
-  methods: {
-    /*------ 图片封面 ------*/
-    imgDelete(value) {
-      this.addForm.url = "";
-      console.log(value, "删除的");
-    },
-    imgSuccess(value) {
-      this.addForm.url = value.row;
-      console.log(value, "上传的");
-    },
-    /*--- ---*/
-    cancelBtn() {
-      this.$refs.addForm.resetFields();
-      this.fileList = [];
-    },
-    addBtn() {
-      this.$refs.addForm.validate(valid => {
-        if (valid) {
-          this._add();
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-      console.log("上传之前的数据", this.addTimeForm);
-    },
-    deleteBtn(index, row) {
-      this.centerDialogVisible = true;
-      this.deleteObj.id = row.id;
-    },
-    deleteDefineBut() {
-      this._delete();
-    },
-    /*--- API ---*/
-    _search() {
-      coverInt.search().then(res => {
-        if (res.data.state == true) {
-          if (res.data.row == null || res.data.length > 6) {
-            this.juge = true;
-          } else {
-            this.juge = false;
-          }
-          this.list = res.data.row;
-        } else {
-          this.$message.error(res.data.msg);
-        }
-        console.log("测试接口", res);
-      });
-    },
-    _add() {
-      coverInt.add(this.addTimeForm).then(res => {
-        if (res.data.state == true) {
-          this.clearObj(this.addForm);
-          this.fileList = [];
-          this.$refs.addForm.resetFields();
-          this.$refs.cover.preImg = "";
-          this._search();
-          this.$message.success(res.data.msg);
-        } else {
-          this.$message.error(res.data.msg);
-        }
-      });
-    },
-    _delete() {
-      let arr = [];
-      arr.push(this.deleteObj);
-      coverInt.remove(arr).then(res => {
-        if (res.data.state == true) {
-          this.$message.success(res.data.msg);
-          this.centerDialogVisible = false;
-          this._search();
-        } else {
-          this.$message.error(res.data.msg);
-        }
-      });
-    },
-    /*--- 过滤函数 ---*/
-    clearObj(obj) {
-      for (let key in obj) {
-        obj[key] = "";
-      }
-    }
-  },
-  components: {
-    cover
   }
 };
 </script>
-
+<style lang="scss">
+.wxed {
+  .waringDialog {
+    .dialogBody {
+      text-align: center;
+      font-size: 16px;
+      margin-top: 15px;
+      margin-bottom: 30px;
+    }
+  }
+}
+</style>
 <style scoped>
-.video {
-  background-color: #ffffff;
-  padding-left: 30px;
-  padding-bottom: 117px;
+#Notice {
+  background: #ffffff;
+  padding: 30px;
 }
-.pagetitle {
-  padding: 30px 0;
+#Notice .searchBox {
+  display: flex;
+  justify-content: space-between;
 }
-.titleName {
-  font-size: 16px;
-  color: #878787;
+.sonTitle .titleName {
   border-left: 4px solid #0096ff;
   padding-left: 10px;
+  font-size: 16px;
+  font-family: MicrosoftYaHei;
+  font-weight: 400;
+  color: rgba(135, 135, 135, 1);
+  display: inline-block;
+  margin-bottom: 33px;
 }
-.videoBox {
-  display: flex;
-  flex-direction: row;
-
-  box-sizing: border-box;
-}
-.uploadBox {
-  padding-top: 66px;
-  margin-right: 40px;
-  width: 40%;
-}
-.nomal-Box {
-  height: 453px;
-  border-right: 2px solid #e4e4e4;
-  position: relative;
-}
-.upload-demo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-/*--- 视频上传列表 ---*/
-.ListBox {
-  max-width: 820px;
-  width: 100%;
-  height: 610px;
-}
-.recomandList {
-  height: 100%;
-}
-.red {
-  cursor: pointer;
-  color: #ff3535;
-}
-.firstButton {
+.page_div {
+  text-align: center;
   margin-top: 30px;
 }
-.buttonBlue {
-  color: white;
-  cursor: pointer;
-  background-color: #0096ffad;
-  border-width: 0px;
-  border-style: none;
-  width: 100px;
+.confirm_bt {
+  display: inline-block;
+  text-align: center;
+  width: 70px;
+  padding: 8px 8px;
+}
 
-  outline: none;
+.button_s {
+  width: 90px;
+  font-size: 16px;
+  text-align: center;
 }
-.buttonBlue:hover {
-  color: white;
-  background-color: #0096ff73;
-}
-.buttonGray {
-  background-color: #dcdcdc;
-  color: #878787;
-  cursor: pointer;
-  margin-left: 10px;
-  border-style: none;
-  width: 100px;
 
-  outline: none;
+#loginrecord {
+  background: #ffffff;
 }
-.buttonGray:hover {
-  background-color: #d2d2d2;
+
+.time_p {
+  margin-left: 30px;
+}
+
+/*.el-select-dropdown__item {*/
+/*color: #878787;*/
+/*}*/
+.operate {
+  cursor: pointer;
+}
+.textLeft {
+  text-align: left;
+}
+/* .textLeft:hover{
+  color: #1e9eff;
+  cursor: pointer;
+} */
+#title {
+  display: inline-block;
+  padding-left: 10px;
+  border-left: 5px solid #1e9eff;
   color: #878787;
-  margin-left: 10px;
+}
+
+#loginrecord .el-table {
+  border: 1px solid #eaeaea;
+  /*border-width: 0 1px 1px 1px ;*/
+  border-bottom: 0;
+}
+.buttonBox .add {
+  background: rgba(255, 146, 49, 1);
+  border-radius: 10px;
+  margin-right: 30px;
+}
+.buttonBox .add .addIcon {
+  margin-right: 6px;
+}
+.buttonBox button {
+  padding-left: 18px;
+  padding-right: 18px;
+  height: 40px;
+  font-size: 16px;
+  color: #fff;
+  display: inline-block;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  background: #fff;
+  border: none;
+  -webkit-appearance: none;
+  text-align: center;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  outline: 0;
+  margin: 0;
+  -webkit-transition: 0.1s;
+  transition: 0.1s;
+  font-weight: 500;
 }
 </style>
-<style>
-#video .el-scrollbar__wrap {
-  overflow-x: hidden;
-}
-</style>
-

@@ -701,7 +701,20 @@ export default new Router({
           },
           component: () => import('../components/progress/bannerM')
         },
-
+        {
+          path:"/addWxAdvertisement",
+          meta:{
+            Mode:'5'
+          },
+          component: () => import('../components/progress/bannerAdd')
+        },
+        {
+          path:"/editWxAdvertisement",
+          meta:{
+            Mode:'5'
+          },
+          component: () => import('../components/progress/bannerM')
+        },
           /*废弃 */
 
           {

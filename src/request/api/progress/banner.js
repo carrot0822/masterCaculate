@@ -6,19 +6,27 @@ var imgurl = window.glob.imgurl;
 var fileUrl = window.glob.fileUrl;
 
 const cover = {
-  search: `${url}authmodule/small/smallAdvertisement/select`, // 搜索
-  add: `${url}authmodule/small/smallAdvertisement/add`, // 添加
-  remove: `${url}authmodule/small/smallAdvertisement/delete`, // 移除
-  adjust: `${url}authmodule/small/smallAdvertisement/updorder`
+  search: `${url}authmodule/wx/WxAdvertisement/select`, // 搜索
+  add: `${url}authmodule/wx/WxAdvertisement/add`, // 添加
+  remove: `${url}authmodule/wx/WxAdvertisement/delete`, // 移除
+  revise: `${url}authmodule/wx/WxAdvertisement/edit`, // 调整
+  article:`${url}authmodule/wx/WxAdvertisement/selectNotice`,// 下拉框查询
 }
 
 export const coverInt = {
   search,
   add,
   remove,
-  adjust
+  revise,
+  article
 }
-
+function article(obj) {
+  return axios.get(cover.article, {
+    params: obj
+  }).then((res) => {
+    return Promise.resolve(res)
+  })
+}
 function search(obj) {
   return axios.get(cover.search, {
     params: obj
@@ -34,8 +42,8 @@ function add(obj) {
   })
 }
 
-function adjust(data) {
-  return axios.put(cover.adjust, data).then((res) => {
+function revise(data) {
+  return axios.put(cover.revise, data).then((res) => {
     return Promise.resolve(res)
   })
 }
