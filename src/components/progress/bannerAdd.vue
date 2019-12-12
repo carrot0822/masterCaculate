@@ -123,10 +123,12 @@ export default {
         url: this.addForm.url,
         linkType: this.addForm.linkType
       };
-      if (this.linkType == "0") {
+      if (this.addForm.linkType == "0") {
         obj.link = this.addForm.inLink;
+        obj.title = this.addForm.instr
       } else {
         obj.link = this.addForm.outLink;
+        obj.title = ''
       }
       return obj;
     }
@@ -150,6 +152,7 @@ export default {
       this.addForm.instr = row.title;
       this.addForm.inLink = row.id;
       this.inLinkDlg.display = false;
+      console.log(this.addForm,'选择后')
     },
     backBtn() {
       this.$router.push({ path: "/WxAdvertisement" });
@@ -195,20 +198,11 @@ export default {
       });
     },
     _add() {
-      let type = this.linkType;
-      let obj = {
-        url: this.addForm.url,
-        linkType: this.addForm.linkType
-      };
-      if (this.linkType == "0") {
-        obj.link = this.addForm.inLink;
-      } else {
-        obj.link = this.addForm.outLink;
-      }
-      coverInt.add(obj).then(res => {
+
+      coverInt.add(this.addTimeForm).then(res => {
         if (res.data.state == true) {
           this.clearObj(this.addForm);
-          this.linkType = "0";
+          this.addForm.linkType = "0";
 
           this.$refs.addForm.resetFields();
           this.$refs.cover.preImg = "";

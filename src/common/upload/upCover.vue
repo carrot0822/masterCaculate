@@ -56,13 +56,17 @@ export default {
     width:{
       type:Number,
       default:590
+    },
+    img:{
+      type:String,
+      default:''
     }
   },
   data() {
     return {
       /*------ 图片上传配置 ------*/
       imgUrl: uploadInt.editorImg,
-      preImg: "", // 预览图片
+      preImg: this.img||"", // 预览图片
       nomalImg: "", // 默认图片
       submitImg: "" // 表单图片
     };
@@ -95,7 +99,7 @@ export default {
     }
   },
   created() {
-    console.log("???");
+    console.log(this.img,'继承下来也能用吧');
   }
 };
 </script>

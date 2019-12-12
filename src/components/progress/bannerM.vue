@@ -6,7 +6,7 @@
           <span class="titleName">微信广告栏管理</span>
         </div>
         <!-- 2.0表单填写 -->
-        <section class="searchBox">
+        <section class="mb_30 searchBox">
           <div class="left buttonBox">
             <button @click="addBtn" class="add">
               <i class="addIcon el-icon-plus"></i>添加
@@ -116,7 +116,7 @@ export default {
           id: id
         }
       ];
-      this.deleteApi(obj);
+      this._delete(obj);
     },
     // 删除按钮
     deleteBtn(index, row) {
@@ -127,7 +127,7 @@ export default {
     // 编辑按钮
     editBtn(index, row) {
       let id = row.id;
-      this.$router.push({ path: `/wxEditor/${id}` });
+      this.$router.push({ path: `/editWxAdvertisement/${id}` });
       console.log("这个信息是", row);
     },
     /*------ Api ------*/
@@ -145,20 +145,17 @@ export default {
         console.log(res);
       });
     },
-    deleteApi(value) {
-      axios({
-        url: wxInt.remove,
-        method: "delete",
-        data: value
-      }).then(res => {
-        if (res.data.state == true) {
+    _delete(value) {
+      let data = value
+      coverInt.remove(data).then((res)=>{
+        if(res.data.state){
           this.$message.success("删除成功");
-          this.warDialog.display = false;
-          this.searchApi();
-        } else {
+          this.warDialog.display = false
+          this._search();
+        }else{
           this.$message.error(res.data.msg);
         }
-      });
+      })
     }
   },
   created() {

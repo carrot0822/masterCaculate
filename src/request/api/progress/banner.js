@@ -7,6 +7,7 @@ var fileUrl = window.glob.fileUrl;
 
 const cover = {
   search: `${url}authmodule/wx/WxAdvertisement/select`, // 搜索
+  selectOne:`${url}authmodule/wx/WxAdvertisement//selectOne`, // 查询单个
   add: `${url}authmodule/wx/WxAdvertisement/add`, // 添加
   remove: `${url}authmodule/wx/WxAdvertisement/delete`, // 移除
   revise: `${url}authmodule/wx/WxAdvertisement/edit`, // 调整
@@ -18,7 +19,8 @@ export const coverInt = {
   add,
   remove,
   revise,
-  article
+  article,
+  selectOne
 }
 function article(obj) {
   return axios.get(cover.article, {
@@ -27,6 +29,15 @@ function article(obj) {
     return Promise.resolve(res)
   })
 }
+
+function selectOne(obj) {
+  return axios.get(cover.selectOne, {
+    params: obj
+  }).then((res) => {
+    return Promise.resolve(res)
+  })
+}
+
 function search(obj) {
   return axios.get(cover.search, {
     params: obj

@@ -709,6 +709,14 @@ export default new Router({
           component: () => import('../components/progress/bannerAdd')
         },
         {
+          path:"/editWxAdvertisement/:id",
+          meta:{
+            Mode:'5',
+            
+          },
+          component: () => import('../components/progress/bannerEdit')
+        },
+        {
           path:"/editWxAdvertisement",
           meta:{
             Mode:'5'
