@@ -44,7 +44,7 @@
               @imgDelete="imgDelete"
             ></cover>
             <div class="textCenter firstButton">
-              <el-button class="buttonBlue" type="primary" @click="addBtn">添加</el-button>
+              <el-button class="buttonBlue" type="primary" @click="addBtn">修改</el-button>
             </div>
           </div>
         </div>
@@ -103,7 +103,8 @@ export default {
         url: "",
         inLink: "", // 内部链接
         outLink: "", // 外部链接
-        instr: ""
+        instr: "",
+				id:"",
       },
       loading:false,
       rules: {
@@ -123,18 +124,22 @@ export default {
       let type = this.linkType;
       let obj = {
         url: this.addForm.url,
-        linkType: this.addForm.linkType
+        linkType: this.addForm.linkType,
+				id:this.addForm.id
       };
       if (this.addForm.linkType == "0") {
         obj.link = this.addForm.inLink;
+				obj.title = this.addForm.instr
       } else {
         obj.link = this.addForm.outLink;
+				obj.title = ''
       }
       return obj;
     }
   },
   created() {
       let obj = this.$route.params
+			this.addForm.id = obj.id
     this._search();
 
     this._selectOne(obj)
@@ -213,7 +218,7 @@ export default {
               this.addForm.outLink = data.link
           }
           this.addForm.linkType = data.linkType + ''
-          this.url = data.url
+          this.addForm.url = data.url
           this.preImg = uploadInt.preimg + data.url
           this.loading = true
           console.log(this.addForm,'改变过后')
@@ -226,7 +231,7 @@ export default {
 
       coverInt.revise(this.addTimeForm).then(res => {
         if (res.data.state == true) {
-          this.$message.success(res.data.msg);
+          this.$message.success('修改成功');
         } else {
           this.$message.error(res.data.msg);
         }

@@ -122,6 +122,7 @@ export default {
       let obj = {
         url: this.addForm.url,
         linkType: this.addForm.linkType
+				
       };
       if (this.addForm.linkType == "0") {
         obj.link = this.addForm.inLink;

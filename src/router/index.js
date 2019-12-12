@@ -704,7 +704,8 @@ export default new Router({
         {
           path:"/addWxAdvertisement",
           meta:{
-            Mode:'5'
+            Mode:'5',
+						title:"微信广告添加"
           },
           component: () => import('../components/progress/bannerAdd')
         },
@@ -719,7 +720,8 @@ export default new Router({
         {
           path:"/editWxAdvertisement",
           meta:{
-            Mode:'5'
+            Mode:'5',
+						title:'微信广告编辑'
           },
           component: () => import('../components/progress/bannerM')
         },

@@ -60,6 +60,10 @@
               label="链接地址"
               width="500"
             >
+							<template slot-scope="scope">
+							  
+							  <p class="link">{{scope.row.linkType == '0'?scope.row.title:scope.row.link}}</p>
+							</template>
             </el-table-column>
             <!-- 自定义插槽 -->
             <el-table-column width="300" align="center" prop="state" label="操作" fixed="right">
