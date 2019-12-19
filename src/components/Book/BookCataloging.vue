@@ -347,6 +347,7 @@
 
 <script>
   import axios from "axios";
+	import {filterStr,objClear} from "@/base/js/utlis.js";
   import { catalog,deriveInt,uploadInt } from "@request/api/base.js";
   import moment from "moment";
   export default {
@@ -500,10 +501,13 @@
       },
       addFormData(){
         let newData=this.addForm
+				newData.introduction = filterStr(newData.introduction,256)
+				console.log(newData,filterStr(newData.introduction),'测试 未过滤？')
         return newData
       },
       editFormData(){
         let newData=this.addForm
+				newData.introduction = filterStr(newData.introduction,256)
         return newData
       }
     },
@@ -663,6 +667,11 @@
       },
       //新增按钮
       rechargeBtn(){
+        objClear(this.addForm)
+        this.addForm.literatureType = '图书'
+        this.addForm.layout = '平装'
+        this.addForm.openBook = '32开'
+        this.addForm.languageCode = '汉语'
         this.type=[1,2]
         this.i=1
         this.dialogFormVisible=true

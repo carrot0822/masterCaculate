@@ -361,10 +361,10 @@ export default {
     },
     paginationApi(value) {
       //获取登录记录
-      console.log(value);
+      console.log(value,11111);
       this.tableLoading = true;
       axios
-        .get(wxInt.select, {
+        .get(wxInt.search, {
           params: value
         })
         .then(res => {
@@ -372,6 +372,7 @@ export default {
           if (res.data.state === true) {
             this.tableData = res.data.row; //获取返回数据
             this.total = res.data.total; //总条目数
+            console.log('翻页')
             this.paginationForm = Object.assign({}, value); // 保存上次的查询结果
             this.tableLoading = false;
             console.log("列表", this.tableData);

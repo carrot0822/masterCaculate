@@ -173,8 +173,8 @@ export default {
       },
       /*------ 图片上传配置 ------*/
       imgUrl: uploadInt.editorImg,
-      preImg: "https://game.gtimg.cn/images/c2/web201801/pc/slider1.jpg", // 预览图片
-      nomalImg: "", // 默认图片
+      preImg: "", // 预览图片
+      nomalImg: require('../../base/img/normal/activeImg.jpg'), // 默认图片
       submitImg: "" // 表单图片
     };
   },
@@ -281,7 +281,7 @@ export default {
           this.$message.success(res.data.msg);
           this.clearObj(this.editForm)
           this.content = ''
-          this.preImg = ''
+          this.preImg = this.nomalImg
           this.submitImg = ''
           console
         }else{
@@ -292,6 +292,7 @@ export default {
     }
   },
   created() {
+    this.preImg = this.nomalImg
     console.log(this.$route.params.id);
   }
 };

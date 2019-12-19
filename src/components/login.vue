@@ -163,6 +163,7 @@ export default {
                 $("#yzm").show();
                 $("#imgYzm").attr("src", login.yzm + Math.random());
               }
+							this.$message.error(res.data.msg)
               this.buttonLoading = false;
             }
           });

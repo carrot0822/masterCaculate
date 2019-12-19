@@ -506,6 +506,7 @@
 
 <script>
 import axios from "axios";
+import {filterStr,objClear} from "@/base/js/utlis.js";
 import { logUrl } from "@request/api/magazine/magazine.js";
 import { catalog, deriveInt, uploadInt } from "@request/api/base.js";
 import moment from "moment";
@@ -671,11 +672,13 @@ export default {
     addFormData() {
       this.addForm.language = this.addForm.languageCode;
       let newData = this.addForm;
+      newData.introduction = filterStr(newData.introduction,256)
       return newData;
     },
     editFormData() {
       this.addForm.language = this.addForm.languageCode;
       let newData = this.addForm;
+      newData.introduction = filterStr(newData.introduction,256)
       return newData;
     }
   },
@@ -841,10 +844,12 @@ export default {
     },
     //新增按钮
     rechargeBtn() {
+      objClear(this.addForm);
       this.type = [1, 2];
       this.i = 1;
       this.addForm.openBook = "32";
       this.addForm.periodicalTypeId = "1";
+      this.addForm.layout = "平装"
       this.dialogFormVisible = true;
       this.languageFun();
     },
@@ -956,7 +961,7 @@ export default {
               this.messageWidth = "750px";
               this.centerDialogVisible = true;
             } else {
-              this.$message.error(row.data.msg);
+              this.$message.error(res.data.msg);
             }
           },
           err => {

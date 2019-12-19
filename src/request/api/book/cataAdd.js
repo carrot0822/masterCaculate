@@ -18,7 +18,7 @@ const reserveUrl = {
   getNumber: `${url}data/cata/book/bookcollection/currency/getCode`, // 获馆内码
   getSearchNum:`${url}data/cata/book/bookcollection/currency/getBopSearchNumber`, // 通用接口 获取索取号*2
 	
-  getCity:`${url}data/cata/book/bookcollection/currency/getLibNameAndsLib`, // 查询所有藏馆
+  getCity:`${url}data/cata/book/bookcollection/currency/getLibNameAndsLib2`, // 查询所有藏馆
   closeIndex:`${url}data/cata/book/bookcollection/stopUs`, // 停用
   openIndex:`${url}data/cata/book/bookcollection/startUs`, // 启用
   translate:`${url}data/cata/book/bookcollection/letLeave`, // 调馆

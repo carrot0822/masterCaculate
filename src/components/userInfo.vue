@@ -340,6 +340,7 @@ export default {
     pwdBtn(){
       this.oldInput = ''
       this.newInput = ''
+			this.okInput = ''
       this.pwdDialog = true
     },
     //修改密码确定按钮

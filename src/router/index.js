@@ -725,6 +725,14 @@ export default new Router({
           },
           component: () => import('../components/progress/bannerM')
         },
+        {
+          path:"/wxAboutUS",
+          meta:{
+            Mode:'5',
+						title:'微信关于我们'
+          },
+          component: () => import('../components/progress/aboutUs')
+        },
           /*废弃 */
 
           {
