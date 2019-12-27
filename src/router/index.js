@@ -97,9 +97,17 @@ export default new Router({
           path:'/smallAdvertisement',
           meta:{
             title:'广告栏管理',
-            
+            Mode:'5'
           },
           component:()=>import('../components/SmallLib/bannerSet.vue')
+        },
+        {
+          path:'/monitor',
+          meta:{
+            title:'摄像头管理',
+            Mode:'5'
+          },
+          component:()=>import('../components/SmallLib/monitor.vue')
         },
         // 书籍管理
         {
