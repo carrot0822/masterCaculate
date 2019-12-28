@@ -4,7 +4,9 @@
       <div class="titleName">摄像头管理</div>
     </section>
     <div class="layoutBox">
-      <section class="leftBox"></section>
+      <section class="leftBox">
+        <video-player ref="video" :options="playerOptions"></video-player>
+      </section>
       <section class="rightBox">
         <el-scrollbar class="listScroll">
           <section class="listBox">
@@ -88,17 +90,27 @@
 </template>
 
 <script>
+import videoPlayer from '../../common/video/player';
 import { monitorlInt } from "../../request/api/smallLib/monitor";
 export default {
   data() {
     return {
       centerDialogVisible: false,
-      list: [], // 循环列表
-      jude: false, // 判定是否禁用
-      addForm: {
-        title: "",
-        url: ""
+      playerOptions: {
+        height: "360",
+        sources: [
+          {
+            type: "rtmp/mp4",
+            src: ""
+          }
+        ],
+        techOrder: ["flash"],
+        autoplay: false,
+        controls: true,
       },
+      videoSrc:'rtmp://192.168.2.29:1935/live/2',
+      player:null,
+      list: [], // 循环列表
       dialogType: 0, // 弹框类型
       dialogFlag: false, // 是否被创建了DOM节点 不然ref是抓不到的
       aeDialog: {
@@ -117,19 +129,16 @@ export default {
       deleteObj: {}
     };
   },
+  components:{
+    videoPlayer
+  },
   computed: {
-    addTimeForm() {
-      let obj = {
-        url: this.addForm.url,
-        title: this.addForm.title
-      };
-      return obj;
-    }
   },
   created() {
     this._search();
   },
   methods: {
+
     addBtn() {
       this.clearObj(this.aeDialog.aeForm);
       console.log(this.aeDialog.aeForm);
@@ -149,6 +158,8 @@ export default {
       this.dialogFlag = true;
     },
     checkBtn(index, row) {
+      this.$refs.video.checkPlayer(row.url)
+      console.log(row.url)
       // 更改直播地址
     },
     deleteBtn(index, row) {
@@ -219,7 +230,7 @@ export default {
       });
     },
     _revise() {
-      monitorlInt.revise(this.addTimeForm).then(res => {
+      monitorlInt.revise(this.aeDialog.aeForm).then(res => {
         if (res.data.state == true) {
           this._search();
           this.$message.success(res.data.msg);
@@ -242,6 +253,7 @@ export default {
         }
       });
     },
+
     /*--- 过滤函数 ---*/
     clearObj(obj) {
       for (let key in obj) {

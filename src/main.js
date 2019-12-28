@@ -17,6 +17,7 @@ import "./zTree_v3/js/jquery.ztree.excheck.min.js"
 import './zTree_v3/js/jquery.ztree.exedit.min'
 import './zTree_v3/js/jquery.ztree.exhide.min'
 //css
+import '../src/base/css/video-js.min.css'
 import '../src/base/iconfont/iconfont.css'
 import 'element-ui/lib/theme-chalk/index.css'
 import {

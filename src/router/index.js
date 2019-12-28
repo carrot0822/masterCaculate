@@ -59,7 +59,7 @@ export default new Router({
     },
     {
       path: '/test',
-      component: () => import('../common/markText/markText.vue')
+      component: () => import('../common/video/player.vue')
     },
 
     {
