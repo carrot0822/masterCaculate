@@ -10,7 +10,7 @@
             <img class="logo" :src="logoNomalUrl" />
             <span @click="skip" class="Logotext">{{nomalName}}</span>
           </div>
-           <div v-if="logo" id="logoBox" class="logoBox">
+          <div v-if="logo" id="logoBox" class="logoBox">
             <img class="logo" :src="logoUrl" />
             <span @click="skip" class="Logotext">{{systemName}}</span>
           </div>
@@ -89,13 +89,20 @@
           </el-menu>
         </section>
         <el-main>
-          <div class="mb_10 tagsBox">
+           <div class="mb_10 tagsBox">
             <Tags></Tags>
-          </div>
+          </div> 
           <!-- <div class="space"></div> -->
-          <transition name="fade-transform" mode="out-in">
-            <router-view></router-view>
-          </transition>
+          <div class="scrollBox">
+            <el-scrollbar style="height:100%;">
+              <transition name="fade-transform" mode="out-in">
+                <router-view></router-view>
+              </transition>
+            </el-scrollbar>
+
+
+          </div>
+
           <!-- <transition name="fade-transform" mode="out-in">
               <keep-alive>
                 <router-view v-if="$route.meta.isAlive"></router-view>
@@ -111,7 +118,7 @@
 </template>
 
 <script>
-import { uploadInt, PersonalCentre,  } from "@request/api/base.js";
+import { uploadInt, PersonalCentre } from "@request/api/base.js";
 import axios from "axios";
 import NavMenu from "../common/test/NavMenu";
 import Tags from "../common/test/tags";
@@ -160,8 +167,7 @@ export default {
     },
     cardBtn() {
       this.$router.push("/logoff");
-    },
-   
+    }
   },
   computed: {
     onRoutes() {
@@ -176,12 +182,10 @@ export default {
     },
     ...mapGetters(["logo"]),
     logoUrl() {
-      return this.logo.manageSystemLogoAddress
-        
+      return this.logo.manageSystemLogoAddress;
     },
     systemName() {
-      return this.logo.manageSystemName
-        
+      return this.logo.manageSystemName;
     }
   },
   components: {
@@ -232,6 +236,13 @@ html,
 body,
 #app {
   height: 100%;
+}
+#index {
+  height: 100vh;
+  overflow: hidden;
+}
+.scrollBox {
+  height: calc(100vh - 180px);
 }
 .index {
   height: 100%;
@@ -489,5 +500,8 @@ body,
 <style>
 #navBar .el-menu-item {
   margin: 0 10px;
+}
+.el-scrollbar__wrap{
+  overflow-x: hidden;
 }
 </style>
