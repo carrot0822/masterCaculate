@@ -1,23 +1,36 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1.0">
-		<title>图书管理系统</title>
-		<script src="./static/config.js"></script>
-	</head>
-	<body>
-		<div id="app"></div>
-		<!-- built files will be auto injected -->
-	</body>
-	<script>
-		var timing = window.performance.timing
-		console.log(timing.domLoading,'浏览器开始解析 HTML 文档第一批收到的字节')
-		console.log(timing.domInteractive,'浏览器完成解析并且所有 HTML 和 DOM 构建完毕')
-		console.log(timing.domContentLoadedEventStart,'DOM 解析完成后，网页内资源加载开始的时间')
-		console.log(timing.domContentLoadedEventEnd,'DOM 解析完成后，网页内资源加载完成的时间（如 JS 脚本加载执行完毕')
-		 console.log(timing.domComplete,'网页上所有资源（图片等）下载完成,且准备就绪的时间')
-		 //
-	</script>
-	<script src="static/test.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>图书管理系统</title>
+
+  <script src="./static/config.js"></script>
+</head>
+
+<body>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+<script type="text/javascript" src="static/video/video.min.js"></script>
+<script type="text/javascript" src="static/video/lang/zh-CN.js"></script>
+<script type="text/javascript" src="static/video/videojs-flash.min.js"></script>
+<script type="text/javascript">
+  videojs.options.flash.swf = "static/video/video-js.swf";
+  window.videojs = videojs
+  console.log(videojs)
+
+</script>
+<script>
+  var timing = window.performance.timing
+  console.log(timing.domLoading, '浏览器开始解析 HTML 文档第一批收到的字节')
+  console.log(timing.domInteractive, '浏览器完成解析并且所有 HTML 和 DOM 构建完毕')
+  console.log(timing.domContentLoadedEventStart, 'DOM 解析完成后，网页内资源加载开始的时间')
+  console.log(timing.domContentLoadedEventEnd, 'DOM 解析完成后，网页内资源加载完成的时间（如 JS 脚本加载执行完毕')
+  console.log(timing.domComplete, '网页上所有资源（图片等）下载完成,且准备就绪的时间')
+  //
+</script>
+<script src="static/test.js"></script>
+
 </html>
