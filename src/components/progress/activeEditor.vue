@@ -19,7 +19,7 @@
               </div>
               <img v-if="preImg" class="normalImg" :src="preImg" />
             </div>
-            <div class="tips">温馨提示：图片大小为310*140为最佳尺寸</div>
+            <!-- <div class="tips">温馨提示：图片大小为310*140为最佳尺寸</div> -->
           </div>
           <div class="formInput">
             <div class="inputBox">

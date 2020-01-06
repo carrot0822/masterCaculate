@@ -674,7 +674,8 @@ export default new Router({
         {
           path:"/wxEditor/:id",
           meta:{
-            title: '资讯编辑'
+            title: '资讯编辑',
+            
           },
           component: () => import('../components/progress/editor.vue')
         },
@@ -713,7 +714,7 @@ export default new Router({
           path:"/editWxAdvertisement/:id",
           meta:{
             Mode:'5',
-            
+            title:''
           },
           component: () => import('../components/progress/bannerEdit')
         },

@@ -1,19 +1,17 @@
 <template>
   <div class="tagsBox">
     <transition>
-    <div class="routerBox" v-if="showTags">
-      <el-tag
-        v-for="(item,index) in tagsList"
-        :key="index"
-        :class="{'labelActive':isActive(item.path)}"
-        class="tags"
-        closable
-        @click="routerLink(item.path)"
-        @close="closeTags(index)"
-      >
-        {{item.title}}
-      </el-tag>
-      <!-- <li
+      <div class="routerBox" v-if="showTags">
+        <el-tag
+          v-for="(item,index) in tagsList"
+          :key="index"
+          :class="{'labelActive':isActive(item.path)}"
+          class="tags"
+          closable
+          @click="routerLink(item.path)"
+          @close="closeTags(index)"
+        >{{item.title}}</el-tag>
+        <!-- <li
         class="routerButton circularButton"
         v-for="(item,index) in tagsList"
         :class="{'labelActive':isActive(item.path)}"
@@ -23,20 +21,20 @@
         <span class="tags-li-icon" @click="closeTags(index)">
           <i class="el-icon-close point"></i>
         </span>
-      </li> -->
-      <div class="tags-close">
-        <el-dropdown @command="handleTags">
-          <el-button size="mini" type="primary">
-            关闭选项
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-          <el-dropdown-menu size="small" slot="dropdown">
-            <el-dropdown-item command="other">关闭其他</el-dropdown-item>
-            <el-dropdown-item command="all">关闭所有</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        </li>-->
+        <div class="tags-close">
+          <el-dropdown @command="handleTags">
+            <el-button size="mini" type="primary">
+              关闭选项
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <el-dropdown-menu size="small" slot="dropdown">
+              <el-dropdown-item command="other">关闭其他</el-dropdown-item>
+              <el-dropdown-item command="all">关闭所有</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
       </div>
-    </div>
     </transition>
   </div>
 </template>
@@ -60,13 +58,15 @@ export default {
       if (!isExist) {
         if (this.tagsList.length >= 8) {
           this.tagsList.shift();
-          console.log('您执行了吗')
+          console.log("您执行了吗");
         }
-        this.tagsList.push({
-          title: route.meta.title,
-          path: route.fullPath,
-          name: route.matched[1].components.default.name
-        });
+        if (route.meta.title) {
+          this.tagsList.push({
+            title: route.meta.title,
+            path: route.fullPath,
+            name: route.matched[1].components.default.name
+          });
+        }
       }
 
       console.log("此时的循环列表", this.tagsList);
@@ -91,9 +91,9 @@ export default {
       }
     },
     // 路由跳转
-    routerLink(route){
-      this.$router.push({path:`${route}`})
-      console.log(route)
+    routerLink(route) {
+      this.$router.push({ path: `${route}` });
+      console.log(route);
     },
     // 标签控制按钮
     handleTags(command) {
@@ -101,14 +101,14 @@ export default {
     },
     // 关闭其他
     closeOther() {
-      console.log('关闭前的',this.tagsList)
-      console.log(this.$route.fullPath)
+      console.log("关闭前的", this.tagsList);
+      console.log(this.$route.fullPath);
       const curItem = this.tagsList.filter(item => {
         return item.path === this.$route.fullPath;
       });
-      console.log('匹配到的',curItem)
+      console.log("匹配到的", curItem);
       this.tagsList = curItem;
-      console.log('关闭后的',this.tagsList)
+      console.log("关闭后的", this.tagsList);
     },
     // 关闭全部
     closeAll() {
@@ -138,7 +138,7 @@ export default {
 </script>
 
 <style scoped>
-.tags{
+.tags {
   margin-right: 5px;
   cursor: pointer;
 }
@@ -184,10 +184,9 @@ export default {
 .labelActive .tags-li-title {
   color: #fff;
 }
-
 </style>
 <style>
-.labelActive.el-tag .el-icon-close{
+.labelActive.el-tag .el-icon-close {
   color: #fff;
 }
 </style>
