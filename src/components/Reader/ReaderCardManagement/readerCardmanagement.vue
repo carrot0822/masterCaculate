@@ -525,7 +525,11 @@
 							console.log(res);
 							// 获取数据进行过滤
 							for (let item of res.data.row) {
-								item.filterState = item.state == 1 ? "失信" : (item.cardState == 1 ? "挂失" : (item.overdue == 1 ? "逾期" : "正常"))
+								//item.filterState = item.state == 1 ? "失信" : (item.cardState == 1 ? "挂失" : (item.overdue == 1 ? "逾期" : "正常"))
+								console.log(item,'你这个')
+								
+
+								item.filterState = item.cardState== 1?"失信":(item.overdue == 1?"逾期":(item.state==1?"挂失":"正常"))
 							}
 							this.tableData = res.data.row;
 							this.total = res.data.total; //总条目数
@@ -551,7 +555,7 @@
 							console.log(res);
 							// 获取数据进行过滤
 							for (let item of res.data.row) {
-								item.filterState = item.state == 1 ? "失信" : (item.cardState == 1 ? "挂失" : (item.overdue == 1 ? "逾期" : "正常"))
+								item.filterState = item.cardState== 1?"失信":(item.overdue == 1?"逾期":(item.state==1?"挂失":"正常"))
 							}
 							this.tableData = res.data.row;
 							this.total = res.data.total; //总条目数

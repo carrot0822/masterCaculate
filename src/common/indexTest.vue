@@ -501,7 +501,7 @@ body,
 #navBar .el-menu-item {
   margin: 0 10px;
 }
-.el-scrollbar__wrap{
-  overflow-x: hidden;
+#index .el-scrollbar__wrap{
+  overflow-x: hidden!important;
 }
 </style>

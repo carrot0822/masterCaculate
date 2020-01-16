@@ -666,7 +666,7 @@ export default {
             value: 3
           },
           {
-            label: "isbn",
+            label: "ISBN",
             value: 4
           },
           /* {

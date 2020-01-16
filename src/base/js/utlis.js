@@ -1,4 +1,8 @@
   export function filterStr(str, number) {
+    if(!str){
+      let str = ''
+      return str
+    }
     let len = str.length
     let result = str
     let limit = number - 4
