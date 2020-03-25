@@ -2,11 +2,11 @@
   <div id="damageCount">
     <div class="commonMode spect">
       <div class="sonTitle">
-        <span class="titleName">损坏清点详情</span>
+        <span class="titleName">书籍清点详情</span>
       </div>
       <div class="back">
         <i class="el-icon-back"></i>
-        <router-link class="textback" tag="span" to="/damageCount">返回损坏清点</router-link>
+        <router-link class="textback" tag="span" to="/damageCount">返回书籍清点</router-link>
       </div>
     </div>
     <!-- 2.0表单填写 -->

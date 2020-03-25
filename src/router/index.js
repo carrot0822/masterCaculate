@@ -145,7 +145,7 @@ export default new Router({
         {
           path: '/checkDetails/:id',
           meta: {
-            title: '书籍损坏清点详情',
+            title: '书籍清点详情',
             Mode: '1'
           },
           component: resolve => require(['../components/Book/DamageIinventoryDetails.vue'], resolve)

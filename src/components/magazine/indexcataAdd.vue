@@ -1430,21 +1430,7 @@ export default {
     },
     toLendState(num) {
       let str = "";
-
-      switch (num) {
-        case 0:
-          str = "不在架";
-          break;
-        case 1:
-          str = "在架";
-          break;
-        case 2:
-          str = "借出";
-        case 3:
-          str = "剔除";
-        case 4:
-          str = "报损";
-      }
+      toLendState
       return str;
     },
     toOtherState(num) {

@@ -2,11 +2,11 @@
   <div id="damageCount">
     <div class="commonMode spect">
       <div class="sonTitle">
-        <span class="titleName">期刊-损坏清点详情</span>
+        <span class="titleName">期刊清点详情</span>
       </div>
       <div class="back">
         <i class="el-icon-back"></i>
-        <router-link class="textback" tag="span" to="/indexDamageCount">返回期刊-损坏清点</router-link>
+        <router-link class="textback" tag="span" to="/indexDamageCount">返回期刊清点</router-link>
       </div>
     </div>
     <!-- 2.0表单填写 -->
