@@ -73,8 +73,6 @@ export default new Router({
       },
       component: resolve => require(['../components/userInfo.vue'], resolve)
     },
-
-
     {
       path: '/indexTest',
       meta: {
@@ -86,28 +84,28 @@ export default new Router({
         /*------ 资料管理 ------*/
         // 微型图书馆
         {
-          path:'/smallLib',
-          meta:{
-            title:'漂流柜典藏',
-            Mode:'1'
+          path: '/smallLib',
+          meta: {
+            title: '漂流柜典藏',
+            Mode: '1'
           },
-          component:()=> import('../components/SmallLib/sLibCata.vue')
+          component: () => import('../components/SmallLib/sLibCata.vue')
         },
         {
-          path:'/smallAdvertisement',
-          meta:{
-            title:'广告栏管理',
-            Mode:'5'
+          path: '/smallAdvertisement',
+          meta: {
+            title: '广告栏管理',
+            Mode: '5'
           },
-          component:()=>import('../components/SmallLib/bannerSet.vue')
+          component: () => import('../components/SmallLib/bannerSet.vue')
         },
         {
-          path:'/monitor',
-          meta:{
-            title:'监控管理',
-            Mode:'5'
+          path: '/monitor',
+          meta: {
+            title: '监控管理',
+            Mode: '5'
           },
-          component:()=>import('../components/SmallLib/monitor.vue')
+          component: () => import('../components/SmallLib/monitor.vue')
         },
         // 书籍管理
         {
@@ -156,7 +154,8 @@ export default new Router({
             title: '图书位置信息',
             Mode: '1'
           },
-          component: resolve => require(['../components/Reader/libraryManage/BookLocationInformation.vue'], resolve)
+          component: resolve => require(['../components/Reader/libraryManage/BookLocationInformation.vue'],
+            resolve)
         },
         // 期刊管理
         {
@@ -387,7 +386,7 @@ export default new Router({
           },
           component: () => import('@/components/Opac/appointedHis.vue')
         },
-        
+
         /*------ 读者管理 ------*/
         {
           path: '/readerInfo',
@@ -654,8 +653,8 @@ export default new Router({
           },
           component: resolve => require(['../components/System/notice.vue'], resolve)
         },
-      
-        
+
+
         {
           path: '/publisher',
           meta: {
@@ -677,91 +676,91 @@ export default new Router({
           },
           component: resolve => require(['../components/System/article.vue'], resolve)
         },
-        
+
         /* 微信小程序 */
         {
-          path:"/wxEditor/:id",
-          meta:{
+          path: "/wxEditor/:id",
+          meta: {
             title: '资讯编辑',
-            
+
           },
           component: () => import('../components/progress/editor.vue')
         },
         {
-          path:"/wxCreator",
-          meta:{
+          path: "/wxCreator",
+          meta: {
             title: '资讯添加'
           },
           component: () => import('../components/progress/activeEditor')
         },
         {
-          path:"/wxNoticeInfo",
-          meta:{
+          path: "/wxNoticeInfo",
+          meta: {
             title: '活动资讯管理',
-            Mode:'5'
+            Mode: '5'
           },
           component: () => import('../components/progress/activeList')
         },
         {
-          path:"/WxAdvertisement",
-          meta:{
+          path: "/WxAdvertisement",
+          meta: {
             title: '微信广告栏管理',
-            Mode:'5'
+            Mode: '5'
           },
           component: () => import('../components/progress/bannerM')
         },
         {
-          path:"/addWxAdvertisement",
-          meta:{
-            Mode:'5',
-						title:"微信广告添加"
+          path: "/addWxAdvertisement",
+          meta: {
+            Mode: '5',
+            title: "微信广告添加"
           },
           component: () => import('../components/progress/bannerAdd')
         },
         {
-          path:"/editWxAdvertisement/:id",
-          meta:{
-            Mode:'5',
-            title:''
+          path: "/editWxAdvertisement/:id",
+          meta: {
+            Mode: '5',
+            title: ''
           },
           component: () => import('../components/progress/bannerEdit')
         },
         {
-          path:"/editWxAdvertisement",
-          meta:{
-            Mode:'5',
-						title:'微信广告编辑'
+          path: "/editWxAdvertisement",
+          meta: {
+            Mode: '5',
+            title: '微信广告编辑'
           },
           component: () => import('../components/progress/bannerM')
         },
         {
-          path:"/wxAboutUS",
-          meta:{
-            Mode:'5',
-						title:'微信关于我们'
+          path: "/wxAboutUS",
+          meta: {
+            Mode: '5',
+            title: '微信关于我们'
           },
           component: () => import('../components/progress/aboutUs')
         },
-          /*废弃 */
+        /*废弃 */
 
-          {
-            path: '/bookLocation',
-            meta: {
-              title: '图书位置绑定',
-              Mode: '2'
-            },
-            component: resolve => require(['../components/Reader/libraryManage/bookLocation.vue'], resolve)
+        {
+          path: '/bookLocation',
+          meta: {
+            title: '图书位置绑定',
+            Mode: '2'
           },
-  
-  
-          {
-            path: '/purchasingManagement',
-            meta: {
-              title: '采购管理',
-              Mode: '1'
-            },
-            component: resolve => require(['../components/Book/purchasingManagement.vue'], resolve)
+          component: resolve => require(['../components/Reader/libraryManage/bookLocation.vue'], resolve)
+        },
+
+
+        {
+          path: '/purchasingManagement',
+          meta: {
+            title: '采购管理',
+            Mode: '1'
           },
+          component: resolve => require(['../components/Book/purchasingManagement.vue'], resolve)
+        },
 
       ]
     },

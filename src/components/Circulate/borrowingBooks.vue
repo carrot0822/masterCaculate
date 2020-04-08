@@ -72,7 +72,7 @@
                 :label-position="labelPosition"
                 label-width="80px"
                 :model="searchForm"
-                
+
                 ref="searchForm"
                 :rules="rules"
               >
@@ -84,7 +84,7 @@
                     @keyup.enter.native="selectBtn"
                     clearable
                   >
-                    
+
                     <el-button
                       type="primary"
                       slot="append"
@@ -199,7 +199,7 @@
                 <el-table-column align="center" prop="createTime" label="借书开始时间"></el-table-column>
                 <el-table-column align="center" prop="planReturnTime" label="预计书籍归还时间"></el-table-column>
                 <el-table-column align="center" prop="renewCount" label="续借次数"></el-table-column>
-                
+
               </el-table>
             </section>
           </el-tab-pane>
@@ -253,7 +253,7 @@ export default {
       tips:'', // 提示信息
       message: "",
       labelPosition: "left",
-      
+
       searchForm: {
         cardNum: "",
         bookCode: "",
@@ -322,7 +322,7 @@ export default {
     selectBtn() {
         this.codeSearchApi(this.searchTimeForm);
         console.log('就是看看',this.searchForm.selectBook)
-    
+
     },
     // 读卡按钮
     readCardBtn() {
@@ -461,7 +461,7 @@ export default {
             console.log(
               "搜索出来的数据",
               this.borrowTableData,
-              "接收的数据",                                    
+              "接收的数据",
               obj[0].code
             );
             // some不执行console.log
@@ -470,7 +470,7 @@ export default {
             });
             console.log(isExist);
             if (!isExist) {
-              this.borrowTableData.push(obj[0]);                  
+              this.borrowTableData.push(obj[0]);
               console.log("现在的数据", this.borrowTableData);
             } else {
               this.$message.error("已选中该书");
@@ -540,12 +540,12 @@ export default {
         let reconnect = /reconnect/.test(e.data);
         console.log("接收的信息",e.data);
         console.log(reconnect,"是否匹配")
-        
+
          if(damage) {
           this.$message.error("设备连接已断开，请刷新页面或联系相关人员")
           this.tips = "设备连接已断开，请刷新页面或联系相关人员"
           ws.send("knowError")
-          
+
         } else if(reconnect){
           this.$message.success("设备已重新连接")
           this.tips = "连接成功"

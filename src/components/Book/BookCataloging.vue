@@ -802,6 +802,7 @@
       },
       //添加弹窗确定按钮
       definiteCheck(){
+        console.warn('点击触发')
         if(this.i==0){
           this.editApi(this.editFormData)
         }else if(this.i==1){
