@@ -264,6 +264,14 @@ export default new Router({
           component: StoneRoomInfo
         },
         {
+          path:'/araeRemaker',
+          meta:{
+            title:'区域管理重置',
+            Mode:'1'
+          },
+          component:()=> import('../components/Area/areaManage/areaCommand.vue')
+        },
+        {
           path: '/baseData',
           meta: {
             title: '初始参数',

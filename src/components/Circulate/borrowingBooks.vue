@@ -489,6 +489,7 @@ export default {
           this.endTable = res.data.row.list;
           this.borrowTableData = [];
           this.$message.success("操作完成,请查看下方借书结果");
+		  this.readCardBtn()
           console.log("现在的借书机理", this.endTable);
         } else {
           this.$message.error(res.data.msg);
