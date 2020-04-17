@@ -269,7 +269,7 @@ export default new Router({
             title:'区域管理重置',
             Mode:'1'
           },
-          component:()=> import('../components/Area/areaManage/areaCommand.vue')
+          component:()=> import('../components/Area/areaCommand/areaCommand.vue')
         },
         {
           path: '/baseData',
