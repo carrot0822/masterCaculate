@@ -273,7 +273,7 @@ export default {
       activeName: "first",
       tabFlag: false,
       tabCard: {},
-      lastCardNum:'',
+      lastCardNum:'',// 缓存的读者卡号
       /*------ 用户信息 ------*/
       userTable: [],
       /*------ 借书结果配置 ------*/
@@ -489,7 +489,10 @@ export default {
           this.endTable = res.data.row.list;
           this.borrowTableData = [];
           this.$message.success("操作完成,请查看下方借书结果");
-		  this.readCardBtn()
+          // 刷新用户资料
+          let obj = {}
+          obj.cardNum = this.lastCardNum
+		      this.readCardApi(obj)
           console.log("现在的借书机理", this.endTable);
         } else {
           this.$message.error(res.data.msg);

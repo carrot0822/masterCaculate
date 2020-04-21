@@ -460,6 +460,10 @@ export default {
             this.oweTable.splice(this.deleteIndex, 1);
           }
           this.damageDialog = false;
+          // 刷新用户信息
+          let obj = {}
+          obj.cardNum = this.lastCardNum
+		      this.readCardApi(obj)
         } else {
           this.$message.error(res.data.msg);
           this.damageDialog = false;

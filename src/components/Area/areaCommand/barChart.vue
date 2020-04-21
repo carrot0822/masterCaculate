@@ -104,7 +104,16 @@ export default {
             name: "访问量",
             itemStyle: {
               barBorderRadius: [50, 50, 0, 0],
-              
+              color: function(params) {
+                var colorList = [
+                  "#3A97FF",
+                  "#9ECEFB",
+                  "#3A97FF",
+                  "#9ECEFB",
+                  "#3A97FF",
+                ];
+                return colorList[params.dataIndex];
+              }
             },
             smooth: true,
             type: "bar",

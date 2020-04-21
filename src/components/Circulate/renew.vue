@@ -314,7 +314,11 @@ export default {
           if(this.endTable[0].state === true){
               console.log('比较测试',)
           }
-
+          // 刷新用户信息
+          // 刷新用户信息
+          let obj = {}
+          obj.cardNum = this.lastCardNum
+		      this.readCardApi(obj)
           this.$message.success("操作成功");
         } else {
           this.$message.error(res.data.msg);
