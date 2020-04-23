@@ -622,6 +622,12 @@ export default {
     this.wsValue = this.init("ws://127.0.0.1:7181");
     //this.wsValue = this.init("ws://192.168.2.141:7181");
   },
+  activated(){
+    console.log('这是激活')
+  },
+  deactivated(){
+    console.log('这是失活')
+  },
   destroyed() {
     this.wsValue.close();
   }

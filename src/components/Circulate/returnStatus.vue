@@ -77,6 +77,7 @@ export default {
   created() {
     // 需要做一次判定 看这个人是不是从其他页面直接过来的 传读者卡吧
     let obj = localStorage.getItem("return");
+    console.log(obj)
     this.detail = JSON.parse(obj);
     let Num = this.detail.cardNum
     let cardNum = this.$route.query

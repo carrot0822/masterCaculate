@@ -454,7 +454,7 @@ export default {
   components: {
     VePie,
     VeHis,
-    VeCount
+    VeCount,
   }
 };
 </script>

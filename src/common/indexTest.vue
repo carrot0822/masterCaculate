@@ -95,20 +95,12 @@
           <!-- <div class="space"></div> -->
           <div class="scrollBox">
             <el-scrollbar style="height:100%;">
-				<!--
+				
               <transition name="fade-transform" mode="out-in">
                 <router-view></router-view>
 
               </transition>
-			  -->
-			  <transition name="fade-transform" mode="out-in">
-			      <keep-alive>
-			        <router-view v-if="$route.meta.isAlive"></router-view>
-			      </keep-alive>
-			  </transition>
-			  <transition name="fade-transform" mode="out-in">
-			        <router-view v-if="!$route.meta.isAlive"></router-view>
-			  </transition>
+			  
             </el-scrollbar>
 
 

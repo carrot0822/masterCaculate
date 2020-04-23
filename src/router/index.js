@@ -296,7 +296,7 @@ export default new Router({
           meta: {
             title: '书籍归还',
             Mode: '2',
-            isAlive: true
+            isAlive: false
           },
           component: () => import('../components/Circulate/returnBooks.vue')
         },
@@ -305,7 +305,7 @@ export default new Router({
           meta: {
             title: '还书结果',
             Mode: '2',
-            isAlive: true
+            isAlive: false
           },
           component: () => import('../components/Circulate/returnStatus.vue')
         },

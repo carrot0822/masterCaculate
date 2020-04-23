@@ -216,7 +216,7 @@
         >
           <section class="firstInfoBox">
             <div class="searchForm">
-              <el-form-item prop="isbn" label="isbn:">
+              <el-form-item prop="isbn" label="ISBN:">
                 <el-input
                   style="width:350px;"
                   :disabled="aeDialog.searchDisabled"
@@ -561,7 +561,7 @@
             </div>
 
             <div class="backShow">
-              <span class="label">isbn:</span>
+              <span class="label">ISBN:</span>
               <p class="showContent">{{damageDialog.showData.isbn}}</p>
             </div>
             <div class="backShow">
@@ -742,7 +742,7 @@ export default {
           lendingPermission: false // 是否外借
         },
         aeRules: {
-          isbn: [{ required: true, message: "issn不得为空", trigger: "blur" }],
+          isbn: [{ required: true, message: "ISBN不得为空", trigger: "blur" }],
           pNumberId: [
             { required: true, message: "期刊号不得为空", trigger: "blur" }
           ],
