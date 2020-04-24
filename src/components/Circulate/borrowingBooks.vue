@@ -623,6 +623,7 @@ export default {
     //this.wsValue = this.init("ws://192.168.2.141:7181");
   },
   activated(){
+    
     console.log('这是激活')
   },
   deactivated(){

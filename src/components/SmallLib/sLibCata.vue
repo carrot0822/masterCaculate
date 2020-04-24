@@ -734,7 +734,7 @@ export default {
         ]
       },
       searchForm: {
-				
+
         libraryBookCode: "", // 藏馆码
         name: "", // 名字
         parallelTitle: "", // 并列题名
@@ -1425,7 +1425,8 @@ export default {
     },
     toLendState(num) {
       let str = "";
-      toLendState
+      let lendArr = ['不在架','在架','借出','剔除','报损']
+      str = lendArr[num]
       return str;
     },
     toOtherState(num) {
@@ -1643,7 +1644,7 @@ export default {
           } else {
             this.aeDialog.cNbSelect.backSelect = arr;
           }
-          
+
           console.log(this.aeDialog.cNbSelect, "索取号下拉");
         } else {
           this.$message.error(res.data.msg);
@@ -1657,7 +1658,7 @@ export default {
         this.aeDialog.cNbSelect.input = this.aeDialog.cNbSelect.backSelect[value];
         console.log("？？？")
       }
-      
+
     },
     watchValue(val) {
       //this.aeDialog.libIndex = Object.assign(this.aeDialog.libIndex,val)

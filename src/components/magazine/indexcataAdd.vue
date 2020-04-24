@@ -1430,41 +1430,15 @@ export default {
     },
     toLendState(num) {
       let str = "";
-      toLendState
+      let lendArr = ['不在架','在架','借出','剔除','报损']
+      str = lendArr[num]
       return str;
     },
     toOtherState(num) {
       let str = "";
-      switch (num) {
-        case 0:
-          str = "无特殊状态";
-          break;
-        case 1:
-          str = "损坏";
-          break;
-        case 2:
-          str = "遗失";
-          break;
-        case 3:
-          str = "调馆";
-          break;
-        case 4:
-          str = "未还";
-          break;
-        case 5:
-          str = "被盗";
-          break;
-        case 6:
-          str = "陈旧";
-          break;
-        case 7:
-          str = "破损";
-          break;
-        case 8:
-          str = "其他";
-          break;
-      }
-      return str;
+      let lendArr = ['无特殊状态','损坏','遗失','调馆','未还','被盗','陈旧','破损','其他']
+      
+      return lendArr[num];
     },
     /*------ 2019/8/10接盘版 api区 ------*/
 
