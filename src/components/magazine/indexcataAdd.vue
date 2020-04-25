@@ -663,16 +663,16 @@
                 <el-form-item label=" 损坏原因 :" prop="price" class="errTitle" label-width="100px">
                   <el-select
                     @change="dagameTest"
-                    value-key="id"
+                    
                     style="width: 330px"
                     v-model="damageDialog.damageItem"
                     placeholder="请选择"
                   >
                     <el-option
-                      v-for="item in damageDialog.damageOptions"
+                      v-for="(item,index) in damageDialog.damageOptions"
                       :key="item.id"
                       :label="item.damageName"
-                      :value="item"
+                      :value="index"
                     ></el-option>
                   </el-select>
                 </el-form-item>
@@ -952,13 +952,7 @@ export default {
           remarks: "",
           fkBookLibCode: ""
         },
-        damageItem: {
-          compensationNum: 0,
-          compensationType: 0,
-
-          id: "",
-          remarks: "阿斯顿"
-        }, // 报损原因对象
+        damageItem: "",
         rules: {
           price: [
             { required: true, message: "赔偿原因不得为空", trigger: "change" }
@@ -1005,8 +999,13 @@ export default {
     },
     // 报损价格
     damageValue() {
-      let juge = this.damageDialog.damageItem.compensationType;
-      let times = this.damageDialog.damageItem.compensationNum;
+      let options = this.damageDialog.damageOptions
+      let i = this.damageDialog.damageItem
+      if(i==''){
+        return ''
+      }
+      let juge = options[i].compensationType;
+      let times = options[i].compensationNum;
       let price = this.damageDialog.showData.price;
       if (juge == 0) {
         return times;
@@ -1188,6 +1187,7 @@ export default {
       this.clearValue(this.damageDialog.form);
       this.clearValue(this.damageDialog.damageItem);
       this.damageDialog.form.fkBookLibCode = row.code;
+      this.damageDialog.damageItem = ''
       console.log("报损回显", row);
       this.damageDialog.showData = Object.assign(
         this.damageDialog.showData,
