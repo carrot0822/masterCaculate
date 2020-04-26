@@ -34,7 +34,7 @@
                 </el-form-item>
               </el-form>
             </div>
-            <div class="tips">提示:</div>
+            <div class="tips">提示:web外链需要在微信开发平台进行相关的域名认证才能正确的链接到对应的网址</div>
             <cover
               :height="175"
               :width="375"
@@ -342,6 +342,11 @@ export default {
   background-color: #d2d2d2;
   color: #878787;
   margin-left: 10px;
+}
+.tips{
+  color: #0096ff;
+  font-size: 14px;
+  padding:10px 0; 
 }
 </style>
 <style>

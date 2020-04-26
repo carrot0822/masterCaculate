@@ -322,6 +322,11 @@ export default {
   color: #878787;
   margin-left: 10px;
 }
+.tips{
+  color: #0096ff;
+  font-size: 14px;
+  padding:10px 0; 
+}
 </style>
 <style>
 .wxadd .el-input.is-disabled .el-input__inner {
@@ -330,10 +335,6 @@ export default {
 #video .el-scrollbar__wrap {
   overflow-x: hidden;
 }
-.tips{
-  color: #0096ff;
-  font-size: 14px;
-  padding:10px 0; 
-}
+
 </style>
 
