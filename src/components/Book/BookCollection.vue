@@ -598,7 +598,7 @@
                 <el-form-item label=" 损坏原因 :" prop="price" class="errTitle" label-width="100px">
                   <el-select
                     @change="dagameTest"
-                    
+
                     style="width: 330px"
                     v-model="damageDialog.damageItem"
                     placeCodeholder="请选择"
@@ -863,6 +863,7 @@ export default {
           fkBookLibCode: ""
         },
         damageItem:'',
+        damageIndex:'',
         rules: {
           price: [
             { required: true, message: "赔偿原因不得为空", trigger: "change" }
@@ -923,7 +924,7 @@ export default {
       } else {
         return times * price;
       }
-      
+
       console.log(this.damageDialog.damageItem, "先看看值和字段");
     }
   },
@@ -1117,7 +1118,10 @@ export default {
     },
     damageDlgBtn() {
       // 要开校检 而且是分开校检
-      this.damageDialog.form.damageId = this.damageDialog.damageItem.id;
+      let options = this.damageDialog.damageOptions
+      let i = this.damageDialog.damageItem
+
+      this.damageDialog.form.damageId =options[i].id;
       this.$refs.damageForm.validate(valid => {
         if (valid) {
           this.damageDialog.form.price = this.damageValue;

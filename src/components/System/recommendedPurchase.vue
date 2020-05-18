@@ -9,6 +9,22 @@
         <section class="searchBox">
           <div class="buttonBox"></div>
           <el-form :inline="true" :model="searchForm">
+            <el-form-item size="130" label="创建时间:">
+              <el-date-picker
+                v-model="Time.beginTime"
+                type="date"
+                placeholder="开始日期"
+                style="width: 200px"
+                :picker-options="pickerOptions0"
+              ></el-date-picker>
+              <el-date-picker
+                v-model="Time.endTime"
+                type="date"
+                placeholder="结束日期"
+                style="width: 200px"
+                :picker-options="pickerOptions1"
+              ></el-date-picker>
+            </el-form-item>
             <el-form-item label="筛选 :">
               <el-select
                 style="width: 150px"
@@ -120,7 +136,7 @@
 <script>
   import axios from "axios";
   import { catalog,deriveInt,uploadInt,recommPurchase } from "@request/api/base.js";
-  import moment from "moment";
+  import {format} from "../../base/js/utlis"
   export default {
     data() {
       return {
@@ -137,6 +153,30 @@
           // 接受搜索表单的数据
           makeMethod: "",
           searchData: "",
+        },
+        Time:{
+          beginTime:'',
+          endTime:''
+        },
+        pickerOptions0: {
+          disabledDate: time => {
+            if (this.searchForm.endTime) {
+              return (
+                time.getTime() > Date.now() ||
+                time.getTime() > this.Time.endTime
+              )
+            } else {
+              return time.getTime() > Date.now()
+            }
+          }
+        },
+        pickerOptions1: {
+          disabledDate: time => {
+            return (
+              time.getTime() < this.Time.beginTime ||
+              time.getTime() > Date.now()
+            )
+          }
         },
         searchData: "",
         selectSearchForm: {
@@ -180,6 +220,18 @@
           pageSize: this.pageSize,
           currentPage: 1,
         }
+        // 新增时间
+        let {beginTime,endTime} = this.Time
+        if(beginTime){
+          beginTime = format(new Date(beginTime),'yyyy-MM-dd')
+        }
+        if(endTime){
+          endTime = format(new Date(endTime),'yyyy-MM-dd')
+        }
+        let obj = {}
+        obj.beginTime = beginTime
+        obj.endTime = endTime
+        let changeData = Object.assign(newData,obj)
         return newData
       },
     },

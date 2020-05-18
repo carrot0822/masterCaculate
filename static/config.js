@@ -1,5 +1,5 @@
 
-var ip = 'http://192.168.2.114';
+var ip = 'http://192.168.2.157';
 
 window.glob = {
   url:ip + ':8088/',

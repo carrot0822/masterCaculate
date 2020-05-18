@@ -1197,7 +1197,9 @@ export default {
     },
     damageDlgBtn() {
       // 要开校检 而且是分开校检
-      this.damageDialog.form.damageId = this.damageDialog.damageItem.id;
+      let options = this.damageDialog.damageOptions
+      let i = this.damageDialog.damageItem
+      this.damageDialog.form.damageId = options[i].id;
       this.$refs.damageForm.validate(valid => {
         if (valid) {
           this.damageDialog.form.price = this.damageValue;

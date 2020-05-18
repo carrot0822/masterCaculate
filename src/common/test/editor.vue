@@ -67,6 +67,7 @@
         @ready="onEditorReady($event)"
         @change="onEditorChange($event)"
       ></quill-editor>
+      <span class="editorText">{{editorLen}}/{{editorMax}}</span>
     </section>
     <!-- 附件上传 -->
     <section class="upFile mb_30">
@@ -83,6 +84,7 @@
           :on-exceed="handleExceed"
           :on-success="fileSuccess"
           :on-error="fileError"
+          :before-upload="fileBefore"
         >
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">
@@ -179,6 +181,8 @@ export default {
           }
         }
       },
+      editorLen:0,
+      editorMax:800,
       /*------ 图片上传配置 ------*/
       imgUrl: uploadInt.editorImg,
       /*------ 附件上传配置项 ------*/
@@ -219,14 +223,31 @@ export default {
     onEditorReady(editor) {
       //console.log("editor ready!", editor);
     },
-    onEditorChange({ editor, html, text }) {
-      console.log("editor change!", editor, html, "限制一下", this.content);
-      console.log("text文本内容", text, "text字数", text.length);
+    onEditorChange(event) {
+      let max = this.editorMax
+      event.quill.deleteText(max, 4)
+      if(this.content === ''){
+        this.editorLen = 0
+      }else{
+        this.editorLen = event.quill.getLength() - 1
+      }
+      
     },
 
     /*------ 上传附件功能 ------*/
     beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${file.name}？`);
+      //return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    fileBefore(file){
+      let {size} = file
+      size = size/(1024*1024)
+      if(size>50){
+        this.$message.error("文件大小超出限制")
+        return false
+      }else{
+
+      }
+      console.log(file,'上传之前',size)
     },
     fileRemove(file, fileList) {
       this.fileList = fileList;
@@ -375,6 +396,13 @@ export default {
 /*------ 富文本编辑器 ------*/
 .editorBox {
   padding: 0 37px;
+  position: relative;
+}
+
+.editorText{
+  position: absolute;
+  bottom: 10px;
+  right: 50px;
 }
 .upFile {
   padding-left: 37px;
