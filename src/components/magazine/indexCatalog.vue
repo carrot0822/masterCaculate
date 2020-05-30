@@ -103,7 +103,7 @@
             <el-table-column
               align="center"
               prop="unifyNum"
-              label="国内统一号"
+              label="统一刊号"
               width="200"
               :show-overflow-tooltip="true"
             ></el-table-column>

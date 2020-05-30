@@ -402,7 +402,7 @@
               >启用</el-checkbox>
               <el-checkbox
                 style="margin-right:130px; margin-left:20px;"
-                v-model="aeDialog.aeForm.available"
+                v-model="aeDialog.aeForm.dailyRent"
               >默认日租金</el-checkbox>
               <el-checkbox style="margin:0;" v-model="aeDialog.aeForm.lendingPermission">不外借</el-checkbox>
             </div>
@@ -737,7 +737,7 @@ export default {
           callNumber: "", // 索引号
           alteration: 0, // 索引号码是否改动
           placeCode: "", // 馆内码
-          dailyRent: false,
+          dailyRent: false, // 默认日租金
           available: true, // 是否启用
           lendingPermission: false // 是否外借
         },
@@ -912,14 +912,19 @@ export default {
     damageValue() {
       let options = this.damageDialog.damageOptions
       let i = this.damageDialog.damageItem
+      console.log(options[i])
       console.log(i,options,'怎么回事')
-      if(i== ''){
+      
+      if(i=== ''){
         return ''
       }
+      
       let juge = options[i].compensationType;
       let times = options[i].compensationNum;
       let price = this.damageDialog.showData.price;
+      console.log(juge,times,'？？？没过？')
       if (juge == 0) {
+
         return times;
       } else {
         return times * price;

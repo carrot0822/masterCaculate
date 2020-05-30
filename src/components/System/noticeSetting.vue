@@ -8,14 +8,14 @@
         <div class="nomal-Box noticeForm">
           <el-form  :model="formLabelAlign" style="margin-right: 40px">
             <el-form-item label="公告标题 :" label-width="80px">
-              <el-input v-model="formLabelAlign.title" maxlength="40" show-word-limit>
+              <el-input v-model="formLabelAlign.title" maxlength="20" show-word-limit>
               </el-input>
             </el-form-item>
             <el-form-item label="公告内容 :" label-width="80px">
               <el-input
                 type="textarea"
                 :rows="18"
-                maxlength="300"
+                maxlength="100"
                 show-word-limit
                 resize="none"
                 @input="contentNumFun(formLabelAlign.content)"

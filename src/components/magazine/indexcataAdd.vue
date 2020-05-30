@@ -718,7 +718,7 @@ export default {
         search: "", // 输入框
         optionsArr: [
           {
-            label: "藏馆码",
+            label: "馆内码",
             value: 1
           },
           {
@@ -1001,12 +1001,13 @@ export default {
     damageValue() {
       let options = this.damageDialog.damageOptions
       let i = this.damageDialog.damageItem
-      if(i==''){
+      if(i=== ''){
         return ''
       }
       let juge = options[i].compensationType;
       let times = options[i].compensationNum;
       let price = this.damageDialog.showData.price;
+      
       if (juge == 0) {
         return times;
       } else {
