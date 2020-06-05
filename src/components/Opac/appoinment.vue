@@ -289,6 +289,8 @@ export default {
       this.warIndex = 0;
       this.warDialog.display = true;
       this.warDialog.id = row.id;
+	  // 情空输入内容
+	  this.warDialog.remark = ''
     },
     /*------ 非弹框触发按钮 ------*/
     searchBtn() {

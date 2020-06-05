@@ -364,7 +364,7 @@ export default {
     },
     toState(num) {
       let i = parseInt(num);
-      let arr = ["正常", "失信"];
+      let arr = ["正常", "逾期","失信"];
       return arr[i];
     },
     toMoney(num) {
