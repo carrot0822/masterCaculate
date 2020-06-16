@@ -553,8 +553,10 @@
 						if (res.data.state === true) {
 							console.log(res);
 							// 获取数据进行过滤
+              let stateArr = ['正常','逾期','失信']
 							for (let item of res.data.row) {
-								item.filterState = item.cardState== 1?"失信":(item.overdue == 1?"逾期":(item.state==1?"挂失":"正常"))
+								let i = item.overdue
+								item.filterState = stateArr[i]
 							}
 							this.tableData = res.data.row;
 							this.total = res.data.total; //总条目数

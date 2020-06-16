@@ -19,6 +19,7 @@
               <div class="opearate">
                 <div class="static">
                   <span class="switch">开</span>
+                  <span class="close">关</span>
                   <span class="areaName">楼层名</span>
                 </div>
                 <div class="curd">
@@ -56,6 +57,7 @@
           </section>
           <!-- 数字跳动 -->
           <section class="numberDance">
+            
             <panel-group></panel-group>
           </section>
           <!-- 数据可视化 -->

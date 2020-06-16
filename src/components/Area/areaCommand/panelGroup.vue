@@ -2,8 +2,8 @@
   <el-row :gutter="40" class="panel-group">
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper">
-          <i>图标</i>
+        <div class="card-panel-icon-wrapper onShelfC">
+          
           <p></p>
         </div>
         <div class="card-panel-description">
@@ -57,6 +57,7 @@ export default {
   data(){
     return{
       endVal:1000, // 如果数据是异步的话 需要v-if处理
+
     }
   },
   components:{
@@ -66,6 +67,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+ .onShelfC{
+   background-color: #0096FF;
+ }
+ .borrowC{
+   background-color: #FFAE00;
+ }
+ .returnC{
+   background-color: #0EEBAF;
+ }
+ .damageC{
+   background-color: #FD6B6B;
+ }
 .panel-group {
   margin-top: 18px;
   .card-panel-col {

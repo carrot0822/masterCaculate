@@ -502,6 +502,7 @@ export default {
     /*------ 结构启动按钮 ------*/
     editstoreBtn(store) {
       // 其实可以写成一个switch
+	  console.log(store,'楼号')
       this.preImg = "";
       this.i = 4;
       this.changeStoreForm.storeName = store.storeName;
@@ -512,6 +513,7 @@ export default {
       this.changeStoreForm.id = store.id;
       this.changeStoreForm.info = store.info;
       this.changeStoreForm.imageAddress = store.imgAddress;
+      this.changeStoreForm.storeNum = store.storeNum
       this.storeRoomDialog = true;
     },
     addStoreBtn() {
