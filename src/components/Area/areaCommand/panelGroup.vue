@@ -3,7 +3,7 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper onShelfC">
-          <p></p>
+          <img src="../../../base/img/areaRemaker/onSheif.png">
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">在架数据</div>
@@ -16,33 +16,39 @@
 
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper">图标</div>
+        <div class="card-panel-icon-wrapper borrowC">
+          <img src="../../../base/img/areaRemaker/borrow.png">
+        </div>
         <div class="card-panel-description">
           <div class="card-panel-text">借出书籍</div>
           <div class="card-panel-num">
-            <count :end="1000"></count>
+            <count :end="borrowNum"></count>
           </div>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper">图标</div>
+        <div class="card-panel-icon-wrapper returnC">
+          <img src="../../../base/img/areaRemaker/return.png">
+        </div>
         <div class="card-panel-description">
           <div class="card-panel-text">归还书籍</div>
           <div class="card-panel-num">
-            <count :end="1000"></count>
+            <count :end="returnNum"></count>
           </div>
         </div>
       </div>
     </el-col>
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper">图标</div>
+        <div class="card-panel-icon-wrapper damageC">
+          <img src="../../../base/img/areaRemaker/damage.png">
+        </div>
         <div class="card-panel-description">
           <div class="card-panel-text">报损书籍</div>
           <div class="card-panel-num">
-            <count :end="1000"></count>
+            <count :end="damageNum"></count>
           </div>
         </div>
       </div>
@@ -67,6 +73,24 @@ export default {
   components: {
     count
   },
+  computed:{
+    onshelf(){
+      
+    },
+    borrowNum(){
+      let result = this.options.borrowNum
+      return result?result:0
+    },
+    returnNum(){
+      let result = this.options.returnNum
+      return result?result:0
+    },
+    damageNum(){
+      let result = this.options.damageNum
+      return result?result:0
+    },
+
+  },
   mounted(){
     console.log(this.options)
   }
@@ -76,6 +100,7 @@ export default {
 <style lang="scss" scoped>
 .onShelfC {
   background-color: #0096ff;
+
 }
 .borrowC {
   background-color: #ffae00;

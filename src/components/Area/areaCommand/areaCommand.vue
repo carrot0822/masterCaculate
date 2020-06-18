@@ -18,7 +18,10 @@
             <div class="floorBox" v-for="(store,index) of storeInfo" :key="index">
               <div class="opearate">
                 <div class="static">
-                  <span @click="storeBtn(store,index)" class="switch">开关</span>
+                  <span @click="storeBtn(store,index)" class="switch">
+                    <img v-if="!(index == launch)" src="../../../base/img/areaRemaker/open.png">
+                    <img v-if="(index == launch)" src="../../../base/img/areaRemaker/close.png">
+                  </span>
                   <span class="areaName">{{store.storeName}}</span>
                 </div>
                 <div class="curd">
@@ -28,12 +31,15 @@
                 </div>
               </div>
               <div class="zoneList" v-if="index == launch && regionInfo.length">
-                <p
+                <div
                   v-for="(son,sonNum) of regionInfo"
                   :key="sonNum"
-                  @click="regionBtn(son,sonNum)"
+                  :class="{quactive:sonNum == quIndex}"
                   class="zoneName"
-                >{{son.regionName}}</p>
+                >
+                <p @click="regionBtn(son,sonNum)" class="quName"> {{son.regionName}} </p>
+                <span @click="deleteAreaBtn(son,sonNum)" class="deleteQu">删除区</span>
+                </div>
               </div>
             </div>
           </div>
@@ -46,7 +52,7 @@
           <!-- 标题和控制按钮 -->
           <section class="titleBox">
             <div class="title">
-              <Title :value="contentTitle"></Title>
+              <Title :value="contentTitle">{{reginName}}</Title>
             </div>
             <div clsss="opearate"></div>
           </section>
@@ -56,12 +62,12 @@
               <el-date-picker v-model="dateValue" type="month" placeholder="选择月"></el-date-picker>
             </div>
             <div class="outpotBtn">
-              <el-button size="mini" type="primary">导出excel</el-button>
+              <el-button @click="outputExcel" size="mini" type="primary">导出excel</el-button>
             </div>
           </section>
           <!-- 数字跳动 -->
           <section class="numberDance">
-            <panel-group :options="cacheObj"></panel-group>
+            <panel-group :options="cardData"></panel-group>
           </section>
           <!-- 数据可视化 -->
           <section class="dataBox">
@@ -277,8 +283,10 @@ export default {
       storeInfo: [],
       activeIndex: 0, // 控制被选中标签的数据
       storeIndex: 1000,
+      reginName:'',
       regionInfo: [], // 区渲染数据
       storeIndex: 1000, // 控制打开与关闭
+      quIndex:1000,
       shelvesShow: false, // 控制右侧库房显隐
       selectRegin: {},
       cacheObj: {},
@@ -452,12 +460,21 @@ export default {
 
       
     },
-    reset() {},
+    reset() {
+      this.quIndex = 1000
+    },
+    outputExcel(){
+      let obj = this.cacheObj
+      console.log(obj)
+      this._output(obj)
+    },
     regionBtn(store, index) {
       // 这里就该调查右边图表的数据了
       let obj = {};
       obj.fkStoreId = store.fkStoreId;
       obj.fkRegionId = store.id;
+      this.quIndex = index
+      this.reginName = store.regionName
       this.cacheObj = obj;
       this._getRegin(obj);
       this._getTop(obj);
@@ -754,12 +771,35 @@ export default {
           console.log(this.cacheArr, "缓存数组");
           console.log(this.chartData, "未生效?");
         });
+    },
+    //
+    _output(obj){
+      let data = obj;
+      var defultobj = {
+        bop: 0,
+        state:true
+      };
+      data = Object.assign(defultobj, data);
+      axios
+        .get(baseInt.search, {
+          params: data
+        })
+        .then(res => {
+          if (res.data.state) {
+            // 触发excel导出函数
+            this.$message.success('导出excel成功')
+          }
+          console.log(res, "数据啥样");
+        });
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.quactive{
+  background-color: blanchedalmond;
+}
 #araeRemaker {
   .areaSelect {
     background-color: #fffeff;
@@ -779,10 +819,10 @@ export default {
     .areaList {
       padding: 20px 30px 0 30px;
       .floorBox {
+        margin-bottom: 10px;
         .opearate {
           display: flex;
           flex-direction: row;
-          align-items: center;
           justify-content: space-between;
           min-height: 30px;
           span {
@@ -790,10 +830,12 @@ export default {
             font-family: Microsoft YaHei;
             font-weight: 400;
             color: rgba(0, 150, 255, 1);
-            cursor: pointer;
+            
+            vertical-align:text-top;
           }
           .static {
             .switch {
+              cursor: pointer;
             }
             .areaName {
             }
@@ -811,7 +853,15 @@ export default {
             line-height: 40px;
             position: relative;
             padding-left: 40px;
-            cursor: pointer;
+            padding-right: 10px;
+            display: flex;
+            justify-content: space-between;
+            .quName{
+              cursor: pointer;
+            }
+            .deleteQu{
+              cursor: pointer;
+            }
             &::before {
               position: absolute;
               content: "";
@@ -820,8 +870,11 @@ export default {
               left: 25px;
               width: 6px;
               height: 6px;
-              background-color: red;
+              background-color: #E6E6E6;
               border-radius: 50%;
+            }
+            &:hover{
+              background-color: blanchedalmond;
             }
           }
         }
@@ -832,6 +885,7 @@ export default {
   .areaDetail {
     background: rgba(255, 255, 255, 1);
     min-height: 850px;
+    box-sizing: border-box;
     padding: 30px;
     .titleBox {
       margin-bottom: 20px;

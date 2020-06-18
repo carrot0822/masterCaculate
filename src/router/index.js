@@ -394,7 +394,14 @@ export default new Router({
           },
           component: () => import('@/components/Opac/appointedHis.vue')
         },
-
+        {
+          path: '/circleCount',
+          meta: {
+            title: '流通统计',
+            Mode: '2'
+          },
+          component: () => import('../components/Circulate/ciculateCount/circulate.vue')
+        },
         /*------ 读者管理 ------*/
         {
           path: '/readerInfo',

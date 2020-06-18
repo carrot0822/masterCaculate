@@ -75,7 +75,7 @@ export default {
         },
         grid: {
           left: "3%",
-          right: "4%",
+          right: "0",
           bottom: "3%",
           top: "6%",
           containLabel: true
@@ -83,7 +83,7 @@ export default {
         xAxis: [
           {
             type: "category",
-            data: ["不在架", "在架", "借出", "剔除", "损坏"],
+            data: ["借出的数量", "逾期的数量", "归还的数量", "报损的数量"],
             axisTick: {
               alignWithLabel: true
             }
@@ -117,7 +117,7 @@ export default {
             },
             smooth: true,
             type: "bar",
-            barWidth: "40%",
+            barWidth: "25%",
 
             animationDuration: 2800,
             animationEasing: "cubicInOut"

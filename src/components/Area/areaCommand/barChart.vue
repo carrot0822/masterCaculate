@@ -102,7 +102,7 @@ export default {
         series: [
           {
             data: expectedData,
-            name: "访问量",
+            name: "书籍量",
             itemStyle: {
               barBorderRadius: [50, 50, 0, 0],
               color: function(params) {

@@ -19,16 +19,15 @@
             </div>
           </section>
           <!-- 数字跳动 -->
-          <section class="numberDance">
-            
+          <section class="numberDance mb_30">
             <panel-group></panel-group>
           </section>
           <!-- 数据可视化 -->
           <section class="dataBox">
-            <el-col :span="12">
+            <el-col :span="16">
               <div class="rankBox">
                 <div class="titleBox">
-                  <Title :value="'图书借阅前10排行榜'"></Title>
+                  <Title :value="lineChartT"></Title>
                 </div>
                 <div class="tableBox">
                   <el-table :data="tableData" style="width: 100%">
@@ -42,13 +41,13 @@
             </el-col>
 
             <!-- 数据折线图 -->
-            <el-col :span="12">
+            <el-col :span="8">
               <div class="dataShow">
                 <div class="titleBox">
-                  <Title :value="'图书分类数量统计'"></Title>
+                  <Title :value="barChartT"></Title>
                 </div>
                 <div class="barchart">
-                  <bar-chart :height="'500px'" :chartData="chartData"></bar-chart>
+                  <bar-chart :height="'450px'" :chartData="chartData"></bar-chart>
                 </div>
               </div>
             </el-col>
@@ -68,6 +67,8 @@ export default {
   data() {
     return {
       contentTitle: "流通统计",
+      barChartT:'流通柱状数据图',
+      lineChartT:'流通折线数据图',
       dateValue: "",
       tableData: [
         {
@@ -234,6 +235,7 @@ export default {
 
     .dataBox {
       .rankBox {
+        margin-right: 60px;
         .titleBox {
           margin-bottom: 30px;
         }
