@@ -6,9 +6,8 @@ export const baseInt = {
   search: `${url}data/cata/dictionaries/areaManagementPage/selectByLocationAndTime`,
   topSearch: `${url}data/cata/dictionaries/areaManagementPage/getBorrowHot`,
   classify: `${url}data/cata/dictionaries/areaManagementPage/getStateMums`,
-  storeSearch: `${url}`
 }
-
+/*
 export const storeInt = {
   select: `${url}data/cata/dictionaries/areaManagementPage/storeselect`,
   add: `${url}data/cata/dictionaries/areaManagementPage/storeadd`,
@@ -22,4 +21,4 @@ export const regionInt = {
   delete: `${url}data/cata/dictionaries/areaManagementPage/regiondelete`,
   selectBind: `${url}bookcollectionmodule/areaManagementPage/regionselectBind`,
   bind: `${url}bookcollectionmodule/areaManagementPage/regioneditBind`
-};
+};*/

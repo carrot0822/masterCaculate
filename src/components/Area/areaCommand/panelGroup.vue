@@ -3,7 +3,6 @@
     <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper onShelfC">
-          
           <p></p>
         </div>
         <div class="card-panel-description">
@@ -52,33 +51,41 @@
 </template>
 
 <script>
-import count from './count'
+import count from "./count";
 export default {
-  data(){
-    return{
-      endVal:1000, // 如果数据是异步的话 需要v-if处理
-
+  props: {
+    options: {
+      type: Object
     }
   },
-  components:{
+  data() {
+    return {
+      endVal: 1000, // 如果数据是异步的话 需要v-if处理
+
+    };
+  },
+  components: {
     count
+  },
+  mounted(){
+    console.log(this.options)
   }
 };
 </script>
 
 <style lang="scss" scoped>
- .onShelfC{
-   background-color: #0096FF;
- }
- .borrowC{
-   background-color: #FFAE00;
- }
- .returnC{
-   background-color: #0EEBAF;
- }
- .damageC{
-   background-color: #FD6B6B;
- }
+.onShelfC {
+  background-color: #0096ff;
+}
+.borrowC {
+  background-color: #ffae00;
+}
+.returnC {
+  background-color: #0eebaf;
+}
+.damageC {
+  background-color: #fd6b6b;
+}
 .panel-group {
   margin-top: 18px;
   .card-panel-col {

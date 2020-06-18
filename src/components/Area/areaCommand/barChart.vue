@@ -95,7 +95,8 @@ export default {
             axisTick: {
               show: false
             },
-            boundaryGap: ["20%", "20%"]
+            boundaryGap: ["20%", "20%"],
+            min:0,
           }
         ],
         series: [

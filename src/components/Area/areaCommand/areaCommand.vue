@@ -10,26 +10,30 @@
             </div>
 
             <div class="addFloorBtn">
-              <el-button size="mini" type="primary">添加楼层</el-button>
+              <el-button size="mini" @click="addStoreBtn" type="primary">添加楼层</el-button>
             </div>
           </div>
           <!-- 楼层 区选择 -->
           <div class="areaList">
-            <div class="floorBox">
+            <div class="floorBox" v-for="(store,index) of storeInfo" :key="index">
               <div class="opearate">
                 <div class="static">
-                  <span class="switch">开</span>
-                  <span class="close">关</span>
-                  <span class="areaName">楼层名</span>
+                  <span @click="storeBtn(store,index)" class="switch">开关</span>
+                  <span class="areaName">{{store.storeName}}</span>
                 </div>
                 <div class="curd">
-                  <span class="editArea">编辑</span>
-                  <span class="addArea">添加区</span>
-                  <span class="deleteArea">删除</span>
+                  <span class="editArea" @click.stop="editstoreBtn(store)">编辑</span>
+                  <span class="addArea" @click.stop="addAreaBtn(store)">添加区</span>
+                  <span class="deleteArea" @click.stop="deleteStoreBtn(store)">删除</span>
                 </div>
               </div>
-              <div class="zoneList">
-                <p class="zoneName">区名字1</p>
+              <div class="zoneList" v-if="index == launch && regionInfo.length">
+                <p
+                  v-for="(son,sonNum) of regionInfo"
+                  :key="sonNum"
+                  @click="regionBtn(son,sonNum)"
+                  class="zoneName"
+                >{{son.regionName}}</p>
               </div>
             </div>
           </div>
@@ -57,8 +61,7 @@
           </section>
           <!-- 数字跳动 -->
           <section class="numberDance">
-            
-            <panel-group></panel-group>
+            <panel-group :options="cacheObj"></panel-group>
           </section>
           <!-- 数据可视化 -->
           <section class="dataBox">
@@ -69,10 +72,32 @@
                 </div>
                 <div class="tableBox">
                   <el-table :data="tableData" style="width: 100%">
-                    <el-table-column width="60" align="center" :show-overflow-tooltip="true" prop="rank" label="排名"></el-table-column>
-                    <el-table-column align="center" :show-overflow-tooltip="true" prop="bookname" label="书籍" width="180"></el-table-column>
-                    <el-table-column align="center" :show-overflow-tooltip="true" prop="author" label="作者"></el-table-column>
-                    <el-table-column align="center" :show-overflow-tooltip="true" prop="booktype" label="书籍类型"></el-table-column>
+                    <el-table-column
+                      width="100"
+                      align="center"
+                      type="index"
+                      label="排名"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                      align="center"
+                      :show-overflow-tooltip="true"
+                      prop="bookName"
+                      label="书籍"
+                      width="180"
+                    ></el-table-column>
+                    <el-table-column
+                      align="center"
+                      :show-overflow-tooltip="true"
+                      prop="author"
+                      label="作者"
+                    ></el-table-column>
+                    <el-table-column
+                      align="center"
+                      :show-overflow-tooltip="true"
+                      prop="typeName"
+                      label="书籍类型"
+                    ></el-table-column>
                   </el-table>
                 </div>
               </div>
@@ -93,6 +118,124 @@
         </div>
       </el-col>
     </el-row>
+    <!-- 弹框组 -->
+    <div class="dialogBox">
+      <!-- 左侧弹框组 -->
+      <!-- 楼层添加/编辑 -->
+      <div class="storeRoomDia common stonerMessage">
+        <el-dialog
+          :title="dialogTitle[i]"
+          :visible.sync="storeRoomDialog"
+          width="494px"
+          @close="handleClose('changeStoreForm')"
+        >
+          <el-form ref="changeStoreForm" :rules="changeStoreRules" :model="changeStoreForm">
+            <el-form-item class="spec" label="楼层名称:" :label-width="changelabel" prop="storeName">
+              <el-input v-model="changeStoreForm.storeName"></el-input>
+            </el-form-item>
+            <el-form-item class="spec" label="楼　　号:" :label-width="changelabel" prop="storeNum">
+              <el-input v-model="changeStoreForm.storeNum "></el-input>
+            </el-form-item>
+            <div class="row2">
+              <el-form-item label="温度警报" :label-width="changelabel">
+                <el-input v-model="changeStoreForm.temperatureS"></el-input>
+              </el-form-item>
+              <div class="hr">-</div>
+              <el-form-item>
+                <el-input v-model="changeStoreForm.temperatureE"></el-input>
+              </el-form-item>
+            </div>
+            <div class="row2">
+              <el-form-item label="湿度警报" :label-width="changelabel">
+                <el-input v-model="changeStoreForm.humidityS"></el-input>
+              </el-form-item>
+              <div class="hr">-</div>
+              <el-form-item>
+                <el-input v-model="changeStoreForm.humidityE"></el-input>
+              </el-form-item>
+            </div>
+            <el-form-item class="dialogFooter">
+              <div>
+                <span
+                  class="dialogButton true mr_40"
+                  @click="submitForm('changeStoreForm','storeRoomDialog')"
+                >确 定</span>
+                <span
+                  class="dialogButton cancel"
+                  @click="resetForm('changeStoreForm','storeRoomDialog')"
+                >取 消</span>
+              </div>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+      </div>
+
+      <!-- 右侧弹框组 -->
+      <!-- 绑定区 -->
+      <!-- 删除区Or删除楼层 -->
+      <div class="forbid collectionDelete">
+        <el-dialog :title="dialogTitle[i]" :visible.sync="deleteDialog" width="400px" center>
+          <div class="dialogBody">是否删除?</div>
+          <div style="margin-bottom: 30px">
+            <span class="dialogButton true mr_40" @click="subDelete()">确 定</span>
+            <span class="dialogButton cancel" @click="deleteDialog = false">取 消</span>
+          </div>
+        </el-dialog>
+      </div>
+      <!-- 编辑区Or添加区 -->
+      <div class="changeArea common">
+        <el-dialog
+          :title="dialogTitle[i]"
+          :visible.sync="changeDialog"
+          width="750px"
+          @close="handleClose('changeAreaForm')"
+          center
+        >
+          <el-form ref="changeAreaForm" :inline="true" :rules="changeRules" :model="changeAreaForm">
+            <el-form-item label="区 名 称:" :label-width="changelabel" prop="regionName">
+              <el-input v-model="changeAreaForm.regionName"></el-input>
+            </el-form-item>
+            <el-form-item label="区 编 号:" :label-width="changelabel" prop="regionNum">
+              <el-input v-model="changeAreaForm.regionNum" maxlength="2"></el-input>
+            </el-form-item>
+            <div class="row2">
+              <el-form-item label="该区共有:" :label-width="changelabel" prop="cols">
+                <el-input v-model="changeAreaForm.cols" maxlength="3"></el-input>
+              </el-form-item>
+              <span class="text">架</span>
+              <el-form-item label="该区共有:" :label-width="changelabel" prop="divs">
+                <el-input v-model="changeAreaForm.divs" maxlength="2"></el-input>
+              </el-form-item>
+              <span class="text2">列</span>
+            </div>
+            <div class="row2">
+              <el-form-item label="该区共有:" :label-width="changelabel" prop="lays">
+                <el-input v-model="changeAreaForm.lays" maxlength="2"></el-input>
+              </el-form-item>
+              <span class="text1" style="left: 325px;width: 20px">层</span>
+              <el-form-item label="层架容量:" :label-width="changelabel" prop="volumetric">
+                <el-input v-model="changeAreaForm.volumetric" maxlength="2"></el-input>
+              </el-form-item>
+              <span class="text2">本</span>
+            </div>
+            <el-form-item class="dialogFooter">
+              <div>
+                <span
+                  class="dialogButton true mr_40"
+                  @click="submitForm('changeAreaForm','changeDialog')"
+                  style="width: 150px"
+                >确 定</span>
+                <span
+                  class="dialogButton cancel"
+                  @click="resetForm('changeAreaForm','changeDialog')"
+                  style="width: 150px"
+                >取 消</span>
+              </div>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -100,83 +243,518 @@
 <script>
 import Title from "../../../common/title/title";
 import PanelGroup from "./panelGroup";
-import barChart from './barChart';
+import barChart from "./barChart";
+import { regionInt, storeInt, headUpload } from "@request/api/base.js";
+import { baseInt } from "../../../request/api/area/remake";
+import axios from "../../../request/http.js";
+import {
+  isvalidNumber_english,
+  isvalidNum
+} from "@/base/js/yf/elementValidate";
+var isvalidNumberEnglish = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error("请输入楼号"));
+  } else if (!isvalidNumber_english(value)) {
+    callback(new Error("只可输入字母与数字如：负一楼 (B1) 正一楼 (1)"));
+  } else {
+    callback();
+  }
+};
+var isvalidNumber = (rule, value, callback) => {
+  if (!value) {
+    callback(new Error("该项不能为空"));
+  } else if (!isvalidNum(value)) {
+    callback(new Error("只可输入数字"));
+  } else {
+    callback();
+  }
+};
 export default {
   data() {
     return {
       asideTitle: "楼层管理",
       contentTitle: "书籍统计",
+      storeInfo: [],
+      activeIndex: 0, // 控制被选中标签的数据
+      storeIndex: 1000,
+      regionInfo: [], // 区渲染数据
+      storeIndex: 1000, // 控制打开与关闭
+      shelvesShow: false, // 控制右侧库房显隐
+      selectRegin: {},
+      cacheObj: {},
+      launch:-1, // 控制开关
+      /*------ 右侧数据 ------*/
       testList: [{ name: "楼层名", area: ["文学区", "XX区"] }],
+
       dateValue: "",
-      tableData: [
-        {
-          rank: "1",
-          bookname: "无头骑士异闻录",
-          author: "王小明",
-          booktype:'小说'
-        },
-        {
-          rank: "1",
-          bookname: "无头骑士异闻录",
-          author: "王小明",
-          booktype:'小说'
-        },
-        {
-          rank: "1",
-          bookname: "无头骑士异闻录",
-          author: "王小明",
-          booktype:'小说'
-        },
-        {
-          rank: "1",
-          bookname: "无头骑士异闻录",
-          author: "王小明",
-          booktype:'小说'
-        },
-        {
-          rank: "1",
-          bookname: "无头骑士异闻录",
-          author: "王小明",
-          booktype:'小说'
-        },
-        {
-          rank: "1",
-          bookname: "无头骑士异闻录",
-          author: "王小明",
-          booktype:'小说'
-        },
-        {
-          rank: "1",
-          bookname: "无头骑士异闻录",
-          author: "王小明",
-          booktype:'小说'
-        },
-        {
-          rank: "1",
-          bookname: "无头骑士异闻录",
-          author: "王小明",
-          booktype:'小说'
-        },
-        {
-          rank: "1",
-          bookname: "无头骑士异闻录",
-          author: "王小明",
-          booktype:'小说'
-        },
-        {
-          rank: "1",
-          bookname: "无头骑士异闻录",
-          author: "王小明",
-          booktype:'小说'
-        },
+      cardData: {},
+      tableData: [],
+      chartData: [50, 100, 200, 100, 100],
+      // 弹框相关
+      storeRoomDialog: false,
+      preImg: "",
+      imgfiles: null,
+      changeStoreForm: {
+        storeName: "",
+        storeNum: "",
+        temperatureS: "",
+        temperatureE: "",
+        humidityS: "",
+        humidityE: "",
+        files: "", // 喜闻乐见的上传图片
+        imageAddress: "",
+        id: "",
+        info: ""
+      },
+      changeStoreRules: {
+        storeName: [
+          { required: true, message: "请输入楼层名称", trigger: "blur" }
+        ],
+        storeNum: [
+          { required: true, trigger: "blur", validator: isvalidNumberEnglish }
+        ],
+        temperatureS: [
+          { required: true, message: "请输入温度警告", trigger: "blur" }
+        ],
+        temperatureE: [
+          { required: true, message: "请输入温度警告", trigger: "blur" }
+        ],
+        humidityS: [
+          { required: true, message: "请输入湿度警告", trigger: "blur" }
+        ],
+        humidityE: [
+          { required: true, message: "请输入湿度警告", trigger: "blur" }
+        ]
+      },
+      /*------ 删除楼层 ------*/
+      deleteStoreData: {},
+      /*====== 右侧弹框配置项 ======*/
+
+      /*------ 删除区 ------*/
+      deleteDialog: false,
+      deleteArea: {},
+      /*------ 绑定区 ------*/
+      bindDialog: false,
+      bindForm: {
+        bindId: ""
+      },
+      bindRules: {
+        bindId: [{ required: true, message: "请选择区", trigger: "change" }]
+      },
+      changeOption: [], // 这里下拉肯定是个变量
+      /*------ 改变区 添加 编辑 ------*/
+      dialogTitle: [
+        "添加区",
+        "编辑区",
+        "绑定区",
+        "删除区",
+        "编辑楼层",
+        "添加楼层",
+        "删除楼层"
       ],
-      chartData:[50,100,200,100,100]
+      i: 0, // 控制区弹框的添加编辑绑定 删除标题和调用API
+      changeDialog: false,
+      changeAreaForm: {
+        regionName: "", //区名称
+        regionNum: "", //区号
+        divs: "", //列
+        lays: "", //层
+        cols: "", //架
+        volumetric: "", //本
+        id: ""
+      },
+      changeRules: {
+        regionName: [
+          { required: true, message: "请输入区名称", trigger: "blur" }
+        ],
+        regionNum: [
+          { required: true, trigger: "blur", validator: isvalidNumber }
+        ],
+        cols: [{ required: true, trigger: "blur", validator: isvalidNumber }],
+        divs: [{ required: true, trigger: "blur", validator: isvalidNumber }],
+        lays: [{ required: true, trigger: "blur", validator: isvalidNumber }],
+        volumetric: [
+          { required: true, trigger: "blur", validator: isvalidNumber }
+        ]
+      },
+      changelabel: "120px"
     };
   },
   components: {
     Title,
     PanelGroup,
     barChart
+  },
+  created() {
+    this.searchStore();
+    this.searchRegion();
+  },
+  computed: {
+    dashOffset() {
+      return (1 - this.percent) * this.dashArray;
+    },
+    editStoreSub() {
+      let obj = {
+        storeName: this.changeStoreForm.storeName,
+        storeNum: this.changeStoreForm.storeNum,
+        wddown: this.changeStoreForm.temperatureS,
+        wdup: this.changeStoreForm.temperatureE,
+        sddown: this.changeStoreForm.humidityS,
+        sdup: this.changeStoreForm.humidityE,
+        id: this.changeStoreForm.id,
+        info: this.changeStoreForm.info,
+        imgAddress: this.changeStoreForm.imageAddress
+      };
+      return obj;
+    },
+    bindTimeForm() {
+      let obj = {
+        id: this.bindForm.id,
+        bindId: this.bindForm.bindId
+      };
+      return obj;
+    },
+    editAreaSub() {
+      let obj = {
+        id: this.changeAreaForm.id,
+        regionName: this.changeAreaForm.regionName,
+        regionNum: this.changeAreaForm.regionNum,
+        divs: this.changeAreaForm.divs,
+        lays: this.changeAreaForm.lays,
+        cols: this.changeAreaForm.cols,
+        volumetric: this.changeAreaForm.volumetric
+      };
+      return obj;
+    },
+    addAreaSub() {
+      let obj = {
+        fkStoreId: this.changeAreaForm.id,
+        regionName: this.changeAreaForm.regionName,
+        regionNum: this.changeAreaForm.regionNum,
+        divs: this.changeAreaForm.divs,
+        lays: this.changeAreaForm.lays,
+        cols: this.changeAreaForm.cols,
+        volumetric: this.changeAreaForm.volumetric
+      };
+      return obj;
+    }
+  },
+  methods: {
+    storeBtn(item, index) {
+      this.storeIndex = index;
+      if (this.launch == index) {
+        this.launch = -1;
+      } else {
+        this.launch = index;
+        this.searchRegion(item.id);
+      }
+      this.reset();
+
+      
+    },
+    reset() {},
+    regionBtn(store, index) {
+      // 这里就该调查右边图表的数据了
+      let obj = {};
+      obj.fkStoreId = store.fkStoreId;
+      obj.fkRegionId = store.id;
+      this.cacheObj = obj;
+      this._getRegin(obj);
+      this._getTop(obj);
+      this._getClassify(obj);
+      console.log(store, "这里的数据");
+    },
+    // 弹框
+    /*------ 结构启动按钮 ------*/
+    editstoreBtn(store) {
+      // 其实可以写成一个switch
+      console.log(store, "楼号");
+      this.preImg = "";
+      this.i = 4;
+      this.changeStoreForm.storeName = store.storeName;
+      this.changeStoreForm.temperatureS = store.wddown;
+      this.changeStoreForm.temperatureE = store.wdup;
+      this.changeStoreForm.humidityS = store.sddown;
+      this.changeStoreForm.humidityE = store.sdup;
+      this.changeStoreForm.id = store.id;
+      this.changeStoreForm.info = store.info;
+      this.changeStoreForm.imageAddress = store.imgAddress;
+      this.changeStoreForm.storeNum = store.storeNum;
+      this.storeRoomDialog = true;
+    },
+    addStoreBtn() {
+      if (this.storeFormBug) {
+        this.$refs.changeStoreForm.resetFields();
+      }
+      //
+      let pbj = this.changeStoreForm;
+      for (var i in pbj) {
+        pbj[i] = "";
+      }
+      this.i = 5;
+      this.preImg = "";
+      this.storeRoomDialog = true;
+    },
+    deleteStoreBtn(store) {
+      this.i = 6;
+      this.deleteStoreData.id = store.id;
+      this.deleteDialog = true;
+    },
+    /*------ 区相关按钮 ------*/
+    addAreaBtn(store) {
+      console.log("添加区信息", store.id);
+      this.i = 0;
+      if (this.areaFormBug) {
+        this.$refs.changeAreaForm.resetFields();
+      }
+      let obj = this.changeAreaForm;
+      for (var i in obj) {
+        obj[i] = "";
+      }
+      this.changeAreaForm.id = store.id;
+      this.changeDialog = true;
+    },
+    editAreaBtn(region, index) {
+      console.log("区信息", region);
+      this.i = 1;
+      this.changeAreaForm.regionName = region.regionName;
+      this.changeAreaForm.regionNum = region.regionNum;
+      this.changeAreaForm.divs = region.divs;
+      this.changeAreaForm.lays = region.lays;
+      this.changeAreaForm.cols = region.cols;
+      this.changeAreaForm.volumetric = region.volumetric;
+      this.changeAreaForm.id = region.id;
+
+      this.changeDialog = true;
+    },
+    deleteAreaBtn(region, index) {
+      this.i = 3;
+      this.deleteArea.id = region.id;
+      this.deleteDialog = true;
+    },
+    /*------ 弹框按钮 ------*/
+    // 删除弹框的提交按钮
+    subDelete() {
+      let flag = this.i; // 关闭弹框
+      switch (flag) {
+        case 3:
+          //console.log("删除区Api");
+          this.deleteRegion();
+          break;
+        case 6:
+          this.deleteStore();
+        //console.log("删除楼层API");
+      }
+    },
+    submitForm(formName, dialogName) {
+      // 提交后也要清空 表单验证要开起来
+
+      let i = this.i;
+      let data = {};
+      //let method = 'post'
+      let url = "";
+      // 楼层编辑和添加接口
+      if (i == 4 || i == 5) {
+        url = i == 4 ? storeInt.edit : storeInt.add;
+        //method = 'put'
+        data = this.editStoreSub;
+
+        this.$refs[formName].validate(valid => {
+          if (valid) {
+            // 发送上传图片请求
+
+            // 发送数据提交请求
+            axios({
+              url: url,
+              method: "post",
+              data: data
+            }).then(res => {
+              if (res.data.state === true) {
+                this.searchStore();
+                this[dialogName] = false;
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            });
+          } else {
+            return false;
+          }
+        });
+      }
+      // 区编辑和添加
+      if (i == 0 || i == 1) {
+        url = i == 0 ? regionInt.add : regionInt.edit;
+        data = i == 0 ? this.addAreaSub : this.editAreaSub;
+
+        this.$refs[formName].validate(valid => {
+          if (valid) {
+            axios({
+              url: url,
+              method: "post",
+              data: data
+            }).then(res => {
+              if (res.data.state === true) {
+                this.$message.success("执行成功");
+                this.searchRegion(data.fkStoreId);
+                this[dialogName] = false;
+              } else {
+                this.$message.error(res.data.msg);
+              }
+            });
+          } else {
+            return false;
+          }
+        });
+      }
+    },
+    // 改变表单取消按钮
+    resetForm(formName, dialogName) {
+      // /this.$refs[formName].resetFields();
+      this[dialogName] = false;
+    },
+    // 弹框关闭执行的回调函数
+    handleClose(formName) {
+      // 关闭和取消 确定结束后都要清除数据
+      if (formName == "changeStoreForm") {
+        this.storeFormBug = true;
+      } else {
+        this.areaFormBug = true;
+      }
+      if (formName == "bindForm") {
+        this.bindFormBug = true;
+      }
+    },
+    /*====== Api部分 总计10个接口 ======*/
+    /*------ 楼层API ------*/
+    searchStore() {
+      // 查询楼层
+      axios.get(storeInt.select).then(res => {
+        if (res.data.state === true) {
+          this.storeInfo = res.data.row;
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    deleteStore() {
+      // 删除楼层
+      let data = this.deleteStoreData;
+
+      axios.post(storeInt.delete, data).then(res => {
+        if (res.data.state === true) {
+          this.$message.success("删除成功");
+          this.searchStore();
+          this.searchRegion();
+          this.deleteDialog = false;
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    /*------ 区API ------*/
+    searchRegion(num) {
+      let obj = {};
+      obj.id = num;
+      axios
+        .get(regionInt.select, {
+          params: obj
+        })
+        .then(res => {
+          if (res.data.state === true) {
+            for (let item of res.data.row) {
+              for (let reg of item.regionIcon) {
+                reg.数量 = reg.value;
+                delete reg.value;
+              }
+              item.HisData = {
+                columns: ["type", "数量"],
+                rows: item.regionIcon
+              };
+            }
+            this.regionInfo = res.data.row;
+            console.log("获取的区信息", this.regionInfo);
+          } else {
+            this.$message.error(res.data.msg);
+          }
+        });
+    },
+    deleteRegion() {
+      let data = this.deleteArea;
+
+      axios.post(regionInt.delete, data).then(res => {
+        if (res.data.state === true) {
+          this.$message.success("删除成功");
+          this.searchRegion();
+          this.deleteDialog = false;
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      });
+    },
+    // 获取区图表信息
+    _getRegin(obj) {
+      let data = obj;
+      var defultobj = {
+        bop: 0
+      };
+      data = Object.assign(defultobj, data);
+      axios
+        .get(baseInt.search, {
+          params: data
+        })
+        .then(res => {
+          if (res.data.state) {
+            this.cardData = res.data.row;
+          }
+          console.log(res, "数据啥样");
+        });
+    },
+    // 获取前10
+    _getTop(obj) {
+      let data = obj;
+      var defultobj = {
+        bop: 0
+      };
+      data = Object.assign(defultobj, data);
+      axios
+        .get(baseInt.topSearch, {
+          params: data
+        })
+        .then(res => {
+          if (res.data.state) {
+            this.tableData = res.data.rows;
+          }
+          console.log(res, "top10");
+          console.log(this.tableData);
+        });
+    },
+    // 获取图表
+    _getClassify(obj) {
+      let data = obj;
+      var defultobj = {
+        bop: 0
+      };
+      data = Object.assign(defultobj, data);
+      axios
+        .get(baseInt.classify, {
+          params: data
+        })
+        .then(res => {
+          if (res.data.state) {
+            let cacheArr = [];
+            let data = res.data.row;
+            cacheArr.push(data.offNum);
+            cacheArr.push(data.onNum);
+            cacheArr.push(data.lendNum);
+            cacheArr.push(data.damageNum);
+            cacheArr.push(data.cullingNum);
+            this.chartData = cacheArr;
+          }
+          console.log(res, "右侧图表");
+          console.log(this.cacheArr, "缓存数组");
+          console.log(this.chartData, "未生效?");
+        });
+    }
   }
 };
 </script>
@@ -277,16 +855,161 @@ export default {
           margin-bottom: 30px;
         }
 
-        .tableBox{
-
+        .tableBox {
         }
       }
 
       .dataShow {
-        .titleBox{
+        .titleBox {
           margin-bottom: 30px;
         }
       }
+    }
+  }
+}
+</style>
+
+<style>
+/*====== 弹框 ======*/
+.bind,
+.common {
+}
+.bind .el-dialog {
+}
+.bind .el-form,
+.common .el-form {
+  width: 100%;
+  text-align: center;
+}
+.bind .dialogFooter,
+.common .dialogFooter {
+  width: 100%;
+  padding-top: 20px;
+  text-align: center;
+  font-size: 0;
+}
+.bind .dialogFooter .el-button,
+.common .dialogFooter .el-button {
+  height: 46px;
+  width: 150px;
+  border-radius: 10px;
+  display: inline-block;
+  cursor: pointer;
+  font-size: 18px;
+  color: #fff;
+  border: none;
+  box-sizing: border-box;
+  text-align: center;
+}
+.bind .dialogFooter .el-button:first-child,
+.common .dialogFooter .el-button:first-child {
+  margin-right: 20px;
+}
+.bind .el-button.buttonTrueColor,
+.common .el-button.buttonTrueColor {
+  background-color: #0096ff;
+}
+.bind .el-button.buttonCancelColor,
+.common .el-button.buttonCancelColor {
+  background-color: #d5d5d5;
+}
+.bind .el-select {
+  width: 300px;
+}
+.bind .el-dialog__body,
+.common .el-dialog__body {
+  border-radius: 0 0 30px 30px;
+}
+/*自定义样式*/
+.changeArea .el-select {
+  width: 202px;
+}
+.changeArea .el-form--inline .el-form-item {
+  margin-right: 30px;
+}
+.row2 {
+  position: relative;
+}
+.storeRoomDia .el-form {
+  text-align: inherit;
+}
+.storeRoomDia .row2 {
+  display: flex;
+}
+.row2 .text {
+  position: absolute;
+  top: 13px;
+  left: 330px;
+  font-size: 14px;
+  color: #878787;
+}
+.row2 .text2 {
+  position: absolute;
+  top: 13px;
+  right: 10px;
+  font-size: 14px;
+  color: #878787;
+}
+.row2 .text1 {
+  position: absolute;
+  top: 13px;
+  right: 10px;
+  font-size: 14px;
+  color: #878787;
+}
+.storeRoomDia .spec input.el-input__inner {
+  width: 300px;
+}
+.storeRoomDia .row2 input.el-input__inner {
+  width: 130px;
+}
+.hr {
+  font-size: 16px;
+  margin: 0 15px;
+  line-height: 40px;
+}
+/*图片上传*/
+.upload {
+  height: 130px;
+  padding-left: 30px;
+  align-items: center;
+}
+.upload span {
+  margin-right: 10px;
+}
+
+</style>
+<style lang="scss" scoped>
+#storeRoom {
+  .imgBox {
+    height: 130px;
+    width: 130px;
+    position: relative;
+    background-image: url("../../../base/img/timg.jpg");
+    img {
+      height: 130px;
+      width: 130px;
+    }
+    .defaultImg {
+      height: 130px;
+      width: 130px;
+      position: absolute;
+      z-index: 1;
+    }
+    .preImg {
+      position: absolute;
+      z-index: 2;
+    }
+    .loadImg {
+      z-index: 2;
+    }
+    .acces {
+      height: 130px;
+      width: 130px;
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      cursor: pointer;
     }
   }
 }
