@@ -251,7 +251,7 @@
 						required: true,
 						message: "押金不得为空",
 						trigger: "blur"
-					}],
+					},,{ type: 'number', message: '押金只能为数字'}],
 					remarks: [{
 						required: true,
 						message: "备注不得为空",

@@ -245,8 +245,9 @@ export default {
     },
     judge() {
       let obj = this.selectData;
-      for (var key in obj) {
-        return true; // 不是空对象 锁输入框
+      let len = Object.keys(obj).length
+      if(len){
+        return true
       }
       return false; // 是空对象 不锁
     }
@@ -383,7 +384,9 @@ export default {
       });
     },
     resetForm(formName) {
+      // 禁用你倒是解除掉啊...
       this.$refs[formName].resetFields();
+      this.selectData = {}
     },
     pointer() {
       this.$refs.file.click();
