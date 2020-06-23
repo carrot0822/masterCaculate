@@ -396,7 +396,7 @@ export default {
 
         let page = Math.ceil(this.total / this.pageSize)
         page ==0?1:page;
-        if(this.pageInput>page || this.pageInput == ''|| this.pageInput<0){
+        if(this.pageInput>page || this.pageInput == ''|| this.pageInput<=0){
           this.pageInput = 1
           this.$nextTick(()=>{
             this.$refs.text.value = 1 // hack方法
