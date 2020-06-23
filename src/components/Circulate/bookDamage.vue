@@ -54,7 +54,7 @@
                 <section class="right">
                   <p>读者性别：{{userTable[0].sex ==1?'男':'女'}}</p>
                   <p>读者状态：{{userTable[0].state}}</p>
-                  <p>充值余额：{{userTable[0].cardGradeDeposit}}</p>
+                  <p>充值余额：{{userTable[0].balance}}</p>
                 </section>
               </div>
               <p class="manage">{{userTable[0].msg}}</p>
