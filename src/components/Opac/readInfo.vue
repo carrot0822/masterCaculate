@@ -271,7 +271,7 @@ export default {
       if (typeof pageNum != "number") {
         this.pagationObj.pageInput;
       }
-      if (pageNum < 0 || pageNum > this.pageCount) {
+      if (pageNum <= 0 || pageNum > this.pageCount) {
         this.pagationObj.pageInput = 1;
         this.$refs.text.value = 1;
       } else {
