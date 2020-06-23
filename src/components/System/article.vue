@@ -132,6 +132,9 @@ export default {
   width: 90%;
   margin: 0 auto;
   margin-bottom: 30px;
+     
+    font-size: 14px;
+    color: #666;
 }
 </style>
 

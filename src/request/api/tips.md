@@ -1,3 +1,4 @@
+area 新的区域管理接口
 book 书籍编目典藏等
 Finance 财务管理相关
 magazine 期刊相关接口

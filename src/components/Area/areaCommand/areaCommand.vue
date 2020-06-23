@@ -19,8 +19,8 @@
               <div class="opearate">
                 <div class="static">
                   <span @click="storeBtn(store,index)" class="switch">
-                    <img v-if="!(index == launch)" src="../../../base/img/areaRemaker/open.png">
-                    <img v-if="(index == launch)" src="../../../base/img/areaRemaker/close.png">
+                    <img v-if="!(index == launch)" src="../../../base/img/areaRemaker/open.png" />
+                    <img v-if="(index == launch)" src="../../../base/img/areaRemaker/close.png" />
                   </span>
                   <span class="areaName">{{store.storeName}}</span>
                 </div>
@@ -37,8 +37,8 @@
                   :class="{quactive:sonNum == quIndex}"
                   class="zoneName"
                 >
-                <p @click="regionBtn(son,sonNum)" class="quName"> {{son.regionName}} </p>
-                <span @click="deleteAreaBtn(son,sonNum)" class="deleteQu">删除区</span>
+                  <p @click="regionBtn(son,sonNum)" class="quName">{{son.regionName}}</p>
+                  <span @click="deleteAreaBtn(son,sonNum)" class="deleteQu">删除区</span>
                 </div>
               </div>
             </div>
@@ -46,7 +46,7 @@
         </section>
       </el-col>
 
-      <!-- 楼层区间数据显示 -->
+      <!-- 楼层区间数据显示 依赖左侧点击来显示吧 -->
       <el-col :span="19">
         <div class="areaDetail">
           <!-- 标题和控制按钮 -->
@@ -59,7 +59,7 @@
           <!--excel导出 -->
           <section class="outputExcel">
             <div class="dateBlock">
-              <el-date-picker v-model="dateValue" type="month" placeholder="选择月"></el-date-picker>
+              <el-date-picker v-model="dateValue" value-format="yyyy-MM-dd" type="month" placeholder="选择月"></el-date-picker>
             </div>
             <div class="outpotBtn">
               <el-button @click="outputExcel" size="mini" type="primary">导出excel</el-button>
@@ -78,13 +78,7 @@
                 </div>
                 <div class="tableBox">
                   <el-table :data="tableData" style="width: 100%">
-                    <el-table-column
-                      width="100"
-                      align="center"
-                      type="index"
-                      label="排名"
-                    >
-                    </el-table-column>
+                    <el-table-column width="100" align="center" type="index" label="排名"></el-table-column>
                     <el-table-column
                       align="center"
                       :show-overflow-tooltip="true"
@@ -253,6 +247,7 @@ import barChart from "./barChart";
 import { regionInt, storeInt, headUpload } from "@request/api/base.js";
 import { baseInt } from "../../../request/api/area/remake";
 import axios from "../../../request/http.js";
+import {format} from "../../../base/js/utlis"
 import {
   isvalidNumber_english,
   isvalidNum
@@ -283,14 +278,14 @@ export default {
       storeInfo: [],
       activeIndex: 0, // 控制被选中标签的数据
       storeIndex: 1000,
-      reginName:'',
+      reginName: "",
       regionInfo: [], // 区渲染数据
       storeIndex: 1000, // 控制打开与关闭
-      quIndex:1000,
+      quIndex: 1000,
       shelvesShow: false, // 控制右侧库房显隐
       selectRegin: {},
       cacheObj: {},
-      launch:-1, // 控制开关
+      launch: -1, // 控制开关
       /*------ 右侧数据 ------*/
       testList: [{ name: "楼层名", area: ["文学区", "XX区"] }],
 
@@ -457,29 +452,65 @@ export default {
         this.searchRegion(item.id);
       }
       this.reset();
-
-      
     },
     reset() {
-      this.quIndex = 1000
+      this.quIndex = 1000;
     },
-    outputExcel(){
-      let obj = this.cacheObj
-      console.log(obj)
-      this._output(obj)
+    outputExcel() {
+      let obj = this.cacheObj;
+      let nomalData = {
+        bop: 0,
+        state: true
+      };
+      
+      
+      console.log(obj,this.dateValue,typeof(this.dateValue) );
     },
     regionBtn(store, index) {
       // 这里就该调查右边图表的数据了
       let obj = {};
       obj.fkStoreId = store.fkStoreId;
       obj.fkRegionId = store.id;
-      this.quIndex = index
-      this.reginName = store.regionName
+      this.quIndex = index;
+      this.reginName = store.regionName;
       this.cacheObj = obj;
       this._getRegin(obj);
       this._getTop(obj);
       this._getClassify(obj);
       console.log(store, "这里的数据");
+    },
+    // 字符串拼接函数
+    assembleStr(obj){
+
+    },
+    // 下载excel函数
+    outClick(url, saveName) {
+      var aLink = document.createElement("a");
+      aLink.href = url;
+      aLink.download = saveName || ""; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
+      var event;
+      if (window.MouseEvent) event = new MouseEvent("click");
+      else {
+        event = document.createEvent("MouseEvents");
+        event.initMouseEvent(
+          "click",
+          true,
+          false,
+          window,
+          0,
+          0,
+          0,
+          0,
+          0,
+          false,
+          false,
+          false,
+          false,
+          0,
+          null
+        );
+      }
+      aLink.dispatchEvent(event);
     },
     // 弹框
     /*------ 结构启动按钮 ------*/
@@ -771,33 +802,13 @@ export default {
           console.log(this.cacheArr, "缓存数组");
           console.log(this.chartData, "未生效?");
         });
-    },
-    //
-    _output(obj){
-      let data = obj;
-      var defultobj = {
-        bop: 0,
-        state:true
-      };
-      data = Object.assign(defultobj, data);
-      axios
-        .get(baseInt.search, {
-          params: data
-        })
-        .then(res => {
-          if (res.data.state) {
-            // 触发excel导出函数
-            this.$message.success('导出excel成功')
-          }
-          console.log(res, "数据啥样");
-        });
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.quactive{
+.quactive {
   background-color: blanchedalmond;
 }
 #araeRemaker {
@@ -830,8 +841,8 @@ export default {
             font-family: Microsoft YaHei;
             font-weight: 400;
             color: rgba(0, 150, 255, 1);
-            
-            vertical-align:text-top;
+
+            vertical-align: text-top;
           }
           .static {
             .switch {
@@ -856,10 +867,10 @@ export default {
             padding-right: 10px;
             display: flex;
             justify-content: space-between;
-            .quName{
+            .quName {
               cursor: pointer;
             }
-            .deleteQu{
+            .deleteQu {
               cursor: pointer;
             }
             &::before {
@@ -870,10 +881,10 @@ export default {
               left: 25px;
               width: 6px;
               height: 6px;
-              background-color: #E6E6E6;
+              background-color: #e6e6e6;
               border-radius: 50%;
             }
-            &:hover{
+            &:hover {
               background-color: blanchedalmond;
             }
           }
@@ -1031,7 +1042,6 @@ export default {
 .upload span {
   margin-right: 10px;
 }
-
 </style>
 <style lang="scss" scoped>
 #storeRoom {
