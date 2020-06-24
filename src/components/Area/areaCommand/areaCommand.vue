@@ -48,7 +48,7 @@
 
       <!-- 楼层区间数据显示 依赖左侧点击来显示吧 -->
       <el-col :span="19">
-        <div class="areaDetail">
+        <div v-if="isShow" class="areaDetail">
           <!-- 标题和控制按钮 -->
           <section class="titleBox">
             <div class="title">
@@ -59,7 +59,7 @@
           <!--excel导出 -->
           <section class="outputExcel">
             <div class="dateBlock">
-              <el-date-picker v-model="dateValue" value-format="yyyy-MM-dd" type="month" placeholder="选择月"></el-date-picker>
+              <el-date-picker @change="datechange" v-model="dateValue" value-format="yyyy-MM" type="month" placeholder="选择月"></el-date-picker>
             </div>
             <div class="outpotBtn">
               <el-button @click="outputExcel" size="mini" type="primary">导出excel</el-button>
@@ -235,6 +235,7 @@
           </el-form>
         </el-dialog>
       </div>
+      
     </div>
   </div>
 </template>
@@ -286,6 +287,7 @@ export default {
       selectRegin: {},
       cacheObj: {},
       launch: -1, // 控制开关
+      isShow:false,
       /*------ 右侧数据 ------*/
       testList: [{ name: "楼层名", area: ["文学区", "XX区"] }],
 
@@ -462,12 +464,21 @@ export default {
         bop: 0,
         state: true
       };
-      
-      
-      console.log(obj,this.dateValue,typeof(this.dateValue) );
+
+      if(this.dateValue){
+        obj.time = this.dateValue.substring(0,7)
+        obj = Object.assign(obj,nomalData)
+      }
+
+      var url = this.assembleStr(baseInt.search,obj)
+       this.outClick(url)
+      console.log(url,'拼接后的字符串')
     },
     regionBtn(store, index) {
       // 这里就该调查右边图表的数据了
+      if(!this.isShow){
+        this.isShow = true
+      }
       let obj = {};
       obj.fkStoreId = store.fkStoreId;
       obj.fkRegionId = store.id;
@@ -480,13 +491,17 @@ export default {
       console.log(store, "这里的数据");
     },
     // 字符串拼接函数
-    assembleStr(obj){
-
+    assembleStr(url,params){
+		var result = url + (params ? '?' + Object.keys(params).map(key => key + '=' + params[key]).join('&') : '')
+    return result
     },
+
     // 下载excel函数
     outClick(url, saveName) {
       var aLink = document.createElement("a");
       aLink.href = url;
+      aLink.target = '_blank'
+
       aLink.download = saveName || ""; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
       var event;
       if (window.MouseEvent) event = new MouseEvent("click");
@@ -511,6 +526,19 @@ export default {
         );
       }
       aLink.dispatchEvent(event);
+    },
+    datechange(val){
+      console.log(val)
+      
+      let obj = {}
+      obj = Object.assign(obj,this.cacheObj)
+     if(val){
+       obj.time = this.dateValue.substring(0,7)
+     }
+     this._getRegin(obj)
+     this._getTop(obj)
+     this._getClassify(obj)
+     
     },
     // 弹框
     /*------ 结构启动按钮 ------*/
@@ -791,6 +819,7 @@ export default {
           if (res.data.state) {
             let cacheArr = [];
             let data = res.data.row;
+            // 这里一个循环可以解决的- -
             cacheArr.push(data.offNum);
             cacheArr.push(data.onNum);
             cacheArr.push(data.lendNum);

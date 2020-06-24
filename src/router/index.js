@@ -264,7 +264,7 @@ export default new Router({
           component: StoneRoomInfo
         },
         {
-          path:'/araeRemaker',
+          path:'/areaRemaker',
           meta:{
             title:'区域管理重置',
             Mode:'1'

@@ -8,7 +8,7 @@
         <div class="card-panel-description">
           <div class="card-panel-text">在架数据</div>
           <div class="card-panel-num">
-            <count :end="1000"></count>
+            <count :end="overdueNum"></count>
           </div>
         </div>
       </div>
@@ -74,8 +74,9 @@ export default {
     count
   },
   computed:{
-    onshelf(){
-      
+    overdueNum(){
+      let result = this.options.overdueNum
+      return result?result:0
     },
     borrowNum(){
       let result = this.options.borrowNum
